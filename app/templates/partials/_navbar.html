@@ -1,0 +1,31 @@
+{% load static %}
+
+<header class="header">
+  <div class="header__logo-container">
+    <a href="{% url 'index' %}">
+      <img class="header__logo" src="{% static 'icons/logo-noc.png' %}" alt="company's logo" />
+    </a>
+  </div>
+  <nav class="header__nav">
+    <ul class="header__list-items">
+      <li class="header__list-item">
+        <a href="/a-propo" class="header__link">A propo</a>
+      </li>
+      <li class="header__list-item">
+        <a href="/vision-et-mission" class="header__link">Vision &amp; mission</a>
+      </li>
+      <li class="header__list-item">
+        <a href="/models" class="header__link">Nos models</a>
+      </li>
+      <li class="header__list-item">
+        <a href="/contact" class="header__link">Contact</a>
+      </li>
+      <li class="header__list-item">
+        <a href="/signup" class="header__link">Devenir notre model</a>
+      </li>
+      <li class="header__list-item">
+        <a href="/signin" class="header__link">Sign In</a>
+      </li>
+    </ul>
+  </nav>
+</header>
