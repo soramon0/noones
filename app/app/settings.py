@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'pages',
     'core',
     'models',
+    'accounts',
 ]
 
 MIDDLEWARE = [

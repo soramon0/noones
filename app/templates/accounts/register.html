@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Register</h1>
+
+<form action="{% url 'register' %}" method="post">
+  {% csrf_token %}
+  <input type="text" name="first_name" id="">
+  <input type="text" name="last_name" id="">
+  <input type="text" name="sexe" id="">
+  <input type="email" name="email" id="">
+  <input type="password" name="password" id="">
+  <input type="datetime" name="birth_date" id="">
+  <input type="text" name="facebook" id="">
+  <input type="text" name="instagram" id="">
+  <input type="text" name="phone" id="">
+  <input type="text" name="addresse" id="">
+  <input type="text" name="city" id="">
+  <input type="text" name="country" id="">
+  <input type="text" name="zipcode" id="">
+  <input type="text" name="cin" id="">
+  <input type="submit" value="Submit">
+</form>
+
+{% endblock %}

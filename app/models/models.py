@@ -24,8 +24,8 @@ class Model(models.Model):
     country = models.CharField(max_length=100)
     zipcode = models.CharField(max_length=50)
     cin = models.CharField(max_length=100)
-    profilePicture = models.ImageField(upload_to='photos/%Y/%m/%d')
-    coverPicture = models.ImageField(upload_to='photos/%Y/%m/%d')
+    profilePicture = models.ImageField(upload_to='photos/%Y/%m/%d', blank=True)
+    coverPicture = models.ImageField(upload_to='photos/%Y/%m/%d', blank=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
 
