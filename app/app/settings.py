@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'core',
     'models',
     'accounts',
+    'tailwind',
+    'theme',
 ]
 
 MIDDLEWARE = [
@@ -58,7 +60,7 @@ ROOT_URLCONF = 'app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'theme/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -139,3 +141,7 @@ STATICFILES_DIRS = [
 # Media Folder Settings
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# Tailwind
+TAILWIND_APP_NAME = 'theme'
+NPM_BIN_PATH = 'C:\\Program Files\\nodejs\\npm.cmd'
