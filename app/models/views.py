@@ -1,5 +1,12 @@
 from django.shortcuts import render
+from .models import Model
 
 
 def models(request):
-    return render(request, 'models/index.html')
+    models = Model.objects.all()
+
+    context = {
+        'models': models,
+    }
+
+    return render(request, 'models/index.html', context)

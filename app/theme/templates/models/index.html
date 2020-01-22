@@ -1,7 +1,56 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %}
 
-{% block content %}
+<!-- Model Header -->
+{% include "partials/_header.html" with title="Models" %}
 
-<h1>Models</h1>
+<h1 class="text-center text-2xl uppercase mt-8">Trouver un model</h1>
+
+<form
+  action="/models/search"
+  method="get"
+  class="w-full md:w-1/2 mx-6 md:mx-auto mt-10 text-center"
+>
+  <div
+    class="flex-col md:flex-row flex justify-between uppercase mb-5 text-left"
+  >
+    <div>
+      <label for="ville" class="block">Ville</label>
+      <select type="text" name="ville" class="border">
+        <option value="marrakech">marrakech</option>
+        <option value="agadir">agadir</option>
+      </select>
+    </div>
+    <div>
+      <label for="sexe" class="block">Sexe</label>
+      <select type="text" name="sexe">
+        <option value="f">Femme</option>
+        <option value="h">Homme</option>
+      </select>
+    </div>
+    <div>
+      <label for="taille" class="block">Taille</label>
+      <select type="text" name="taille">
+        <option value="1.20-1.40">1.20-1.40</option>
+        <option value="1.40-1.80">1.40-1.80</option>
+      </select>
+    </div>
+  </div>
+  <button
+    type="submit"
+    class="text-center bg-black hover:bg-gray-700 text-white px-6 py-1 uppercase tracking-wide"
+  >
+    filter
+  </button>
+</form>
+
+<h2 class="text-center text-xl uppercase mt-16">Touts les models</h2>
+
+<section class="mt-10 flex justify-between w-4/5 mx-auto">
+  {% for model in models %}
+  <div class="bg-orange-400">{{ model.first_name }}</div>
+  {% empty %}
+  <p>No Models available</p>
+  {% endfor %}
+</section>
 
 {% endblock %}

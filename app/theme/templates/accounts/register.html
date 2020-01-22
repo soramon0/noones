@@ -1,26 +1,114 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %}
 
-{% block content %}
+<!-- Header -->
+{% include "partials/_header.html" with title="Sign in" %}
 
-<h1>Register</h1>
+<section class="md:w-4/5 mx-auto">
+  <div class="text-center mt-10">
+    <p class="mb-6">
+      L'application pour un profil dans la plateforme digitale NOC MODELS
+    </p>
+    <p class="font-semibold mb-1">
+      Vous allez maintenant vous inscrire au www.nocmodels.com comme un Model
+      avec ou sans expériences.
+    </p class="font-semibold mb-1">
+    <p class="font-semibold mb-1">
+      Cette plateforme vous donnera la chance d’avoir un profil professionnel.
+    </p>
+    <p class="font-semibold mb-1">
+      Avoir un profil approuvé dans www.nocmodels.com, signifie qu’il deviendra
+      publiquement en ligne et vu par des supports de projets de potentiel.
+    </p>
+    <p class="font-semibold">
+      Ayant un profil approuvé dans www.nocmodels.com, ne signifie pas que vous
+      êtes un NOC MODEL !
+    </p>
+  </div>
 
-<form action="{% url 'register' %}" method="post">
-  {% csrf_token %}
-  <input type="text" name="first_name" id="">
-  <input type="text" name="last_name" id="">
-  <input type="text" name="sexe" id="">
-  <input type="email" name="email" id="">
-  <input type="password" name="password" id="">
-  <input type="datetime" name="birth_date" id="">
-  <input type="text" name="facebook" id="">
-  <input type="text" name="instagram" id="">
-  <input type="text" name="phone" id="">
-  <input type="text" name="addresse" id="">
-  <input type="text" name="city" id="">
-  <input type="text" name="country" id="">
-  <input type="text" name="zipcode" id="">
-  <input type="text" name="cin" id="">
-  <input type="submit" value="Submit">
-</form>
+  <h3 class="font-medium uppercase text-lg mt-12 tracking-wide">Contact</h3>
+  <form action="{% url 'register' %}" method="post" class="mt-6">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="flex justify-between">
+      <div class="flex-1 mr-6">
+        <div class="fieldWrapper">
+          <label class="block text-gray-800 font-semibold" for="{{ form.first_name.id_for_label }}">Prénom:</label>
+          {{ form.first_name }}
+          {% include "partials/_form_errors.html" with key=form.first_name %}
+        </div>
+        <div class="fieldWrapper">
+          <label class="block text-gray-800 font-semibold" for="{{ form.last_name.id_for_label }}">Nom</label>
+          {{ form.last_name }}
+          {% include "partials/_form_errors.html" with key=form.last_name %}
+        </div>
+        <div class="fieldWrapper">
+          <label class="block text-gray-800 font-semibold" for="{{ form.email.id_for_label }}">Email:</label>
+          {{ form.email }}
+          {% include "partials/_form_errors.html" with key=form.email %}
+        </div>
+        <div class="fieldWrapper">
+          <label class="block text-gray-800 font-semibold" for="{{ form.password.id_for_label }}">Password</label>
+          {{ form.password }}
+          {% include "partials/_form_errors.html" with key=form.password %}
+        </div>
+        <div class="fieldWrapper">
+          <label class="block text-gray-800 font-semibold" for="{{ form.birth_date.id_for_label }}">Date De Niassance</label>
+          {{ form.birth_date }}
+          {% include "partials/_form_errors.html" with key=form.birth_date %}
+        </div>
+        <div class="fieldWrapper">
+          <label class="block text-gray-800 font-semibold" for="{{ form.city.id_for_label }}">Ville</label>
+          {{ form.city }}
+          {% include "partials/_form_errors.html" with key=form.city %}
+        </div>
+        <div class="fieldWrapper">
+          <label class="block text-gray-800 font-semibold" for="{{ form.country.id_for_label }}">Pays</label>
+          {{ form.country }}
+          {% include "partials/_form_errors.html" with key=form.country %}
+        </div>
+      </div>
+      <div class="flex-1">
+        <div class="fieldWrapper">
+          <label class="block text-gray-800 font-semibold" for="{{ form.facebook.id_for_label }}">Facebook:</label>
+          {{ form.facebook }}
+          {% include "partials/_form_errors.html" with key=form.facebook %}
+        </div>
+        <div class="fieldWrapper">
+          <label class="block text-gray-800 font-semibold" for="{{ form.instagram.id_for_label }}">Instagram</label>
+          {{ form.instagram }}
+          {% include "partials/_form_errors.html" with key=form.instagram %}
+        </div>
+        <div class="fieldWrapper">
+          <label class="block text-gray-800 font-semibold" for="{{ form.phone.id_for_label }}">Phone:</label>
+          {{ form.phone }}
+          {% include "partials/_form_errors.html" with key=form.phone %}
+        </div>
+        <div class="fieldWrapper">
+          <label class="block text-gray-800 font-semibold" for="{{ form.sexe.id_for_label }}">Sexe</label>
+          {{ form.sexe }}
+          {% include "partials/_form_errors.html" with key=form.sexe %}
+        </div>
+        <div class="fieldWrapper">
+          <label class="block text-gray-800 font-semibold" for="{{ form.cin.id_for_label }}">CNI or Numéro de Passport</label>
+          {{ form.cin }}
+          {% include "partials/_form_errors.html" with key=form.cin %}
+        </div>
+        <div class="fieldWrapper">
+          <label class="block text-gray-800 font-semibold" for="{{ form.addresse.id_for_label }}">Adresse</label>
+          {{ form.addresse }}
+          {% include "partials/_form_errors.html" with key=form.addresse %}
+        </div>
+        <div class="fieldWrapper">
+          <label class="block text-gray-800 font-semibold" for="{{ form.zipcode.id_for_label }}">Zipcode</label>
+          {{ form.zipcode }}
+          {% include "partials/_form_errors.html" with key=form.zipcode %}
+        </div>
+      </div>
+    </div>
+    <div class="text-left mt-4">
+      <button type="submit" class="text-center bg-black hover:bg-gray-700 text-white px-6 py-1 uppercase tracking-wide rounded">Register</button>
+    </div>
+  </form>
+</section>
 
 {% endblock %}

@@ -6,8 +6,8 @@ from django.conf import settings
 
 class Model(models.Model):
     SEXE_CHOICES = (
-        ('F', 'Femme'),
-        ('H', 'Homme'),
+        ('f', 'Femme'),
+        ('f', 'Homme'),
     )
     sexe = models.CharField(max_length=1, choices=SEXE_CHOICES)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
