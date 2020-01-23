@@ -11361,6 +11361,34 @@ video {
   z-index: auto;
 }
 
+/* Sidenav */
+
+#sidedrawer {
+  -webkit-transform: translateX(100%);
+          transform: translateX(100%);
+  -webkit-transition: -webkit-transform 0.3s ease-out;
+  transition: -webkit-transform 0.3s ease-out;
+  transition: transform 0.3s ease-out;
+  transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
+}
+
+#sidedrawer.open {
+  -webkit-transform: translateX(0);
+          transform: translateX(0);
+}
+
+.fieldWrapper {
+  margin-bottom: 0.35rem;
+}
+
+.fieldWrapper input,
+.fieldWrapper select {
+  width: 100%;
+  border: 2px solid #ccc;
+  padding: 0.25rem 0.35rem;
+  color: #7b7a7a;
+}
+
 @media (min-width: 640px) {
   .sm\:sr-only {
     position: absolute;

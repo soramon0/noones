@@ -1,3 +1,1 @@
-import printMe from "./print";
-
-printMe();
+import './navbar'

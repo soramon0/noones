@@ -1,35 +1,94 @@
 {% load static %}
 
-<header class="px-10 pt-4 flex justify-between items-center">
-  <div class="h-20 w-auto">
+<header class="p-4 flex justify-between items-center">
+  <div class="h-12">
     <a href="{% url 'index' %}">
-      <img
-        class="h-full"
-        src="{% static 'icons/logo-noc.png' %}"
-        alt="company's logo"
-      />
+      <img class="h-full" src="{% static 'icons/logo-noc.png' %}" />
     </a>
   </div>
-  <nav>
-    <ul class="flex uppercase">
-      <li class="mr-4 pr-2 border-r border-gray-600">
-        <a href="/a-propos">A propos</a>
-      </li>
-      <li class="mr-4 pr-2 border-r border-gray-600">
-        <a href="/vision-et-mission">Vision &amp; mission</a>
-      </li>
-      <li class="mr-4 pr-2 border-r border-gray-600">
-        <a href="{% url 'models' %}">Nos models</a>
-      </li>
-      <li class="mr-4 pr-2 border-r border-gray-600">
-        <a href="/contact">Contact</a>
-      </li>
-      <li class="mr-4 pr-2 border-r border-gray-600">
-        <a href="{% url 'register' %}">Devenir notre model</a>
-      </li>
-      <li class="mr-4">
-        <a href="/signin">Sign In</a>
-      </li>
-    </ul>
+  <div
+    class="hover:bg-gray-400 w-12 h-12 rounded-full lg:hidden flex items-center justify-center"
+  >
+    <button
+      class="h-8 w-8 leading-none flex flex-wrap focus:bg-gray-400 focus:outline-none"
+      id="hamburger"
+    >
+      <span class="inline-block bg-black h-px w-full my-1"></span>
+      <span class="inline-block bg-black h-px w-full my-1"></span>
+      <span class="inline-block bg-black h-px w-full my-1"></span>
+    </button>
+  </div>
+  <nav class="lg:flex hidden uppercase">
+    <a
+      class="mr-1 text-gray-800 font-semibold px-2 border-r border-gray-600"
+      href="/a-propos"
+      >A propos</a
+    >
+    <a
+      class="mr-1 text-gray-800 font-semibold px-2 border-r border-gray-600"
+      href="/vision-et-mission"
+      >Vision &amp; mission</a
+    >
+    <a
+      class="mr-1 text-gray-800 font-semibold px-2 border-r border-gray-600"
+      href="{% url 'models' %}"
+      >Nos models</a
+    >
+    <a
+      class="mr-1 text-gray-800 font-semibold px-2 border-r border-gray-600"
+      href="{% url 'register' %}"
+      >Devenir notre model</a
+    >
+    <a
+      class="mr-1 text-gray-800 font-semibold px-2 border-r border-gray-600"
+      href="/signin"
+      >Sign In</a
+    >
+    <a class="mr-1 text-gray-800 font-semibold px-2" href="/contact">Contact</a>
+  </nav>
+  <nav
+    class="w-1/2 md:w-4/12 bg-gray-800 lg:hidden fixed inset-y-0 right-0"
+    id="sidedrawer"
+  >
+    <button
+      class="absolute top-0 right-0 px-4 py-2 cursor-pointer bg-gray-500 rounded-full mr-2 mt-2 hover:text-white hover:bg-gray-900"
+      id="sidedrawer-close"
+    >
+      <span class="uppercase text-base">x</span>
+    </button>
+    <div class="pt-6">
+      <a
+        class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900"
+        href="/a-propos"
+        >A propos</a
+      >
+      <a
+        class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900"
+        href="/vision-et-mission"
+        >Vision &amp; mission</a
+      >
+      <a
+        class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900"
+        href="{% url 'models' %}"
+        >Nos models</a
+      >
+    </div>
+    <div class="mt-2 border-t border-gray-600">
+      <a
+        class="text-gray-400 block my-2 px-4 py-1 hover:bg-gray-900"
+        href="{% url 'register' %}"
+        >Devenir notre model</a
+      >
+      <a
+        class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900"
+        href="/signin"
+        >Sign In</a
+      >
+      <a
+        class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900"
+        href="/contact"
+        >Contact</a
+      >
+    </div>
   </nav>
 </header>

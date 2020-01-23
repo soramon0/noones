@@ -7,6 +7,7 @@
     "build-cleancss": "cleancss -o ../static/css/styles.min.css ../static/css/styles.min.css",
     "build-clean": "rimraf ../static/css",
     "build:js": "webpack",
+    "watch:js": "webpack --watch",
     "start": "watch 'npm run build-postcss' ./src"
   },
   "keywords": [],
