@@ -20,3 +20,10 @@ class RegisterForm(forms.Form):
         ('f', 'Femme'),
         ('f', 'Homme'),
     ))
+    q1 = forms.CharField(max_length=500, widget=forms.Textarea)
+    q2 = forms.CharField(max_length=500, widget=forms.Textarea)
+    q3 = forms.CharField(max_length=500, widget=forms.Textarea)
+    q4 = forms.ChoiceField(widget=forms.RadioSelect, choices=(
+        ('y', 'Oui'),
+        ('n', 'Non'),
+    ))

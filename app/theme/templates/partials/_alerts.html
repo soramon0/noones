@@ -1,0 +1,10 @@
+{% if messages %} {% for message in messages %}
+<div class="{{message.tags}} mb-6 sm:mx-auto">
+  <strong
+    class="text-white ml-2 text-sm bg-red-400 py-1 px-4 font-medium rounded-full uppercase tracking-wide"
+  >
+    {{ message.tags }}
+  </strong>
+  <span class="ml-1 text-gray-700 text-sm">{{message}}</span>
+</div>
+{% endfor %} {% endif %}

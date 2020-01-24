@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from core.models import User
+from django.contrib import messages
+
 from models.models import Model
 from .forms import RegisterForm
 
@@ -28,7 +30,8 @@ def register(request):
         handle = f'{first_name.replace(" ", "-")}-{last_name.replace(" ", "-")}'
 
         if User.objects.filter(email=email).exists():
-            print('exists')
+            messages.error(request, 'Email provided is already in use.')
+            return render(request, 'accounts/register.html', {'form': form})
 
         user = User.objects.create_user(email=email, password=password)
 

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.error {
+  @apply mx-2 mt-2 bg-gray-100 border-t-4 border-red-400 px-2 py-5 shadow-lg rounded-sm max-w-lg;
+}
+
 /* Sidenav */
 #sidedrawer {
   transform: translateX(100%);
@@ -17,9 +21,27 @@
 }
 
 .fieldWrapper input,
-.fieldWrapper select {
+.fieldWrapper select,
+.fieldWrapper textarea {
   width: 100%;
-  border: 2px solid #ccc;
+  border: 2px solid #b4b4b4;
   padding: 0.25rem 0.35rem;
   color: #7b7a7a;
+  outline: none;
+}
+
+.fieldWrapper textarea {
+  width: 95%;
+}
+
+.fieldWrapper input:hover,
+.fieldWrapper select:hover,
+.fieldWrapper textarea {
+  border-color: #b8b8b8;
+}
+
+.fieldWrapper input:focus,
+.fieldWrapper select:focus,
+.fieldWrapper textarea {
+  border-color: #868686;
 }
