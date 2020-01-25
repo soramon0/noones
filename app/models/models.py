@@ -30,7 +30,7 @@ class Model(models.Model):
                              on_delete=models.CASCADE)
 
 
-class Mensuratoin(models.Model):
+class Mensuration(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     taille = models.IntegerField()
     taillenombrill = models.IntegerField()

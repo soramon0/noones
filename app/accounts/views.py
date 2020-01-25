@@ -2,7 +2,7 @@ from django.shortcuts import render
 from core.models import User
 from django.contrib import messages
 
-from models.models import Model
+from models.models import Model, Mensuration, History
 from .forms import RegisterForm
 
 
@@ -28,6 +28,20 @@ def register(request):
         cin = form.cleaned_data['cin']
         sexe = form.cleaned_data['sexe']
         handle = f'{first_name.replace(" ", "-")}-{last_name.replace(" ", "-")}'
+        q1 = form.cleaned_data['q1']
+        q2 = form.cleaned_data['q2']
+        q3 = form.cleaned_data['q3']
+        q4 = form.cleaned_data['q4']
+        taille = form.cleaned_data['taille']
+        taillenombrill = form.cleaned_data['taillenombrill']
+        buste = form.cleaned_data['buste']
+        epaules = form.cleaned_data['epaules']
+        hanches = form.cleaned_data['hanches']
+        poids = form.cleaned_data['poids']
+        pointure = form.cleaned_data['pointure']
+        cheveux = form.cleaned_data['cheveux']
+        yeux = form.cleaned_data['yeux']
+        permitted = form.cleaned_data['permitted']
 
         if User.objects.filter(email=email).exists():
             messages.error(request, 'Email provided is already in use.')
@@ -39,11 +53,20 @@ def register(request):
                       instagram=instagram, phone=phone, addresse=addresse, city=city, country=country, zipcode=zipcode,
                       cin=cin, sexe=sexe)
 
+        history = History(q1=q1, q2=q2, q3=q3, q4=q4)
+
+        mensuratoin = Mensuration(
+            taille=taille, taillenombrill=taillenombrill, buste=buste, epaules=epaules, hanches=hanches, poids=poids, pointure=pointure, cheveux=cheveux, yeux=yeux, permitted=permitted)
+
         model.user_id = user.id
+        history.user_id = user.id
+        mensuratoin.user_id = user.id
 
         model.save()
+        history.save()
+        mensuratoin.save()
 
-        return render(request, 'accounts/register.html')
+        return render(request, 'pages/index.html')
 
     else:
         context = {

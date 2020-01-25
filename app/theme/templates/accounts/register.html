@@ -30,79 +30,79 @@
   <form action="{% url 'register' %}" method="post" class="mt-6">
     {% csrf_token %}
     {{ form.non_field_errors }}
-    <div class="hidden">
-      <h3 class="uppercase text-2xl font-normal mt-12 tracking-wide ml-2">Contact</h3>
+    <div class="block px-4">
+      <h3 class="uppercase text-2xl font-normal mt-12 tracking-wide">Contact</h3>
       {% include "partials/_alerts.html" %}
-      <div class="px-2 sm:flex">
+      <div class="mt-4 sm:flex">
         <div class="sm:flex-1">
-          <div class="fieldWrapper">
+          <div class="mt-2">
             <label class="block text-gray-800 font-semibold" for="{{ form.first_name.id_for_label }}">Prénom:</label>
             {{ form.first_name }}
             {% include "partials/_form_errors.html" with key=form.first_name %}
           </div>
-          <div class="fieldWrapper">
+          <div class="mt-2">
             <label class="block text-gray-800 font-semibold" for="{{ form.last_name.id_for_label }}">Nom</label>
             {{ form.last_name }}
             {% include "partials/_form_errors.html" with key=form.last_name %}
           </div>
-          <div class="fieldWrapper">
+          <div class="mt-2">
             <label class="block text-gray-800 font-semibold" for="{{ form.email.id_for_label }}">Email:</label>
             {{ form.email }}
             {% include "partials/_form_errors.html" with key=form.email %}
           </div>
-          <div class="fieldWrapper">
+          <div class="mt-2">
             <label class="block text-gray-800 font-semibold" for="{{ form.password.id_for_label }}">Password</label>
             {{ form.password }}
             {% include "partials/_form_errors.html" with key=form.password %}
           </div>
-          <div class="fieldWrapper">
+          <div class="mt-2">
             <label class="block text-gray-800 font-semibold" for="{{ form.birth_date.id_for_label }}">Date De Niassance</label>
             {{ form.birth_date }}
             {% include "partials/_form_errors.html" with key=form.birth_date %}
           </div>
-          <div class="fieldWrapper">
+          <div class="mt-2">
             <label class="block text-gray-800 font-semibold" for="{{ form.city.id_for_label }}">Ville</label>
             {{ form.city }}
             {% include "partials/_form_errors.html" with key=form.city %}
           </div>
-          <div class="fieldWrapper">
+          <div class="mt-2">
             <label class="block text-gray-800 font-semibold" for="{{ form.country.id_for_label }}">Pays</label>
             {{ form.country }}
             {% include "partials/_form_errors.html" with key=form.country %}
           </div>
         </div>
-        <div class="sm:flex-1 sm:ml-4">
-          <div class="fieldWrapper">
+        <div class="sm:flex-1 sm:ml-12">
+          <div class="mt-2">
             <label class="block text-gray-800 font-semibold" for="{{ form.facebook.id_for_label }}">Facebook:</label>
             {{ form.facebook }}
             {% include "partials/_form_errors.html" with key=form.facebook %}
           </div>
-          <div class="fieldWrapper">
+          <div class="mt-2">
             <label class="block text-gray-800 font-semibold" for="{{ form.instagram.id_for_label }}">Instagram</label>
             {{ form.instagram }}
             {% include "partials/_form_errors.html" with key=form.instagram %}
           </div>
-          <div class="fieldWrapper">
+          <div class="mt-2">
             <label class="block text-gray-800 font-semibold" for="{{ form.phone.id_for_label }}">Phone:</label>
             {{ form.phone }}
             {% include "partials/_form_errors.html" with key=form.phone %}
           </div>
-          <div class="fieldWrapper">
+          <div class="mt-2">
             <label class="block text-gray-800 font-semibold" for="{{ form.sexe.id_for_label }}">Sexe</label>
             {{ form.sexe }}
             {% include "partials/_form_errors.html" with key=form.sexe %}
           </div>
-          <div class="fieldWrapper">
+          <div class="mt-2">
             <label class="block text-gray-800 font-semibold" for="{{ form.cin.id_for_label }}">CNI or Numéro de Passport</label>
             {{ form.cin }}
             {% include "partials/_form_errors.html" with key=form.cin %}
           </div>
-          <div class="fieldWrapper">
+          <div class="mt-2">
             <label class="block text-gray-800 font-semibold" for="{{ form.addresse.id_for_label }}">Adresse</label>
             {{ form.addresse }}
             {% include "partials/_form_errors.html" with key=form.addresse %}
           </div>
-          <div class="fieldWrapper">
+          <div class="mt-2">
             <label class="block text-gray-800 font-semibold" for="{{ form.zipcode.id_for_label }}">Zipcode</label>
             {{ form.zipcode }}
             {% include "partials/_form_errors.html" with key=form.zipcode %}
@@ -110,46 +110,119 @@
         </div>
       </div>
     </div>
-    <div class="">
+    <div class="block px-4">
       <h3 class="mt-12 uppercase text-2xl font-normal tracking-wide">Racontez nous</h3>
-        <div class="mt-6 md:flex md:flex-wrap">
-          <div class="fieldWrapper md:w-1/2">
+        <div class="mt-4 md:pl-0 md:flex md:flex-wrap">
+          <div class="mt-2 md:w-1/2">
             <label class="block text-gray-800 font-semibold" for="{{ form.q1.id_for_label }}">Qui étés vous?:</label>
             {{ form.q1 }}
             {% include "partials/_form_errors.html" with key=form.q1 %}
           </div>
-          <div class="fieldWrapper md:w-1/2">
+          <div class="mt-2 md:w-1/2">
             <label class="block text-gray-800 font-semibold" for="{{ form.q2.id_for_label }}">Que connaissez-vous à propos de la MODE?:</label>
             {{ form.q2 }}
             {% include "partials/_form_errors.html" with key=form.q2 %}
           </div>
-          <div class="fieldWrapper md:w-1/2">
+          <div class="mt-2 md:w-1/2">
             <label class="block text-gray-800 font-semibold" for="{{ form.q3.id_for_label }}">Pourquoi devons-nous approuver votre inscription?:</label>
             {{ form.q3 }}
             {% include "partials/_form_errors.html" with key=form.q3 %}
           </div>
         </div>
-        <p class="mt-2">
-          Un NOC MODEL doit être considéré comme idole dans le monde de la MODE.
-        </p>
-        <p>
-          Vous devriez avoir le potentiel de renforcer votre talent, la
-          détermination pour travailler dur pour vos rêves et un bagage lourd de
-          valeurs et d’éthiques pour allumer votre parcours.
-        </p>
-        <p>Un NOC MODEL est seulement officiel si :</p>
-        <ul>
-          <li>Elle/il a suivi une formation de 3 mois fournie par l'agence</li>
-          <li>Elle/il obtient un certificat signé par No One’sCompany.</li>
-          <li>Elle/Il est à la UNE sur la page NOCMODELS dans www.nocmodels.com`</li>
-        </ul>
-        <div class="fieldWrapper">
-          <label class="block text-gray-800 font-semibold" for="{{ form.q4.id_for_label }}">Voulez-vous devenir un(e) NOC MODEL?:</label>
-          {{ form.q4 }}
-          {% include "partials/_form_errors.html" with key=form.q4 %}
+        <div class="mt-4 text-xs sm:text-sm">
+          <p>
+            Un NOC MODEL doit être considéré comme idole dans le monde de la MODE.
+          </p>
+          <p class="mt-2">
+            Vous devriez avoir le potentiel de renforcer votre talent, la
+            détermination pour travailler dur pour vos rêves et un bagage lourd de
+            valeurs et d’éthiques pour allumer votre parcours.
+          </p>
+          <p class="my-2">Un NOC MODEL est seulement officiel si :</pclass="mt-2">
+          <ul class="ml-2 pl-4">
+            <li><span class="inline-block w-2 h-2 rounded-full border-2 border-red-400 mr-2"></span> Elle/il a suivi une formation de 3 mois fournie par l'agence</li>
+            <li><span class="inline-block w-2 h-2 rounded-full border-2 border-red-400 mr-2"></span> Elle/il obtient un certificat signé par No One’sCompany.</li>
+            <li><span class="inline-block w-2 h-2 rounded-full border-2 border-red-400 mr-2"></span> Elle/Il est à la UNE sur la page NOCMODELS dans www.nocmodels.com`</li>
+          </ul>
+          <div class="mt-2 mt-4">
+            <label class="block text-gray-800 font-semibold mb-2" for="{{ form.q4.id_for_label }}">Voulez-vous devenir un(e) NOC MODEL?:</label>
+            {% for radio in form.q4  %}
+              <div class="block mb-2">
+                {{ radio }}
+              </div>
+            {% endfor %}
+            {% include "partials/_form_errors.html" with key=form.q4 %}
+          </div>
         </div>
     </div>
-    <div class="text-right mt-4 mx-2">
+    <div class="block px-4">
+      <h3 class="uppercase text-2xl font-normal mt-12 tracking-wide">Mensurations</h3>
+      <p class="mt-2 text-base text-center">C'est l'une des parties les plus importantes de votre inscription.
+      Veuillez comprendre que n'importe quelle information fausse pourrait
+      bannir votre profil de www.nocmodels.com. Veuillez s'assurer que vous
+      portez un maillot de bain, et qu'une autre personne prend vos mesures à
+      l'aide du mètre à ruban.</p>
+      <div class="mt-4 sm:flex">
+        <div class="sm:flex-1">
+          <div class="mt-2">
+            <label class="block text-gray-800 font-semibold" for="{{ form.taille.id_for_label }}">Taille:</label>
+            {{ form.taille }}
+            {% include "partials/_form_errors.html" with key=form.taille %}
+          </div>
+          <div class="mt-2">
+            <label class="block text-gray-800 font-semibold" for="{{ form.buste.id_for_label }}">Buste</label>
+            {{ form.buste }}
+            {% include "partials/_form_errors.html" with key=form.buste %}
+          </div>
+          <div class="mt-2">
+            <label class="block text-gray-800 font-semibold" for="{{ form.poids.id_for_label }}">Poids:</label>
+            {{ form.poids }}
+            {% include "partials/_form_errors.html" with key=form.poids %}
+          </div>
+          <div class="mt-2">
+            <label class="block text-gray-800 font-semibold" for="{{ form.epaules.id_for_label }}">Epaules</label>
+            {{ form.epaules }}
+            {% include "partials/_form_errors.html" with key=form.epaules %}
+          </div>
+          <div class="mt-2">
+            <label class="block text-gray-800 font-semibold" for="{{ form.cheveux.id_for_label }}">Couleurs de Cheveux</label>
+            {{ form.cheveux }}
+            {% include "partials/_form_errors.html" with key=form.cheveux %}
+          </div>
+        </div>
+        <div class="sm:flex-1 sm:ml-12">
+          <div class="mt-2">
+            <label class="block text-gray-800 font-semibold" for="{{ form.taillenombrill.id_for_label }}">Taille (Nombrill) en cm:</label>
+            {{ form.taillenombrill }}
+            {% include "partials/_form_errors.html" with key=form.taillenombrill %}
+          </div>
+          <div class="mt-2">
+            <label class="block text-gray-800 font-semibold" for="{{ form.instagram.id_for_label }}">Hanches</label>
+            {{ form.hanches }}
+            {% include "partials/_form_errors.html" with key=form.hanches %}
+          </div>
+          <div class="mt-2">
+            <label class="block text-gray-800 font-semibold" for="{{ form.pointure.id_for_label }}">Pointure:</label>
+            {{ form.pointure }}
+            {% include "partials/_form_errors.html" with key=form.pointure %}
+          </div>
+          <div class="mt-2">
+            <label class="block text-gray-800 font-semibold" for="{{ form.yeux.id_for_label }}">Couleur des Yeux</label>
+            {{ form.yeux }}
+            {% include "partials/_form_errors.html" with key=form.yeux %}
+          </div>
+        </div>
+      </div>
+      <div class="mt-6">
+        <label class="block text-gray-800 font-bold mb-2" for="{{ form.permitted.id_for_label }}">Veuillez notre que non toute information que vous avez écrite sur l'application sera vue sur www.nocmodels.com:</label>
+        {{ form.permitted }} <span class="text-xs ml-2">
+          <!-- TODO(sora): check this for spelling -->
+          Moi, le candidat confirme que je soumets mes propres photos et informations. Je prends lal'entiére responsabilité de mon inscription
+        </span>
+        {% include "partials/_form_errors.html" with key=form.permitted %}
+      </div>
+    </div>
+    <div class="text-right mt-6 mx-2">
       <button type="submit" class="w-full text-center bg-black hover:bg-gray-700 text-white px-6 py-1 uppercase tracking-wide rounded sm:w-auto">Register</button>
     </div>
   </form>
