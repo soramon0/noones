@@ -12,14 +12,14 @@
     <div class="flex-auto">
       <!-- Nav Bar -->
       {% include 'partials/_navbar.html' %}
-      
+
       <!-- Main Content -->
       {% block content %} {% endblock %}
-   </div>
+    </div>
 
     <!-- Footer -->
     {% include 'partials/_footer.html' %}
 
-    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/main.bundle.js' %}"></script>
   </body>
 </html>

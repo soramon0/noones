@@ -1,8 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% load static %}
 
 <!-- Profile -->
 {% block content %}
 
-<h1>{{user.email}}</h1>
+<div id="svelte-app"></div>
+
+<script src="{% static 'js/svelte.bundle.js' %}"></script>
 
 {% endblock %}
