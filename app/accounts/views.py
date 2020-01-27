@@ -1,9 +1,38 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from core.models import User
-from django.contrib import messages
+from django.contrib import messages, auth
 
 from models.models import Model, Mensuration, History
-from .forms import RegisterForm
+from .forms import RegisterForm, SigninForm
+
+
+def profile(request):
+    if not request.user.is_authenticated:
+        return render(request, 'accounts/signin.html', {'form': SigninForm()})
+    return render(request, 'accounts/profile.html')
+
+
+def signin(request):
+    if request.method == 'POST':
+        form = SigninForm(request.POST)
+
+        if not form.is_valid():
+            return render(request, 'accounts/signin.html', {'form': form})
+
+        email = form.cleaned_data['email']
+        password = form.cleaned_data['password']
+
+        user = auth.authenticate(email=email, password=password)
+
+        if user is None:
+            messages.error(request, 'Bad login! Please try again ')
+            return render(request, 'accounts/signin.html', {'form': form})
+
+        auth.login(request, user)
+
+        return redirect('profile')
+
+    return render(request, 'accounts/signin.html', {'form': SigninForm()})
 
 
 def register(request):
@@ -66,10 +95,6 @@ def register(request):
         history.save()
         mensuratoin.save()
 
-        return render(request, 'pages/index.html')
+        return redirect('signin')
 
-    else:
-        context = {
-            'form': RegisterForm()
-        }
-        return render(request, 'accounts/register.html', context)
+    return render(request, 'accounts/register.html', {'form': RegisterForm()})

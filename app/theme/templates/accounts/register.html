@@ -27,7 +27,7 @@
     </div>
   </div>
 
-  <form action="{% url 'register' %}" method="post" class="mt-6">
+  <form class="mt-6" action="{% url 'register' %}" method="post">
     {% csrf_token %}
     {{ form.non_field_errors }}
     <div class="block px-4">

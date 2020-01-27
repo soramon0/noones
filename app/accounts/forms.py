@@ -1,12 +1,20 @@
 from django import forms
 
+INPUT_CLASS = {'class': 'form-input'}
+TEXTAREA_CLASS = {'class': 'form-textarea'}
+SELECT_CLASS = {'class': 'form-select'}
+RADIO_CLASS = {'class': 'form-radio'}
+CHECKBOX_CLASS = {'class': 'form-checkbox'}
+
+
+class SigninForm(forms.Form):
+    email = forms.EmailField(
+        max_length=255, widget=forms.EmailInput(attrs=INPUT_CLASS))
+    password = forms.CharField(
+        min_length=6, max_length=100, widget=forms.PasswordInput(attrs=INPUT_CLASS))
+
 
 class RegisterForm(forms.Form):
-    INPUT_CLASS = {'class': 'form-input'}
-    TEXTAREA_CLASS = {'class': 'form-textarea'}
-    SELECT_CLASS = {'class': 'form-select'}
-    RADIO_CLASS = {'class': 'form-radio'}
-    CHECKBOX_CLASS = {'class': 'form-checkbox'}
     email = forms.EmailField(
         max_length=255, widget=forms.EmailInput(attrs=INPUT_CLASS))
     password = forms.CharField(

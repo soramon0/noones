@@ -19,76 +19,49 @@
     </button>
   </div>
   <nav class="lg:flex hidden uppercase">
-    <a
-      class="mr-1 text-gray-800 font-semibold px-2 border-r border-gray-600"
-      href="/a-propos"
-      >A propos</a
-    >
-    <a
-      class="mr-1 text-gray-800 font-semibold px-2 border-r border-gray-600"
-      href="/vision-et-mission"
-      >Vision &amp; mission</a
-    >
-    <a
-      class="mr-1 text-gray-800 font-semibold px-2 border-r border-gray-600"
-      href="{% url 'models' %}"
-      >Nos models</a
-    >
-    <a
-      class="mr-1 text-gray-800 font-semibold px-2 border-r border-gray-600"
-      href="{% url 'register' %}"
-      >Devenir notre model</a
-    >
-    <a
-      class="mr-1 text-gray-800 font-semibold px-2 border-r border-gray-600"
-      href="/signin"
-      >Sign In</a
-    >
-    <a class="mr-1 text-gray-800 font-semibold px-2" href="/contact">Contact</a>
+    {% if user.is_authenticated %}
+      <a class="mr-1 text-gray-800 font-semibold px-2 border-r border-gray-600" href="{% url 'models' %}">Nos models</a>
+      <a class="mr-1 text-gray-800 font-semibold px-2 border-r border-gray-600" href="/contact">Contact</a>
+      <a class="mr-1 text-gray-800 font-semibold px-2 border-r border-gray-600" href="{% url 'profile' %}">Profile</a>
+      <a class="mr-1 text-gray-800 font-semibold px-2" href="{% url 'profile' %}">Sign out</a>
+    {% else %}
+      <a class="mr-1 text-gray-800 font-semibold px-2 border-r border-gray-600" href="/a-propos">A propos</a>
+      <a class="mr-1 text-gray-800 font-semibold px-2 border-r border-gray-600"href="/vision-et-mission">Vision &amp; mission</a>
+      <a class="mr-1 text-gray-800 font-semibold px-2 border-r border-gray-600" href="{% url 'models' %}">Nos models</a>
+      <a class="mr-1 text-gray-800 font-semibold px-2 border-r border-gray-600" href="{% url 'register' %}">Devenir notre model</a>
+      <a class="mr-1 text-gray-800 font-semibold px-2 border-r border-gray-600" href="{% url 'signin' %}">Sign In</a>
+      <a class="mr-1 text-gray-800 font-semibold px-2" href="/contact">Contact</a>
+    {% endif %}
   </nav>
   <nav
     class="w-1/2 md:w-4/12 bg-gray-800 lg:hidden fixed inset-y-0 right-0"
     id="sidedrawer"
   >
-    <button
-      class="absolute top-0 right-0 px-4 py-2 cursor-pointer bg-gray-500 rounded-full mr-2 mt-2 hover:text-white hover:bg-gray-900"
+    <button class="absolute top-0 right-0 px-4 py-2 cursor-pointer bg-gray-500 rounded-full mr-2 mt-2 hover:text-white hover:bg-gray-900"
       id="sidedrawer-close"
     >
       <span class="uppercase text-base">x</span>
     </button>
-    <div class="pt-6">
-      <a
-        class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900"
-        href="/a-propos"
-        >A propos</a
-      >
-      <a
-        class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900"
-        href="/vision-et-mission"
-        >Vision &amp; mission</a
-      >
-      <a
-        class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900"
-        href="{% url 'models' %}"
-        >Nos models</a
-      >
-    </div>
-    <div class="mt-2 border-t border-gray-600">
-      <a
-        class="text-gray-400 block my-2 px-4 py-1 hover:bg-gray-900"
-        href="{% url 'register' %}"
-        >Devenir notre model</a
-      >
-      <a
-        class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900"
-        href="/signin"
-        >Sign In</a
-      >
-      <a
-        class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900"
-        href="/contact"
-        >Contact</a
-      >
-    </div>
+    {% if user.is_authenticated %}
+      <div class="pt-6">
+        <a class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900" href="{% url 'models' %}">Nos models</a>
+        <a class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900" href="/contact">Contact</a>
+      </div>
+      <div class="mt-2 pt-2 border-t border-gray-600">
+        <a class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900" href="{% url 'profile' %}">Profile</a>
+        <a class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900" href="/contact">Sign out</a>
+      </div>
+    {% else %}
+      <div class="pt-6">
+        <a class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900" href="/a-propos">A propos</a>
+        <a class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900" href="/vision-et-mission">Vision &amp; mission</a>
+        <a class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900" href="{% url 'models' %}">Nos models</a>
+      </div>
+      <div class="mt-2 border-t border-gray-600">
+        <a class="text-gray-400 block my-2 px-4 py-1 hover:bg-gray-900" href="{% url 'register' %}">Devenir notre model</a>
+        <a class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900" href="{% url 'signin' %}">Sign In</a>
+        <a class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900" href="/contact">Contact</a>
+      </div>
+    {% endif %}
   </nav>
 </header>
