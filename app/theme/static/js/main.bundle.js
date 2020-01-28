@@ -94,7 +94,11 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _navbar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./navbar */ \"./src/main/navbar.js\");\n/* harmony import */ var _navbar__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_navbar__WEBPACK_IMPORTED_MODULE_0__);\n\r\n\n\n//# sourceURL=webpack:///./src/main/index.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _navbar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./navbar */ "./src/main/navbar.js");
+/* harmony import */ var _navbar__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_navbar__WEBPACK_IMPORTED_MODULE_0__);
+
+
 
 /***/ }),
 
@@ -105,8 +109,20 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _nav
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("const hamburger = document.getElementById(\"hamburger\");\r\nconst sidenav = document.getElementById(\"sidedrawer\");\r\nconst sidenavClose = document.getElementById(\"sidedrawer-close\");\r\n\r\nhamburger.addEventListener(\"click\", function() {\r\n  sidenav.classList.add(\"open\");\r\n});\r\n\r\nsidenavClose.addEventListener(\"click\", function() {\r\n  sidenav.classList.remove(\"open\");\r\n});\r\n\n\n//# sourceURL=webpack:///./src/main/navbar.js?");
+const hamburger = document.getElementById("hamburger");
+const sidenav = document.getElementById("sidedrawer");
+const sidenavClose = document.getElementById("sidedrawer-close");
+
+hamburger.addEventListener("click", function() {
+  sidenav.classList.add("open");
+});
+
+sidenavClose.addEventListener("click", function() {
+  sidenav.classList.remove("open");
+});
+
 
 /***/ })
 
 /******/ });
+//# sourceMappingURL=main.bundle.js.map

@@ -1,4 +1,8 @@
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
+
+const mode = process.env.NODE_ENV || "development";
+const prod = mode === "production";
 
 module.exports = {
   entry: {
@@ -21,8 +25,25 @@ module.exports = {
       {
         test: /\.(html|svelte)$/,
         exclude: /node_modules/,
-        use: "svelte-loader"
+        use: {
+          loader: "svelte-loader",
+          options: {
+            emitCss: true,
+            hotReload: true
+          }
+        }
+      },
+      {
+        test: /\.css$/,
+        use: [prod ? MiniCssExtractPlugin.loader : "style-loader", "css-loader"]
       }
     ]
-  }
+  },
+  mode,
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: "[name].css"
+    })
+  ],
+  devtool: prod ? false : "source-map"
 };
