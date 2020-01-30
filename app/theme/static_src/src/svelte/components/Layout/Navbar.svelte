@@ -1,5 +1,8 @@
 <script>
   import { fly } from "svelte/transition";
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
 
   let navItems = [
     {
@@ -37,33 +40,26 @@
   let isOpen = false;
 
   const toggle = () => (isOpen = !isOpen);
+
+  const chooseTab = key => {
+    dispatch("changeTab", key);
+    toggle();
+  };
 </script>
 
-<div class="p-4 flex items-center relative">
-  <button on:click={toggle}>
-    <svg class="fill-current text-gray-600 h-6 w-6" viewBox="0 0 20 20">
-      <path
-        d="M1.683,3.39h16.676C18.713,3.39,19,3.103,19,2.749s-0.287-0.642-0.642-0.642H1.683
-        c-0.354,0-0.641,0.287-0.641,0.642S1.328,3.39,1.683,3.39z
-        M1.683,7.879h11.545c0.354,0,0.642-0.287,0.642-0.641
-        s-0.287-0.642-0.642-0.642H1.683c-0.354,0-0.641,0.287-0.641,0.642S1.328,7.879,1.683,7.879z
-        M18.358,11.087H1.683
-        c-0.354,0-0.641,0.286-0.641,0.641s0.287,0.642,0.641,0.642h16.676c0.354,0,0.642-0.287,0.642-0.642S18.713,11.087,18.358,11.087z
-        M11.304,15.576H1.683c-0.354,0-0.641,0.287-0.641,0.642s0.287,0.641,0.641,0.641h9.621c0.354,0,0.642-0.286,0.642-0.641
-        S11.657,15.576,11.304,15.576z" />
-    </svg>
-  </button>
-  <div class="px-3 ml-3 border-l border-gray-600 flex">
-    <span class="text-xs text-gray-600">User settings</span>
-    <div class="mx-1 flex items-center">
-      <svg class="h-3 w-3 fill-current text-400" viewBox="0 0 20 20">
-        <path
-          d="M11.611,10.049l-4.76-4.873c-0.303-0.31-0.297-0.804,0.012-1.105c0.309-0.304,0.803-0.293,1.105,0.012l5.306,5.433c0.304,0.31,0.296,0.805-0.012,1.105L7.83,15.928c-0.152,0.148-0.35,0.223-0.547,0.223c-0.203,0-0.406-0.08-0.559-0.236c-0.303-0.309-0.295-0.803,0.012-1.104L11.611,10.049z" />
-      </svg>
-    </div>
-    <span class="text-xs text-gray-800">Edit Profile</span>
-  </div>
-</div>
+<button class="mt-4 mx-4" on:click={toggle}>
+  <svg class="fill-current text-gray-600 h-6 w-6" viewBox="0 0 20 20">
+    <path
+      d="M1.683,3.39h16.676C18.713,3.39,19,3.103,19,2.749s-0.287-0.642-0.642-0.642H1.683
+      c-0.354,0-0.641,0.287-0.641,0.642S1.328,3.39,1.683,3.39z
+      M1.683,7.879h11.545c0.354,0,0.642-0.287,0.642-0.641
+      s-0.287-0.642-0.642-0.642H1.683c-0.354,0-0.641,0.287-0.641,0.642S1.328,7.879,1.683,7.879z
+      M18.358,11.087H1.683
+      c-0.354,0-0.641,0.286-0.641,0.641s0.287,0.642,0.641,0.642h16.676c0.354,0,0.642-0.287,0.642-0.642S18.713,11.087,18.358,11.087z
+      M11.304,15.576H1.683c-0.354,0-0.641,0.287-0.641,0.642s0.287,0.641,0.641,0.641h9.621c0.354,0,0.642-0.286,0.642-0.641
+      S11.657,15.576,11.304,15.576z" />
+  </svg>
+</button>
 
 <!-- Backdrop -->
 <div
@@ -93,9 +89,11 @@
         Profile
       </span>
     </div>
-    {#each navItems as item}
+    {#each navItems as item, i}
       <div class="text-gray-700 hover:text-white hover:bg-gray-400">
-        <button class="p-4 w-full flex focus:bg-gray-300 focus:outline-none">
+        <button
+          class="p-4 w-full flex focus:bg-gray-300 focus:outline-none"
+          on:click={chooseTab.bind(this, i)}>
           {@html item.svg}
           <span class="ml-2 font-medium">{item.text}</span>
         </button>
