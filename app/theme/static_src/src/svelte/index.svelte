@@ -1,5 +1,5 @@
 <script>
-  let name = "world";
+  import Navbar from "./components/Navbar";
 </script>
 
-<h1>Hello {name}!</h1>
+<Navbar />
