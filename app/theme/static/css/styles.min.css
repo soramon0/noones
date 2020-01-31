@@ -909,6 +909,25 @@ video {
   max-width: 32rem;
 }
 
+.disc-list-item {
+  display: -webkit-box;
+  display: flex;
+  font-size: 0.875rem;
+}
+
+.list-disc {
+  margin-top: 0.5rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  border-width: 2px;
+  border-color: #fc8181;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+  -webkit-box-flex: 0;
+          flex-grow: 0;
+}
+
 /* Sidenav */
 
 #sidedrawer {

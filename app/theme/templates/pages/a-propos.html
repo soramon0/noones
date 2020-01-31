@@ -1,0 +1,61 @@
+{% extends 'base.html' %} {% load static %}
+
+<!-- A-Propos -->
+{% block content %}
+
+<!-- Header -->
+{% include 'partials/_header.html' with title="à propo" %}
+
+<div class="px-4 md:flex md:mx-8">
+  <div class="mt-6 md:w-1/2 lg:w-5/12">
+    <img
+      class="w-full h-auto object-cover md:w-auto"
+      src="{% static 'images/agency-no-ones-company.jpg' %}"
+      alt="workspace"
+    />
+  </div>
+
+  <div class="mt-6 md:w-1/2 md:ml-4 lg:w-8/12 lg:ml-6">
+    <p class="text-gray-600 text-sm sm:text-base">
+      <strong>L’écoute, l’exécution</strong> et <em>le développement</em>
+      sont les trois piliers puissants de No One’s Company. Une agence de
+      communication et marketing certes, mais nous offrons beaucoup plus que
+      cela.
+    </p>
+    <p class="mt-4 text-gray-600 text-sm sm:text-base">
+      Nous accueillons toutes les idées possibles,
+      <strong>avec ou sans budget</strong> !
+    </p>
+    <p class="mt-4 text-gray-600 text-sm sm:text-base">
+      Nous vous orientons à l’aide du meilleur encadrement possible et nous vous
+      aidons à créer vos premiers pas correctement. No One’s Company prend sous
+      ses ailes toute personne ambitieuse qui veux réaliser des projets utiles
+      et les suit dans les démarches administratives et sociales.
+    </p>
+    <p class="mt-4 text-gray-600 text-sm sm:text-base">
+      No One’s Company a des équipes constitués de membres différents, elle est
+      l’agence qui a réussi à marier le côté artistique et technique pour
+      toujours atteindre des résultats distingués.
+    </p>
+    <p class="mt-4 text-gray-600 text-sm sm:text-base">
+      Il est très important pour No One’s Company que ses clients sentent que
+      l’agence est leurs deuxième maison, parce que nous valorisons l’humain
+      avant son chèque bancaire. Nous encourageons les visions innovantes, et
+      nous tenons à faire notre possible pour qu’elles se réalisent.
+    </p>
+    <p class="mt-4 text-gray-600 text-sm sm:text-base">
+      Ceci dit, nous travaillons avec un système digital très développé sous le
+      nom de l’application N.O.C. Cette dernière a énormément de fonctions dont
+      la facilité de la communication entre l’agence et ses clients, la
+      transparence à propos des taches à faire et la précision des deadlines.
+    </p>
+    <p class="mt-4 text-gray-600 text-sm sm:text-base">
+      <strong>Le sérieux</strong> et <strong>la détermination</strong>
+      nous servent comme essence afin de bien nourrir le moteur de notre
+      endurance. No One’s Company n’est pas seulement une révolution dans le
+      monde digital, mais aussi dans le monde réel.
+    </p>
+  </div>
+</div>
+
+{% endblock %}

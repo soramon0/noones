@@ -35,6 +35,13 @@ def signin(request):
     return render(request, 'accounts/signin.html', {'form': SigninForm()})
 
 
+def signout(request):
+    if request.user.is_authenticated:
+        auth.logout(request)
+        return redirect('index')
+    return redirect('index')
+
+
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)

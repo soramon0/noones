@@ -43,3 +43,11 @@ def contact(request):
     }
 
     return render(request, 'pages/contact.html', context)
+
+
+def apropos(request):
+    return render(request, 'pages/a-propos.html')
+
+
+def vision(request):
+    return render(request, 'pages/vision.html')
