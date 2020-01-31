@@ -28,7 +28,7 @@
     >
     <a
       class="mr-1 text-gray-800 font-semibold px-2 border-r border-gray-600"
-      href="/contact"
+      href="{% url 'contact' %}"
       >Contact</a
     >
     <a
@@ -65,7 +65,7 @@
       href="{% url 'signin' %}"
       >Sign In</a
     >
-    <a class="mr-1 text-gray-800 font-semibold px-2" href="/contact">Contact</a>
+    <a class="mr-1 text-gray-800 font-semibold px-2" href="{% url 'contact' %}">Contact</a>
     {% endif %}
   </nav>
   <nav
@@ -87,7 +87,7 @@
       >
       <a
         class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900"
-        href="/contact"
+        href="{% url 'contact' %}"
         >Contact</a
       >
     </div>
@@ -99,7 +99,7 @@
       >
       <a
         class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900"
-        href="/contact"
+        href="{% url 'profile' %}"
         >Sign out</a
       >
     </div>
@@ -134,7 +134,7 @@
       >
       <a
         class="text-gray-400 block mb-2 px-4 py-1 hover:bg-gray-900"
-        href="/contact"
+        href="{% url 'contact' %}"
         >Contact</a
       >
     </div>

@@ -36,3 +36,14 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
     USERNAME_FIELD = "email"
+
+
+class Image(models.Model):
+    image = models.ImageField(upload_to='photos/site/%Y/%m/%d')
+    title = models.CharField(max_length=100)
+    inUse = models.BooleanField(default=False)
+
+
+class Header(models.Model):
+    image = models.ImageField(upload_to='photos/site/%Y/%m/%d')
+    inUse = models.BooleanField(default=False)
