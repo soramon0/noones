@@ -23,4 +23,23 @@
   transform: translateX(0);
 }
 
+.carousel-button {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.carousel-track {
+  transition: transform 250ms ease-in;
+}
+
+.carousel-title {
+  top: 2%;
+  left: 20%;
+}
+
+.signup-text-container {
+  left: 45%;
+  top: 20%;
+}
+
 @tailwind utilities;

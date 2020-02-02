@@ -2,7 +2,8 @@ module.exports = {
   theme: {
     extend: {
       spacing: {
-        "95": "95%"
+        "95": "95%",
+        "500": "500px"
       }
     },
     customForms: theme => ({

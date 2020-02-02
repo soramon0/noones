@@ -1,20 +1,26 @@
 from django.shortcuts import render
 from django.contrib import messages
 
-from core.models import Header
-from .forms import ContactForm
+from core.models import Header, Carousel
+from models.models import Model
+from .forms import ContactForm, SearchForm
 
 
 def index(request):
-    return render(request, 'pages/index.html')
+    carousel = Carousel.objects.filter(inUse=True)
+    models = Model.objects.all()
+    context = {
+        'carousel': carousel,
+        'models': models,
+        'form': SearchForm()
+    }
+    return render(request, 'pages/index.html', context)
 
 
 def contact(request):
     # Get the header that's in use
     # And only one
-    header = Header.objects.filter(inUse=True)
-    if len(header):
-        header = header[0]
+    header = Header.objects.filter(inUse=True)[0]
 
     if request.method == 'POST':
         form = ContactForm(request.POST)

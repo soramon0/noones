@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import User, Image, Header
+from .models import User, Carousel, Header
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -9,7 +9,7 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = ('email', 'is_active')
 
 
-class ImageAdmin(admin.ModelAdmin):
+class CarouselAdmin(admin.ModelAdmin):
     list_display = ('id', 'inUse', 'image')
     list_editable = ('inUse',)
     list_per_page = 25
@@ -22,5 +22,5 @@ class HeaderAdmin(admin.ModelAdmin):
 
 
 admin.site.register(User, UserAdmin)
-admin.site.register(Image, ImageAdmin)
+admin.site.register(Carousel, CarouselAdmin)
 admin.site.register(Header, HeaderAdmin)
