@@ -33,7 +33,7 @@ SECRET_KEY = 'uh-4vnm$%b*$t6fe8829gm8&(!g=cx8#otb3v9#cej^j-%hj&^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.104', 'localhost']
+ALLOWED_HOSTS = ['192.168.1.104', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -91,8 +91,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'noonesdev',
-        'USER': 'root',
-        'PASSWORD': 'root',
+        'USER': 'soramon',
+        'PASSWORD': 'soramon0',
         'HOST': 'localhost',
         'PORT': '3306',
     }
