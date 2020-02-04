@@ -1,7 +1,104 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %} {% load static %} {% block content %}
 
-{% block content %}
+<section class="w-full h-64 relative sm:h-500">
+  <div class="h-full absolute inset-y-0">
+    {% if model.coverPicture %}
+    <img
+      class="w-full h-full object-cover"
+      src="{{model.coverPicture.url}}"
+      alt="background image"
+    />
+    {% else %}
+    <img
+      class="w-full h-full object-cover"
+      src="{% static 'images/cover.jpg' %}"
+      alt="background image"
+    />
+    {% endif %}
+    <div class="absolute top-0 mt-6 ml-6 text-white">
+      <h2 class="text-3xl text-white uppercase">
+        {{model.first_name}} {{model.last_name}}
+      </h2>
+      <span class="block h-px w-10 -mt-1 bg-red-500"></span>
+      <h3 class="mt-2 text-lg text-yellow-400 capitalize">{{model.city}}</h3>
+      <h3 class="text-lg uppercase">{{model.country}}</h3>
+    </div>
+  </div>
+</section>
 
-<h1>model</h1>
+<section class="px-4">
+  <div>
+    <div class="py-6">
+      <h1 class="text-xl uppercase">Présentation</h1>
+      <span class="block h-px w-8 mt-1 bg-red-500"></span>
+    </div>
+    <div class="text-gray-900 sm:w-10/12">
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae
+        magni, placeat, quasi quidem tempore repudiandae vitae minima dolorem
+        aliquam suscipit amet deleniti necessitatibus unde, aspernatur nisi
+        architecto magnam sunt fugit!
+      </p>
+      <p class="mt-4 text-gray-900">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa beatae
+        cumque dolor doloremque rem nulla, fuga iste accusantium veniam atque,
+        odit non ipsum. Tempore temporibus ea iure, ad optio aut?
+      </p>
+    </div>
+  </div>
+  <div class="mt-16 shadow-lg">
+    <div class="text-center">
+      {% if model.sexe == "f" %}
+      <img
+        class="-mt-10 w-20 h-20 inline-block"
+        src="{% static 'icons/woman-avatar.png' %}"
+        alt="gender {{model.sexe}}"
+      />
+      {% else %}
+      <img
+        class="-mt-10 w-20 h-20 inline-block"
+        src="{% static 'icons/man-avatar.png' %}"
+        alt="gender {{model.sexe}}"
+      />
+      {% endif %}
+    </div>
+    <div class="text-center mt-2">
+      <h3 class="text-lg font-semibold tracking-wide uppercase">
+        {{model.first_name}} {{model.last_name}}
+      </h3>
+    </div>
+    <ul>
+      <li>{{mensures.taille}}</li>
+      <li>{{mensures.taillenombrill}}</li>
+      <li>{{mensures.buste}}</li>
+      <li>{{mensures.epaules}}</li>
+      <li>{{mensures.hanches}}</li>
+      <li>{{mensures.poids}}</li>
+      <li>{{mensures.pointure}}</li>
+      <li>{{mensures.cheveux}}</li>
+      <li>{{mensures.yeux}}</li>
+    </ul>
+  </div>
+</section>
+
+<section class="px-4">
+  <div>
+    <div class="py-6">
+      <h1 class="text-xl uppercase">Gallery</h1>
+      <span class="block h-px w-8 mt-1 bg-red-500"></span>
+    </div>
+    <div class="w-full h-64">
+      {% for photo in photos %}
+      <img
+        class="h-64"
+        src="{{photo.image.url}}"
+        alt="model photo {{forloop.counter}}"
+      />
+      {% empty %}
+      <p>No Photos</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
 
 {% endblock %}

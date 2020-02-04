@@ -26,8 +26,13 @@ class Model(models.Model):
     cin = models.CharField(max_length=100)
     profilePicture = models.ImageField(upload_to='photos/%Y/%m/%d', blank=True)
     coverPicture = models.ImageField(upload_to='photos/%Y/%m/%d', blank=True)
+    is_public = models.BooleanField(default=False)
+    highlight = models.BooleanField(default=False)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.email
 
 
 class Mensuration(models.Model):
@@ -44,6 +49,8 @@ class Mensuration(models.Model):
     permitted = models.BooleanField(default=False)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
+    model = models.ForeignKey(Model,
+                              on_delete=models.CASCADE)
 
 
 class History(models.Model):
@@ -58,9 +65,12 @@ class History(models.Model):
     q4 = models.CharField(max_length=1, choices=Q4_CHOICES)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
+    model = models.ForeignKey(Model,
+                              on_delete=models.CASCADE)
 
 
 class Photo(models.Model):
     image = models.ImageField(upload_to='photos/%Y/%m/%d')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             on_delete=models.CASCADE)
+    inUse = models.BooleanField(default=False)
+    model = models.ForeignKey(Model,
+                              on_delete=models.CASCADE)

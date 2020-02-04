@@ -98,6 +98,9 @@ def register(request):
         history.user_id = user.id
         mensuratoin.user_id = user.id
 
+        history.model = model
+        mensuratoin.model = model
+
         model.save()
         history.save()
         mensuratoin.save()

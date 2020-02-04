@@ -94,10 +94,16 @@
 /***/ (function(module, exports) {
 
 const track = document.querySelector('.carousel-track')
-const slides = Array.from(track.children)
 const prevButton = document.querySelector('.carousel-left')
 const nextButton = document.querySelector('.carousel-right')
 
+// If this file loads on other pages
+// Track will be undefiend
+if (!track) {
+  return
+}
+
+const slides = Array.from(track.children)
 const slideWidth = slides[0].getBoundingClientRect().width
 
 // If we have only one photo in the slide
@@ -171,6 +177,49 @@ nextButton.addEventListener('click', () => {
 
 /***/ }),
 
+/***/ "./src/main/drag.js":
+/*!**************************!*\
+  !*** ./src/main/drag.js ***!
+  \**************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+const slider = document.querySelector('.drag-slider');
+
+if (!slider) return;
+
+let isDown = false;
+let startX;
+let scrollLeft;
+
+slider.addEventListener('mousedown', (e) => {
+  isDown = true;
+  slider.classList.add('drag-active')
+  scrollLeft = slider.scrollLeft
+});
+
+slider.addEventListener('mouseleave', (e) => {
+  isDown = false;
+  slider.classList.remove('drag-active')
+  // Get where the user clicked and subtrack margin to get correct position
+  startX = e.pageX - slider.parentElement.offsetLeft
+});
+
+slider.addEventListener('mouseup', (e) => {
+  isDown = false;
+  slider.classList.remove('drag-active')
+});
+
+slider.addEventListener('mousemove', (e) => {
+  if (!isDown) return;
+  e.preventDefault()
+  const x = e.pageX - slider.offsetLeft
+  const offset = (x - startX) * 3
+  slider.scrollLeft = scrollLeft - offset;
+});
+
+/***/ }),
+
 /***/ "./src/main/index.js":
 /*!***************************!*\
   !*** ./src/main/index.js ***!
@@ -184,6 +233,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _navbar__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_navbar__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _carousel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./carousel */ "./src/main/carousel.js");
 /* harmony import */ var _carousel__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_carousel__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _drag__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./drag */ "./src/main/drag.js");
+/* harmony import */ var _drag__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_drag__WEBPACK_IMPORTED_MODULE_2__);
+
 
 
 

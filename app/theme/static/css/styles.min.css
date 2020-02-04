@@ -967,6 +967,11 @@ video {
   top: 20%;
 }
 
+.drag-slider.drag-active {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

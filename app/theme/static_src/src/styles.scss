@@ -42,4 +42,9 @@
   top: 20%;
 }
 
+.drag-slider.drag-active {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+
 @tailwind utilities;

@@ -1,8 +1,14 @@
 const track = document.querySelector('.carousel-track')
-const slides = Array.from(track.children)
 const prevButton = document.querySelector('.carousel-left')
 const nextButton = document.querySelector('.carousel-right')
 
+// If this file loads on other pages
+// Track will be undefiend
+if (!track) {
+  return
+}
+
+const slides = Array.from(track.children)
 const slideWidth = slides[0].getBoundingClientRect().width
 
 // If we have only one photo in the slide
