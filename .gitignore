@@ -3,7 +3,7 @@ Scripts
 Include
 .vscode
 app/static
-./pyvenv.cfg
+pyenv.cfg
 *.js.map
 
 # Created by https://www.gitignore.io/api/django
