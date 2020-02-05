@@ -20,7 +20,8 @@ def index(request):
 def contact(request):
     # Get the header that's in use
     # And only one
-    header = Header.objects.filter(inUse=True)[0]
+    header = Header.objects.filter(inUse=True)[:1]
+    header = header[0] if len(header) else header
 
     if request.method == 'POST':
         form = ContactForm(request.POST)
