@@ -21,6 +21,8 @@ class MensurationAdmin(admin.ModelAdmin):
 class PhotoAdmin(admin.ModelAdmin):
     list_display = ('id', 'model', 'image')
     list_display_links = ('id',)
+    list_filter = ('model', 'inUse')
+    list_per_page = 32
 
 
 admin.site.register(Model, ModelAdmin)

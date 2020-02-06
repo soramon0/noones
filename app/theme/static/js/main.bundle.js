@@ -235,8 +235,39 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _carousel__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_carousel__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _drag__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./drag */ "./src/main/drag.js");
 /* harmony import */ var _drag__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_drag__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _model_modal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./model-modal */ "./src/main/model-modal.js");
+/* harmony import */ var _model_modal__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_model_modal__WEBPACK_IMPORTED_MODULE_3__);
 
 
+
+
+
+/***/ }),
+
+/***/ "./src/main/model-modal.js":
+/*!*********************************!*\
+  !*** ./src/main/model-modal.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+const contactButton = document.getElementById('model-contact')
+const backdrop = document.getElementById('model-backdrop')
+const modal = document.getElementById('model-modal')
+
+function toggleModal() {
+    if (modal.classList.contains('hidden')) {
+        backdrop.classList.remove('hidden')
+        modal.classList.remove('hidden')
+    } else {
+        backdrop.classList.add('hidden')
+        modal.classList.add('hidden')
+    }
+}
+
+contactButton.addEventListener('click', toggleModal)
+
+backdrop.addEventListener('click', toggleModal)
 
 
 /***/ }),

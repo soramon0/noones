@@ -42,7 +42,7 @@ class RegisterForm(forms.Form):
                           widget=forms.TextInput(attrs=INPUT_CLASS))
     sexe = forms.ChoiceField(choices=(
         ('f', 'Femme'),
-        ('f', 'Homme'),
+        ('h', 'Homme'),
     ), widget=forms.Select(attrs=SELECT_CLASS))
     q1 = forms.CharField(max_length=500, widget=forms.Textarea(
         attrs=TEXTAREA_CLASS))

@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from .models import Model, Mensuration, Photo
 from pages.forms import SearchForm
+from .forms import ModelContactForm
+from django.http import JsonResponse
 
 
 def models(request):
@@ -21,6 +23,7 @@ def model(request, id):
         'model': model,
         'mensures': [],
         'photos': [],
+        'form': ModelContactForm(initial={'model_id': model.id})
     }
 
     try:
@@ -32,3 +35,19 @@ def model(request, id):
         return render(request, 'models/model.html', context)
 
     return render(request, 'models/model.html', context)
+
+
+def contact(request):
+    if request.method == 'POST':
+        form = ModelContactForm(request.POST)
+        print(form.errors)
+        
+        if not form.is_valid():
+            context = {
+                'form': form.data,
+            }
+            return JsonResponse(context)
+
+        return JsonResponse({'context': 'ok'})
+    
+    

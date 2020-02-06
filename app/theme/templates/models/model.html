@@ -1,38 +1,38 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
 
-<section class="w-full h-64 relative sm:h-500">
-  <div class="h-full absolute inset-y-0">
-    {% if model.coverPicture %}
-    <img
-      class="w-full h-full object-cover"
-      src="{{model.coverPicture.url}}"
-      alt="background image"
-    />
-    {% else %}
-    <img
-      class="w-full h-full object-cover"
-      src="{% static 'images/cover.jpg' %}"
-      alt="background image"
-    />
-    {% endif %}
-    <div class="absolute top-0 mt-6 ml-6 text-white">
-      <h2 class="text-3xl text-white uppercase">
-        {{model.first_name}} {{model.last_name}}
-      </h2>
-      <span class="block h-px w-10 -mt-1 bg-red-500"></span>
-      <h3 class="mt-2 text-lg text-yellow-400 capitalize">{{model.city}}</h3>
-      <h3 class="text-lg uppercase">{{model.country}}</h3>
+<section class="w-full w-full h-64 relative sm:h-500">
+    <div class="h-full w-full absolute inset-y-0">
+      {% if model.coverPicture %}
+      <img
+        class="w-full h-full object-cover"
+        src="{{model.coverPicture.url}}"
+        alt="background image"
+      />
+      {% else %}
+      <img
+        class="w-full h-full object-cover"
+        src="{% static 'images/cover.jpg' %}"
+        alt="background image"
+      />
+      {% endif %}
+      <div class="absolute top-0 mt-6 ml-6 text-white">
+        <h2 class="text-3xl text-white uppercase font-bold">
+          {{model.first_name}} {{model.last_name}}
+        </h2>
+        <span class="block h-px w-10 -mt-1 bg-red-500"></span>
+        <h3 class="mt-2 text-lg text-yellow-400 capitalize">{{model.city}}</h3>
+        <h3 class="text-lg uppercase">{{model.country}}</h3>
+      </div>
     </div>
-  </div>
 </section>
 
-<section class="px-4">
-  <div>
+<section class="px-4 md:flex">
+  <div class="md:flex-1">
     <div class="py-6">
       <h1 class="text-xl uppercase">Présentation</h1>
       <span class="block h-px w-8 mt-1 bg-red-500"></span>
     </div>
-    <div class="text-gray-900 sm:w-10/12">
+    <div class="text-gray-900 md:w-10/12">
       <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae
         magni, placeat, quasi quidem tempore repudiandae vitae minima dolorem
@@ -46,56 +46,90 @@
       </p>
     </div>
   </div>
-  <div class="mt-16 shadow-lg">
-    <div class="text-center">
+  <div class="max-w-md mx-auto mt-16 shadow-lg rounded-lg overflow-hidden md:flex-1">
+    <div class="mt-4 text-center">
       {% if model.sexe == "f" %}
       <img
-        class="-mt-10 w-20 h-20 inline-block"
+        class="w-20 h-20 inline-block"
         src="{% static 'icons/woman-avatar.png' %}"
         alt="gender {{model.sexe}}"
       />
       {% else %}
       <img
-        class="-mt-10 w-20 h-20 inline-block"
+        class="w-20 h-20 inline-block"
         src="{% static 'icons/man-avatar.png' %}"
         alt="gender {{model.sexe}}"
       />
       {% endif %}
     </div>
-    <div class="text-center mt-2">
-      <h3 class="text-lg font-semibold tracking-wide uppercase">
+    <div class="mt-2 text-center">
+      <h3 class="text-2xl font-bold tracking-wide uppercase">
         {{model.first_name}} {{model.last_name}}
       </h3>
     </div>
-    <ul>
-      <li>{{mensures.taille}}</li>
-      <li>{{mensures.taillenombrill}}</li>
-      <li>{{mensures.buste}}</li>
-      <li>{{mensures.epaules}}</li>
-      <li>{{mensures.hanches}}</li>
-      <li>{{mensures.poids}}</li>
-      <li>{{mensures.pointure}}</li>
-      <li>{{mensures.cheveux}}</li>
-      <li>{{mensures.yeux}}</li>
+    <ul class="text-lg px-6 mt-4">
+      <li>Taille: <strong>{{mensures.taille}}</strong> cm</li>
+      <li>Taillenombrill: <strong>{{mensures.taillenombrill}}</strong> cm</li>
+      <li>Buste: <strong>{{mensures.buste}}</strong> cm</li>
+      <li>Epaules: <strong>{{mensures.epaules}}</strong> cm</li>
+      <li>Hanches: <strong>{{mensures.hanches}}</strong> cm</li>
+      <li>Poids: <strong>{{mensures.poids}}</strong> cm</li>
+      <li>Pointure: <strong>{{mensures.pointure}}</strong> cm</li>
+      <li>Cheveux: <strong>{{mensures.cheveux}}</strong></li>
+      <li>Yeux: <strong>{{mensures.yeux}}</strong></li>
     </ul>
+    <button id="model-contact" class="mt-4 py-3 w-full bg-black text-white uppercase tracking-wider">Contact</button>
   </div>
 </section>
 
-<section class="px-4">
+<div id="model-backdrop" class="hidden bg-black fixed inset-0 opacity-75">
+</div>
+<div id="model-modal" class="hidden max-w-md mx-auto mt-4 top-0 inset-x-0 p-4 fixed bg-gray-100 rounded-lg">
+  <form action="{% url 'contact' %}" method="post">
+    {% include "partials/_alerts.html" %}
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div>
+      <label class="mb-2 ml-1 block text-gray-800 font-semibold" for="{{ form.model_nom.id_for_label }}">Nom du Modele:</label>
+      {{ form.model_nom }}
+      {% include "partials/_form_errors.html" with key=form.model_nom %}
+    </div>
+    <div class="mt-2">
+      <label class="mb-2 ml-1 block text-gray-800 font-semibold" for="{{ form.email.id_for_label }}">Your Email</label>
+      {{ form.email }}
+      {% include "partials/_form_errors.html" with key=form.email %}
+    </div>
+    <div class="mt-2">
+      <label class="mb-2 ml-1 block text-gray-800 font-semibold" for="{{ form.phone.id_for_label }}">Your Phone</label>
+      {{ form.phone }}
+      {% include "partials/_form_errors.html" with key=form.phone %}
+    </div>
+    <div class="text-right mt-6">
+      <button type="submit"
+        class="w-full px-6 py-2 text-center bg-black hover:bg-gray-700 text-white uppercase tracking-wide rounded sm:w-auto">
+        Send
+      </button>
+    </div>
+  </form>
+</div>
+
+<section class="px-4 w-full">
   <div>
     <div class="py-6">
       <h1 class="text-xl uppercase">Gallery</h1>
       <span class="block h-px w-8 mt-1 bg-red-500"></span>
     </div>
-    <div class="w-full h-64">
+    <div class="w-full flex flex-wrap">
       {% for photo in photos %}
-      <img
-        class="h-64"
-        src="{{photo.image.url}}"
-        alt="model photo {{forloop.counter}}"
-      />
+        <div class="w-full h-56 mr-4 mb-4 flex-shrink-0 rounded-lg overflow-hidden shadow cursor-pointer sm:w-64 sm:h-64">
+          <img
+            class="w-full h-full object-cover"
+            src="{{photo.image.url}}"
+            alt="model photo {{forloop.counter}}"
+          />
+        </div>
       {% empty %}
-      <p>No Photos</p>
+        <p>No Photos</p>
       {% endfor %}
     </div>
   </div>

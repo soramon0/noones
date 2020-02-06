@@ -7,7 +7,7 @@ from django.conf import settings
 class Model(models.Model):
     SEXE_CHOICES = (
         ('f', 'Femme'),
-        ('f', 'Homme'),
+        ('h', 'Homme'),
     )
     sexe = models.CharField(max_length=1, choices=SEXE_CHOICES)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -51,6 +51,9 @@ class Mensuration(models.Model):
                              on_delete=models.CASCADE)
     model = models.ForeignKey(Model,
                               on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.user.email
 
 
 class History(models.Model):
@@ -68,9 +71,24 @@ class History(models.Model):
     model = models.ForeignKey(Model,
                               on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.user.email
 
 class Photo(models.Model):
     image = models.ImageField(upload_to='photos/%Y/%m/%d')
     inUse = models.BooleanField(default=False)
     model = models.ForeignKey(Model,
                               on_delete=models.CASCADE)
+    def __str__(self):
+        return self.image.url
+
+
+class Contact(models.Model):
+    model_id = models.UUIDField()
+    model_nom = models.CharField(max_length=100)
+    model_email = models.EmailField(max_length=255)
+    email = models.EmailField(max_length=255)
+    phone = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.model_nom

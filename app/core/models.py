@@ -37,6 +37,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
     USERNAME_FIELD = "email"
 
+    def __str__(self):
+        return self.email
+
 
 class Carousel(models.Model):
     image = models.ImageField(upload_to='photos/site/%Y/%m/%d')
@@ -44,7 +47,7 @@ class Carousel(models.Model):
     inUse = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.image.url
+        return self.title
 
 
 class Header(models.Model):

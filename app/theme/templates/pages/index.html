@@ -56,7 +56,7 @@
   <div class="drag-slider flex justify-around overflow-x-scroll">
     {% for model in models %}
     <a
-      class="max-w-xs h-56 mr-4 block flex-shrink-0 rounded-lg shadow overflow-hidden cursor-pointer sm:h-64"
+      class="w-64 h-56 mr-4 block flex-shrink-0 rounded-lg shadow overflow-hidden cursor-pointer sm:h-64"
       href="{% url 'model' model.id %}"
     >
       {% if model.profilePicture %}
