@@ -1,8 +1,11 @@
 from django.shortcuts import render
-from .models import Model, Mensuration, Photo
+from django.http import JsonResponse
+from django.core.exceptions import ValidationError
+
 from pages.forms import SearchForm
 from .forms import ModelContactForm
-from django.http import JsonResponse
+from .models import Model, Mensuration, Photo, Contact
+import json
 
 
 def models(request):
@@ -23,7 +26,10 @@ def model(request, id):
         'model': model,
         'mensures': [],
         'photos': [],
-        'form': ModelContactForm(initial={'model_id': model.id})
+        'form': ModelContactForm(initial={
+            'model_id': model.id,
+            'model_nom': f'{model.first_name} {model.last_name}',
+        })
     }
 
     try:
@@ -39,14 +45,33 @@ def model(request, id):
 
 def contact(request):
     if request.method == 'POST':
-        form = ModelContactForm(request.POST)
-        print(form.errors)
+        data = json.loads(request.body.decode('utf-8'))
+        form = ModelContactForm(data)
         
         if not form.is_valid():
             context = {
-                'form': form.data,
+                'errors': form.errors,
             }
             return JsonResponse(context)
+
+        model_id = form.cleaned_data.get('model_id')
+        model_nom = form.cleaned_data.get('model_nom')
+        email = form.cleaned_data.get('email')
+        phone = form.cleaned_data.get('phone')
+
+        error = {'errors': { 'model_nom': ['model do not exist'] }}
+
+        try:
+            model = Model.objects.get(pk=model_id)
+            model_email = model.user.email
+        except Model.DoesNotExist:
+            return JsonResponse(error)
+        except ValidationError:
+            return JsonResponse(error)
+
+        # TODO(karim): Send email to admin
+        contact = Contact(model_id=model_id, model_nom=model_nom, model_email=model_email, email=email, phone=phone)
+        contact.save()
 
         return JsonResponse({'context': 'ok'})
     

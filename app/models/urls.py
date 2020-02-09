@@ -5,5 +5,5 @@ from . import views
 urlpatterns = [
     path('', views.models, name='models'),
     path('<uuid:id>', views.model, name='model'),
-    path('contact', views.contact, name='contact'),
+    path('request', views.contact, name='request'),
 ]

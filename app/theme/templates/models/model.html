@@ -85,10 +85,14 @@
 <div id="model-backdrop" class="hidden bg-black fixed inset-0 opacity-75">
 </div>
 <div id="model-modal" class="hidden max-w-md mx-auto mt-4 top-0 inset-x-0 p-4 fixed bg-gray-100 rounded-lg">
-  <form action="{% url 'contact' %}" method="post">
+  <form id='model-form' method="post">
     {% include "partials/_alerts.html" %}
     {% csrf_token %}
     {{ form.non_field_errors }}
+    <div>
+      {{ form.model_id }}
+      {% include "partials/_form_errors.html" with key=form.model_id %}
+    </div>
     <div>
       <label class="mb-2 ml-1 block text-gray-800 font-semibold" for="{{ form.model_nom.id_for_label }}">Nom du Modele:</label>
       {{ form.model_nom }}
