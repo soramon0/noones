@@ -438,6 +438,9 @@ const contactButton = document.getElementById('model-contact')
 const backdrop = document.getElementById('model-backdrop')
 const modal = document.getElementById('model-modal')
 const contactForm = document.getElementById('model-form')
+const sendContactButton = document.getElementById('send-contact')
+const modalFlash = document.getElementById('modal-flash')
+const modalMessage = document.getElementById('modal-message')
 
 function toggleModal() {
     if (modal.classList.contains('hidden')) {
@@ -458,18 +461,28 @@ function handleErrorRes(errors) {
     console.log(errors)
 }
 
+function disableSendingButton(sending) {
+    if (sending) {
+        sendContactButton.disabled = sending
+        sendContactButton.textContent = 'sending'
+    } else {
+        sendContactButton.disabled = sending
+        sendContactButton.textContent = 'send'
+    }
+}
+
 function sendContactRequest(e) {
+    // Disable button until request is done
+    disableSendingButton(true)
+
     e.preventDefault()
     const data = {
-        'model_id': "document.getElementById('id_model_id').value",
+        'model_id': document.getElementById('id_model_id').value,
         'model_nom': document.getElementById('id_model_nom').value,
         'email': document.getElementById('id_email').value,
         'phone': document.getElementById('id_phone').value,
     }
 
-    const body = new FormData().append('email', data.email)
-
-    console.log(body)
 
     fetch('/models/request', {
         method: 'POST',
@@ -481,14 +494,24 @@ function sendContactRequest(e) {
     })
     .then(blob => blob.json())
     .then((res) => {
+        disableSendingButton(false)
         if (res.hasOwnProperty('errors')) {
             handleErrorRes(res.errors)
             return
         }
         // Request was successfull
-        console.log(res)
+        modalMessage.textContent = res.message
+        modalFlash.classList.remove('hidden')
+        modalFlash.classList.add('opacity-100')
+        setTimeout(() => {
+            modalFlash.classList.remove('opacity-100')
+            modalFlash.classList.add('hidden')
+        }, 3000)
     })
-    .catch(console.log)
+    .catch((e) => {
+        disableSendingButton(false)
+        console.log(e)
+    })
 }
 
 contactButton.addEventListener('click', toggleModal)

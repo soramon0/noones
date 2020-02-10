@@ -1,11 +1,13 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
 
 from pages.forms import SearchForm
 from .forms import ModelContactForm
 from .models import Model, Mensuration, Photo, Contact
 import json
+import os
 
 
 def models(request):
@@ -69,10 +71,18 @@ def contact(request):
         except ValidationError:
             return JsonResponse(error)
 
+        send_mail(
+            f'Contact Request for {model_email}',
+            f'Client {email} {phone} wants to contact {model_email}',
+            email,
+            [os.environ.get('EMAIL_USER')],
+            fail_silently=False,
+        )
+
         # TODO(karim): Send email to admin
         contact = Contact(model_id=model_id, model_nom=model_nom, model_email=model_email, email=email, phone=phone)
         contact.save()
 
-        return JsonResponse({'context': 'ok'})
+        return JsonResponse({'message': 'Contact ws successful'})
     
     

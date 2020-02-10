@@ -85,6 +85,9 @@
 <div id="model-backdrop" class="hidden bg-black fixed inset-0 opacity-75">
 </div>
 <div id="model-modal" class="hidden max-w-md mx-auto mt-4 top-0 inset-x-0 p-4 fixed bg-gray-100 rounded-lg">
+  <div id="modal-flash" class="hidden transition duration-500 ease-in-out opacity-0 text-center py-4 text-white font-bold rounded mb-2 text-sm bg-indigo-300">
+    <p id="modal-message">Was Sent</p>
+  </div>
   <form id='model-form' method="post">
     {% include "partials/_alerts.html" %}
     {% csrf_token %}
@@ -109,7 +112,7 @@
       {% include "partials/_form_errors.html" with key=form.phone %}
     </div>
     <div class="text-right mt-6">
-      <button type="submit"
+      <button type="submit" id="send-contact"
         class="w-full px-6 py-2 text-center bg-black hover:bg-gray-700 text-white uppercase tracking-wide rounded sm:w-auto">
         Send
       </button>
