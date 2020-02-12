@@ -80,6 +80,8 @@ function sendContactRequest(e) {
     })
 }
 
-contactButton.addEventListener('click', toggleModal)
-backdrop.addEventListener('click', toggleModal)
-contactForm.addEventListener('submit', sendContactRequest)
+if (contactButton) {
+    contactButton.addEventListener('click', toggleModal)
+    backdrop.addEventListener('click', toggleModal)
+    contactForm.addEventListener('submit', sendContactRequest)
+}

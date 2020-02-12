@@ -49,6 +49,7 @@ def model(request, id):
 
 def contact(request):
     if request.method == 'POST':
+        # TODO(karim): check for exceptions 
         data = json.loads(request.body.decode('utf-8'))
         form = ModelContactForm(data)
         
@@ -95,7 +96,6 @@ def subset(request):
     except ValueError:
         start = 0
         count = 12
-    print(start, count)
     
     # TODO(karim): check for is_public
     models = serialize('json',Model.objects.all()[start:count])
