@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.contrib import messages
+from django.conf import settings
+from django.core.mail import send_mail
 
 from core.models import Header, Carousel
 from models.models import Model
@@ -34,6 +36,22 @@ def contact(request):
             return render(request, 'pages/contact.html', context)
 
         # Send Email here
+        nom = form.cleaned_data.get('nom')
+        email = form.cleaned_data.get('email')
+        phone = form.cleaned_data.get('phone')
+        subject = form.cleaned_data.get('subject')
+        message = form.cleaned_data.get('message')
+
+        # TODO(karim): check who should get this email
+        send_mail(
+            f'{nom} - {phone} - {subject}',
+            message,
+            email,
+            [settings.EMAIL_HOST_USER],
+            fail_silently=False,
+        )
+
+        # Set a succes message for the user
         messages.success(
             request, 'Thank you for getting in touch! We\'ll get back to you as soon as possible')
 
