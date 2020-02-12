@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
+from django.http.request import RawPostDataException
 from django.core.mail import send_mail
 from django.core.serializers import serialize
 
@@ -49,8 +50,12 @@ def model(request, id):
 
 def contact(request):
     if request.method == 'POST':
-        # TODO(karim): check for exceptions 
-        data = json.loads(request.body.decode('utf-8'))
+        # TODO(karim): check if this the right exception
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+        except RawPostDataException:
+            return JsonResponse({'errors': { 'json': ['data is not valid json'] }})
+
         form = ModelContactForm(data)
         
         if not form.is_valid():
