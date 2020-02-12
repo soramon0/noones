@@ -1,4 +1,8 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} 
+
+{% load static %}
+
+{% block content %}
 
 <!-- Model Header -->
 {% include "partials/_header.html" with title="Models" %}
@@ -7,11 +11,41 @@
 
 <h2 class="text-center text-xl uppercase mt-16">Touts les models</h2>
 
-<section class="mt-10 flex justify-between w-4/5 mx-auto">
+<section class="mt-10 mx-auto w-11/12 flex flex-col items-center sm:flex-row sm:justify-between sm:w-4/5">
   {% for model in models %}
-  <div class="bg-orange-400">{{ model.first_name }}</div>
+    <div class="w-64 mb-4 mr-2 overflow-hidden rounded-lg shadow relative">
+      <div class="h-56">
+        {% if model.profilePicture %}
+          <img
+            class="w-full h-full object-fit"
+            src="{{model.profilePicture.url}}"
+            alt="{{model.first_name}}"
+          />
+        {% else %}
+          <img
+            class="w-full h-full object-fit"
+            src="{% static 'images/noc-models-mission.jpg' %}"
+            alt="{{model.first_name}}"
+          />
+        {% endif %}
+        <div class="-mt-4 w-full h-10 transform -skew-y-6 bg-white">
+        </div>
+        <div class="-mt-16 mr-4 py-2 px-4 uppercase tracking-wider bg-white rounded text-center shadow absolute right-0">
+          {{model.first_name}} {{model.last_name}}
+        </div>
+      </div>
+      <div class="mt-6 px-4 pb-4 text-sm flex justify-between items-center relative z-20">
+        <div class="tracking-wide">
+          <p class="uppercase tracking-wider">{{model.country}}</p>
+          <p class="capitalize text-gray-800 font-semibold">{{model.city}}</p>
+        </div>
+        <a href="{% url 'model' model.id %}" class="px-4 py-3 text-xs rounded-lg bg-black hover:bg-gray-700 text-white uppercase tracking-wide">
+          Visit Profile
+        </a>
+      </div>
+    </div>
   {% empty %}
-  <p>No Models available</p>
+    <p>No Models available</p>
   {% endfor %}
 </section>
 

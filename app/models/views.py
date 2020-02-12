@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
+from django.core.serializers import serialize
 
 from pages.forms import SearchForm
 from .forms import ModelContactForm
@@ -11,7 +12,8 @@ import os
 
 
 def models(request):
-    models = Model.objects.all()
+    # TODO(karim): check for is_public
+    models = Model.objects.all()[:12]
 
     context = {
         'models': models,
@@ -84,5 +86,18 @@ def contact(request):
         contact.save()
 
         return JsonResponse({'message': 'Contact ws successful'})
+
+
+def subset(request):
+    try:
+        start = int(request.GET.get('start', 0))
+        count = int(request.GET.get('count', 12))
+    except ValueError:
+        start = 0
+        count = 12
+    print(start, count)
     
-    
+    # TODO(karim): check for is_public
+    models = serialize('json',Model.objects.all()[start:count])
+
+    return JsonResponse({'models': models})
