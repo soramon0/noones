@@ -15,7 +15,7 @@
 
 {% include "partials/_alerts.html" %}
 
-<div class="md:flex">
+<div class="md:flex mb-4">
   <form class="bg-black p-4 mx-4 rounded-lg md:p-6 md:flex-1" action="{% url 'contact' %}" method="post">
     {% csrf_token %}
     {{ form.non_field_errors }}
