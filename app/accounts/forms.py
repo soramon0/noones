@@ -54,9 +54,8 @@ class RegisterForm(forms.Form):
         ('y', 'Oui'),
         ('n', 'Non'),
     ))
-    taille = forms.IntegerField(widget=forms.NumberInput(attrs=INPUT_CLASS))
-    taillenombrill = forms.IntegerField(
-        widget=forms.NumberInput(attrs=INPUT_CLASS))
+    taille = forms.DecimalField(max_digits=3, decimal_places=2, widget=forms.NumberInput(attrs=INPUT_CLASS))
+    taillenombrill = forms.DecimalField(max_digits=3, decimal_places=2, widget=forms.NumberInput(attrs=INPUT_CLASS))
     buste = forms.IntegerField(widget=forms.NumberInput(attrs=INPUT_CLASS))
     epaules = forms.IntegerField(widget=forms.NumberInput(attrs=INPUT_CLASS))
     hanches = forms.IntegerField(widget=forms.NumberInput(attrs=INPUT_CLASS))

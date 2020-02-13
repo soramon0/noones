@@ -4,6 +4,42 @@ from django.db import models
 from django.conf import settings
 
 
+class Mensuration(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    taille = models.DecimalField(max_digits=3, decimal_places=2)
+    taillenombrill = models.DecimalField(max_digits=3, decimal_places=2)
+    buste = models.IntegerField()
+    epaules = models.IntegerField()
+    hanches = models.IntegerField()
+    poids = models.IntegerField()
+    pointure = models.IntegerField()
+    cheveux = models.CharField(max_length=100)
+    yeux = models.CharField(max_length=100)
+    permitted = models.BooleanField(default=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.user.email
+
+
+class History(models.Model):
+    Q4_CHOICES = choices = (
+        ('y', 'Oui'),
+        ('n', 'Non'),
+    )
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    q1 = models.CharField(max_length=500)
+    q2 = models.CharField(max_length=500)
+    q3 = models.CharField(max_length=500)
+    q4 = models.CharField(max_length=1, choices=Q4_CHOICES)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.email
+
+
 class Model(models.Model):
     SEXE_CHOICES = (
         ('f', 'Femme'),
@@ -30,46 +66,14 @@ class Model(models.Model):
     highlight = models.BooleanField(default=False)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.user.email
-
-
-class Mensuration(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    taille = models.IntegerField()
-    taillenombrill = models.IntegerField()
-    buste = models.IntegerField()
-    epaules = models.IntegerField()
-    hanches = models.IntegerField()
-    poids = models.IntegerField()
-    pointure = models.IntegerField()
-    cheveux = models.CharField(max_length=100)
-    yeux = models.CharField(max_length=100)
-    permitted = models.BooleanField(default=False)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             on_delete=models.CASCADE)
-    model = models.ForeignKey(Model,
-                              on_delete=models.CASCADE)
-    
-    def __str__(self):
-        return self.user.email
-
-
-class History(models.Model):
-    Q4_CHOICES = choices = (
-        ('y', 'Oui'),
-        ('n', 'Non'),
+    measures = models.OneToOneField(
+        Mensuration,
+        on_delete=models.CASCADE,
     )
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    q1 = models.CharField(max_length=500)
-    q2 = models.CharField(max_length=500)
-    q3 = models.CharField(max_length=500)
-    q4 = models.CharField(max_length=1, choices=Q4_CHOICES)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             on_delete=models.CASCADE)
-    model = models.ForeignKey(Model,
-                              on_delete=models.CASCADE)
+    history = models.OneToOneField(
+        History,
+        on_delete=models.CASCADE,
+    )
 
     def __str__(self):
         return self.user.email

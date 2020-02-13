@@ -83,27 +83,25 @@ def register(request):
             messages.error(request, 'Email provided is already in use.')
             return render(request, 'accounts/register.html', {'form': form})
 
-        user = User.objects.create_user(email=email, password=password)
+        history = History(q1=q1, q2=q2, q3=q3, q4=q4)
+
+        measures = Mensuration(taille=taille, taillenombrill=taillenombrill, buste=buste, epaules=epaules,
+                                hanches=hanches, poids=poids, pointure=pointure, cheveux=cheveux, yeux=yeux,
+                                permitted=permitted)
 
         model = Model(first_name=first_name, last_name=last_name, handle=handle, birth_date=birth_date, facebook=facebook,
                       instagram=instagram, phone=phone, addresse=addresse, city=city, country=country, zipcode=zipcode,
-                      cin=cin, sexe=sexe)
+                      cin=cin, sexe=sexe, history_id=history.id, measures_id=measures.id)
 
-        history = History(q1=q1, q2=q2, q3=q3, q4=q4)
-
-        mensuratoin = Mensuration(
-            taille=taille, taillenombrill=taillenombrill, buste=buste, epaules=epaules, hanches=hanches, poids=poids, pointure=pointure, cheveux=cheveux, yeux=yeux, permitted=permitted)
+        user = User.objects.create_user(email=email, password=password)
 
         model.user_id = user.id
         history.user_id = user.id
-        mensuratoin.user_id = user.id
+        measures.user_id = user.id
 
-        history.model = model
-        mensuratoin.model = model
-
-        model.save()
         history.save()
-        mensuratoin.save()
+        measures.save()
+        model.save()
 
         return redirect('signin')
 

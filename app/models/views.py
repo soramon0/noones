@@ -4,12 +4,12 @@ from django.core.exceptions import ValidationError
 from django.http.request import RawPostDataException
 from django.core.mail import send_mail
 from django.core.serializers import serialize
+from django.conf import settings
 
 from pages.forms import SearchForm
 from .forms import ModelContactForm
 from .models import Model, Mensuration, Photo, Contact
 import json
-import os
 
 
 def models(request):
@@ -29,7 +29,7 @@ def model(request, id):
 
     context = {
         'model': model,
-        'mensures': [],
+        'mensures': model.measures,
         'photos': [],
         'form': ModelContactForm(initial={
             'model_id': model.id,
@@ -39,8 +39,6 @@ def model(request, id):
 
     try:
         photos = Photo.objects.filter(model_id=model.id)
-        mensures = Mensuration.objects.filter(model_id=model.id)[0]
-        context['mensures'] = mensures
         context['photos'] = photos
     except Photo.DoesNotExist:
         return render(request, 'models/model.html', context)
@@ -83,7 +81,7 @@ def contact(request):
             f'Contact Request for {model_email}',
             f'Client {email} {phone} wants to contact {model_email}',
             email,
-            [os.environ.get('EMAIL_USER')],
+            [settings.EMAIL_HOST_USER],
             fail_silently=False,
         )
 
@@ -103,6 +101,35 @@ def subset(request):
         count = 12
     
     # TODO(karim): check for is_public
-    models = serialize('json',Model.objects.all()[start:count])
+    models = serialize('json', Model.objects.all()[start:count])
 
     return JsonResponse({'models': models})
+
+def search(request):
+    form = SearchForm(request.GET)
+
+    if not form.is_valid():
+        context = {
+            'form': form,
+        }
+        return render(request, 'models/search.html', context)
+    
+    pays = form.cleaned_data.get('pays')
+    ville = form.cleaned_data.get('ville')
+    sexe = form.cleaned_data.get('sexe')
+    cheveux = form.cleaned_data.get('cheveux')
+    yeux = form.cleaned_data.get('yeux')
+    taille = form.cleaned_data.get('taille')
+    taille = taille.split('-')
+
+    models = Model.objects.filter(
+        country__iexact=pays, city__iexact=ville, sexe__iexact=sexe,
+        measures__cheveux__iexact=cheveux, measures__yeux__iexact=yeux,
+        measures__taille__gte=taille[0], measures__taille__lte=taille[1],
+    )
+
+    context = {
+        'models': models,
+        'form': form
+    }
+    return render(request, 'models/search.html', context)

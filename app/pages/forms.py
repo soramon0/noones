@@ -29,7 +29,7 @@ class SearchForm(forms.Form):
     ), widget=forms.Select(attrs=SELECT_CLASS))
     sexe = forms.ChoiceField(choices=(
         ('f', 'Femme'),
-        ('f', 'Homme'),
+        ('h', 'Homme'),
     ), widget=forms.Select(attrs=SELECT_CLASS))
     cheveux = forms.ChoiceField(choices=(
         ('brown', 'Brown'),

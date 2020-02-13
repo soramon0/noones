@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // TODO(karim): Add animations
+    const cardContainer = document.querySelector('.card-container')
     let start = 13
     let count = start + 12
     let hasMore = true
@@ -10,8 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
         threshold: 0.5
     }
 
-    const observer = new IntersectionObserver(handleIntersection, options)
-    observer.observe(document.querySelector('.footer'))
+    // Run only in the page that has a cardContainer
+    if (cardContainer) {
+        const observer = new IntersectionObserver(handleIntersection, options)
+        observer.observe(document.querySelector('.footer'))
+    }
 
     function handleIntersection(enteries) {
         if (enteries[0].isIntersecting) {
@@ -44,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createCard({pk, fields}) {
         // Create Card
-        const cardContainer = document.querySelector('.card-container')
         const card = document.createElement('div')
         const cardHead = document.createElement('div')
         const img = document.createElement('img')
