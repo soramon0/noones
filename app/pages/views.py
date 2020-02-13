@@ -10,7 +10,7 @@ from .forms import ContactForm, SearchForm
 
 def index(request):
     carousel = Carousel.objects.filter(inUse=True)
-    models = Model.objects.all()
+    models = Model.objects.all()[:12]
     context = {
         'carousel': carousel,
         'models': models,
