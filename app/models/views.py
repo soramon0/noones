@@ -120,14 +120,44 @@ def search(request):
     cheveux = form.cleaned_data.get('cheveux')
     yeux = form.cleaned_data.get('yeux')
     taille = form.cleaned_data.get('taille')
+
+    # data is 1.40-1.60
+    # split to get each one
     taille = taille.split('-')
 
+    # to avoid errors down the line
+    # TODO(karim): check if we should return more
+    start = 0
+    count = 12
+    returnJson = False
+
+    # if we do then we should return json
+    # This will be true only when the client askes for more data
+    if 'start' in request.GET and 'count' in request.GET:
+        returnJson = True
+        # If all is well, get the count
+        try:
+            # TODO(karim): check if we should get more on the first request
+            start = int(request.GET.get('start', 0))
+            count = int(request.GET.get('count', 12))
+        except ValueError:
+            start = 0
+            count = 12
+
+    print(start, count)
+    # Get the data
     models = Model.objects.filter(
         country__iexact=pays, city__iexact=ville, sexe__iexact=sexe,
         measures__cheveux__iexact=cheveux, measures__yeux__iexact=yeux,
         measures__taille__gte=taille[0], measures__taille__lte=taille[1],
-    )
+    )[start:count]
+        
 
+    # return json when asked by client
+    if returnJson:
+        return JsonResponse({'models': serialize('json', models)})
+
+    # On the initial load return the page
     context = {
         'models': models,
         'form': form
