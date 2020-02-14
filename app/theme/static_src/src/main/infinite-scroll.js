@@ -92,8 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 models.forEach(model => {
                     createCard(model)
                 })
-
-                formSubmited = false
             })
     }
 

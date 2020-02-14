@@ -144,7 +144,6 @@ def search(request):
             start = 0
             count = 12
 
-    print(start, count)
     # Get the data
     models = Model.objects.filter(
         country__iexact=pays, city__iexact=ville, sexe__iexact=sexe,
