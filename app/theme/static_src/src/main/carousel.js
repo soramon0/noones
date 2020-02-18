@@ -1,13 +1,6 @@
 const track = document.querySelector('.carousel-track')
 const prevButton = document.querySelector('.carousel-left')
 const nextButton = document.querySelector('.carousel-right')
-
-// If this file loads on other pages
-// Track will be undefiend
-if (!track) {
-  return
-}
-
 const slides = Array.from(track.children)
 const slideWidth = slides[0].getBoundingClientRect().width
 
@@ -37,7 +30,6 @@ const moveToSlide = (targetSlide, currentSlide) => {
   currentSlide.classList.remove('current-slide')
   targetSlide.classList.add('current-slide')
 }
-
 // When I click left, move slides to the left
 prevButton.addEventListener('click', () => {
   const currentSlide = track.querySelector('.current-slide')

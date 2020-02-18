@@ -7,11 +7,18 @@ const prod = mode === "production";
 module.exports = {
   entry: {
     main: "./src/main/index.js",
+    drag: "./src/main/drag.js",
+    carousel: "./src/main/carousel.js",
+    modelModal: "./src/main/modelModal.js",
+    infiniteScroll: "./src/main/infiniteScroll.js",
+    search: "./src/main/search.js",
     svelte: "./src/svelte/index.js"
   },
   output: {
     filename: "[name].bundle.js",
-    path: path.resolve(__dirname, "..", "static", "js")
+    chunkFilename: "[name].bundle.js",
+    path: path.resolve(__dirname, "..", "static", "js"),
+    publicPath: '/static/js/'
   },
   resolve: {
     alias: {
@@ -22,6 +29,13 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader"
+        }
+      },
       {
         test: /\.(html|svelte)$/,
         exclude: /node_modules/,

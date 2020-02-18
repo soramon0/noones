@@ -1,7 +1,5 @@
 const slider = document.querySelector('.drag-slider');
 
-if (!slider) return;
-
 let isDown = false;
 let startX;
 let scrollLeft;
