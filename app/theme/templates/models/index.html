@@ -1,4 +1,4 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 
 {% load static %}
 
@@ -14,17 +14,17 @@
 <section class="card-container mt-10 mx-auto w-11/12 flex flex-wrap flex-col items-center justify-center sm:flex-row">
   {% for model in models %}
     <div class="w-64 mb-4 mr-4 overflow-hidden rounded-lg shadow relative">
-      <div class="h-56">
+      <div class="h-56 bg-gray-100">
         {% if model.profilePicture %}
           <img
             class="w-full h-full object-fit"
-            src="{{model.profilePicture.url}}"
+            data-src="{{model.profilePicture.url}}"
             alt="{{model.first_name}}"
           />
         {% else %}
           <img
             class="w-full h-full object-fit"
-            src="{% static 'images/noc-models-mission.jpg' %}"
+            data-src="{% static 'images/noc-models-mission.jpg' %}"
             alt="{{model.first_name}}"
           />
         {% endif %}
@@ -48,5 +48,7 @@
     <p>No Models available</p>
   {% endfor %}
 </section>
+
+<script src="{% static 'js/infiniteScroll.bundle.js' %}"></script>
 
 {% endblock %}

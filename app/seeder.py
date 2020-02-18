@@ -8,7 +8,7 @@ if len(sys.argv) == 2:
 
     for _ in range(n):
         try:
-            run(["fish", "./bin/activate.fish", "&&" ,"python3", "app/manage.py", "seeddb"])
+            run(["python3", "app/manage.py", "seeddb"])
         except Exception:
             run(['bash', '.\\Scripts\\activate.bat', "&&" ,"python3", "app/manage.py", "seeddb"])
     print('DONE SEEDING')

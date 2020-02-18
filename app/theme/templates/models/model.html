@@ -46,39 +46,43 @@
       </p>
     </div>
   </div>
-  <div class="max-w-md mx-auto mt-16 shadow-lg rounded-lg overflow-hidden md:flex-1">
-    <div class="mt-4 text-center">
-      {% if model.sexe == "f" %}
-      <img
-        class="w-20 h-20 inline-block"
-        src="{% static 'icons/woman-avatar.png' %}"
-        alt="gender {{model.sexe}}"
-      />
+  <div class="max-w-md pt-8 border mx-auto mt-16 shadow-lg rounded-lg md:flex-1">
+   <div class="-mt-20 flex justify-center items-center">
+     <div class="w-24 h-24 border-4 border-gray-400 rounded-full overflow-hidden">
+      {% if model.profilePicture %}
+        <img
+          class="w-full h-full object-fit"
+          src="{{ model.profilePicture.url }}"
+          alt="gender {{model.sexe}}"
+        />
       {% else %}
-      <img
-        class="w-20 h-20 inline-block"
-        src="{% static 'icons/man-avatar.png' %}"
-        alt="gender {{model.sexe}}"
-      />
+        <img
+          class="w-full h-full object-fit"
+          src="{% static 'images/noc-models-mission.jpg' %}"
+          alt="gender {{model.sexe}}"
+        />
       {% endif %}
     </div>
-    <div class="mt-2 text-center">
-      <h3 class="text-2xl font-bold tracking-wide uppercase">
+   </div>
+    <div class="mt-4 text-center">
+      <h3 class="text-2xl text-gray-500 font-bold tracking-wide uppercase">
         {{model.first_name}} {{model.last_name}}
       </h3>
     </div>
     <ul class="text-lg px-6 mt-4">
-      <li>Taille: <strong>{{mensures.taille}}</strong> cm</li>
-      <li>Taillenombrill: <strong>{{mensures.taillenombrill}}</strong> cm</li>
-      <li>Buste: <strong>{{mensures.buste}}</strong> cm</li>
-      <li>Epaules: <strong>{{mensures.epaules}}</strong> cm</li>
-      <li>Hanches: <strong>{{mensures.hanches}}</strong> cm</li>
-      <li>Poids: <strong>{{mensures.poids}}</strong> cm</li>
-      <li>Pointure: <strong>{{mensures.pointure}}</strong> cm</li>
-      <li>Cheveux: <strong>{{mensures.cheveux}}</strong></li>
-      <li>Yeux: <strong>{{mensures.yeux}}</strong></li>
+      <li><span class="text-base text-gray-800 font-semibold">Taille</span>: <span class="ml-2 font-medium text-xl ">{{mensures.taille}}</span> cm</li>
+      <li><span class="text-base text-gray-800 font-semibold">Taillenombrill</span>: <span class="ml-2 font-medium text-xl ">{{mensures.taillenombrill}}</span> cm</li>
+      <li><span class="text-base text-gray-800 font-semibold">Buste</span>: <span class="ml-2 font-medium text-xl ">{{mensures.buste}}</span> cm</li>
+      <li><span class="text-base text-gray-800 font-semibold">Epaules</span>: <span class="ml-2 font-medium text-xl ">{{mensures.epaules}}</span> cm</li>
+      <li><span class="text-base text-gray-800 font-semibold">Hanches</span>: <span class="ml-2 font-medium text-xl ">{{mensures.hanches}}</span> cm</li>
+      <li><span class="text-base text-gray-800 font-semibold">Poids</span>: <span class="ml-2 font-medium text-xl ">{{mensures.poids}}</span> cm</li>
+      <li><span class="text-base text-gray-800 font-semibold">Pointure</span>: <span class="ml-2 font-medium text-xl ">{{mensures.pointure}}</span> cm</li>
+      <li><span class="text-base text-gray-800 font-semibold">Cheveux</span>: <span class="ml-2 text-xl ">{{mensures.cheveux}}</span></li>
+      <li><span class="text-base text-gray-800 font-semibold">Yeux</span>: <span class="ml-2 text-xl ">{{mensures.yeux}}</span></li>
     </ul>
-    <button id="model-contact" class="mt-4 py-3 w-full bg-black text-white uppercase tracking-wider">Contact</button>
+    <div class="overflow-hidden rounded-lg">
+      <button id="model-contact" class="mt-4 py-3 w-full bg-black text-white text-xl uppercase tracking-wider">Contact</button>
+    </div>
   </div>
 </section>
 
@@ -141,5 +145,7 @@
     </div>
   </div>
 </section>
+
+<script src="{% static 'js/modelModal.bundle.js' %}"></script>
 
 {% endblock %}

@@ -77,7 +77,7 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+/******/ 	__webpack_require__.p = "/static/js/";
 /******/
 /******/
 /******/ 	// Load entry module and return exports
@@ -2901,13 +2901,10 @@ if (false) {}
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _index_svelte__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index.svelte */ "./src/svelte/index.svelte");
 
-
-const app = new _index_svelte__WEBPACK_IMPORTED_MODULE_0__["default"]({
-  target: document.getElementById("svelte-app"),
+var app = new _index_svelte__WEBPACK_IMPORTED_MODULE_0__["default"]({
+  target: document.getElementById("svelte-app")
 });
-
 /* harmony default export */ __webpack_exports__["default"] = (app);
-
 
 /***/ }),
 

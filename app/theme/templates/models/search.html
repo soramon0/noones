@@ -7,7 +7,7 @@
 
 <h2 class="text-center text-xl uppercase mt-16">Touts les models</h2>
 
-<section class="search-card-container mt-10 mx-auto w-11/12 flex flex-wrap flex-col items-center justify-center sm:flex-row">
+<section class="card-container mt-10 mx-auto w-11/12 flex flex-wrap flex-col items-center justify-center sm:flex-row">
   {% for model in models %}
     <div class="w-64 mb-4 mr-4 overflow-hidden rounded-lg shadow relative">
       <div class="h-56">
@@ -30,7 +30,7 @@
           {{model.first_name}} {{model.last_name}}
         </div>
       </div>
-      <div class="mt-6 px-4 pb-4 text-sm flex justify-between items-center relative z-20">
+      <div class="mt-6 px-4 pb-4 text-sm flex justify-between items-center relative">
         <div class="tracking-wide">
           <p class="uppercase tracking-wider">{{model.country}}</p>
           <p class="capitalize text-gray-800 font-semibold">{{model.city}}</p>
@@ -44,5 +44,7 @@
     <p>No Models available</p>
   {% endfor %}
 </section>
+
+<script src="{% static 'js/search.bundle.js' %}"></script>
 
 {% endblock %}

@@ -4,8 +4,8 @@
 {% block content %}
 
 
-<img class="h-48 sm:h-64 w-full object-cover" 
-  src="{% if header %} {{header.image.url}} {%else%} {% static 'images/home-bg.jpg' %} {% endif %}" 
+<img class="h-48 sm:h-64 w-full object-cover"
+  src="{% if header %} {{header.image.url}} {%else%} {% static 'images/home-bg.jpg' %} {% endif %}"
   alt="background image">
 
 <div class="px-4 py-6">
@@ -15,7 +15,7 @@
 
 {% include "partials/_alerts.html" %}
 
-<div class="md:flex mb-4">
+<div class="md:flex">
   <form class="bg-black p-4 mx-4 rounded-lg md:p-6 md:flex-1" action="{% url 'contact' %}" method="post">
     {% csrf_token %}
     {{ form.non_field_errors }}
@@ -48,7 +48,7 @@
       <button class="px-12 py-3 bg-white text-black rounded-lg uppercase font-semibold tracking-wide" type="submit">Envoyer</button>
     </div>
   </form>
-  
+
   <div class="mx-4 mt-6 md:mt-0 md:flex-1">
     <h4 class="text-lg uppercase font-semibold">Contact info</h4>
     <p class="mt-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus magnam ut ex iusto consequatur, deserunt suscipit deleniti atque asperiores! Adipisci facilis similique ex recusandae. Nobis dolorum corporis similique nostrum, sapiente ipsam reiciendis sunt eaque, in, itaque repellendus corrupti atque perspiciatis!</p>
