@@ -16,7 +16,7 @@ class Mensuration(models.Model):
     cheveux = models.CharField(max_length=100)
     yeux = models.CharField(max_length=100)
     permitted = models.BooleanField(default=False)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     
     def __str__(self):
@@ -33,7 +33,7 @@ class History(models.Model):
     q2 = models.CharField(max_length=500)
     q3 = models.CharField(max_length=500)
     q4 = models.CharField(max_length=1, choices=Q4_CHOICES)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
 
     def __str__(self):
@@ -64,7 +64,7 @@ class Model(models.Model):
     coverPicture = models.ImageField(upload_to='photos/%Y/%m/%d', blank=True)
     is_public = models.BooleanField(default=False)
     highlight = models.BooleanField(default=False)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     measures = models.OneToOneField(
         Mensuration,

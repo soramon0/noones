@@ -1,5 +1,5 @@
 <script>
-  import Breadcrumb from "./Shared/Breadcrumb";
+  import Breadcrumb from "./shared/Breadcrumb";
 </script>
 
 <Breadcrumb activeText="Measures" />

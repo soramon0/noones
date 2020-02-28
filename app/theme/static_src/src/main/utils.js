@@ -57,7 +57,7 @@ export function createCard({pk, fields}, parent) {
     const name = `${fields.first_name} ${fields.first_name}`
     // Check For Img
     if (fields.profilePicture) {
-        img.src = fields.profilePicture.url
+        img.src = `/media/${fields.profilePicture}`
     } else {
         img.src = '/static/images/noc-models-mission.jpg'
     }

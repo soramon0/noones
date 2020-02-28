@@ -7,6 +7,7 @@ app/static
 *.js.map
 lib64
 bin
+app/theme/static/
 
 # Created by https://www.gitignore.io/api/django
 # Edit at https://www.gitignore.io/?templates=django

@@ -1,7 +1,12 @@
 <script>
-  import Breadcrumb from "./Shared/Breadcrumb";
+  import Breadcrumb from "./shared/Breadcrumb";
+  export let modelStore;
+
 </script>
 
 <Breadcrumb activeText="General" />
 
-<h1>General</h1>
+<!-- {$modelStore.first_name} -->
+<div class="container mx-auto mt-4">
+  <h1>{$modelStore.first_name}</h1>
+</div>

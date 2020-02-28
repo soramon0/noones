@@ -3590,7 +3590,7 @@ function createCard(_ref, parent) {
   var name = "".concat(fields.first_name, " ").concat(fields.first_name); // Check For Img
 
   if (fields.profilePicture) {
-    img.src = fields.profilePicture.url;
+    img.src = "/media/".concat(fields.profilePicture);
   } else {
     img.src = '/static/images/noc-models-mission.jpg';
   }
