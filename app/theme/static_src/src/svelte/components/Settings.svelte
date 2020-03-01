@@ -2,7 +2,6 @@
   import Breadcrumb from "./shared/Breadcrumb";
   export let modelStore;
 
-  $: console.log($modelStore)
 </script>
 
 <Breadcrumb activeText="User Settings" />
@@ -12,7 +11,7 @@
     <form class="mb-4 p-4 h-40 w-full bg-white shadow rounded-lg sm:w-5/12 sm:mr-4">
       <label for="email" class="block my-1 text-sm text-gray-700 font-semibold">E-mail Address</label>
       <input id="email" bind:value={$modelStore.email} type="email" class="form-input text-gray-600 font-semibold" />
-      <div class="text-right mt-6 mx-2">
+      <div class="text-right mt-6">
         <button class="btn-black capitalize hover:bg-gray-700 sm:w-auto">Change E-mail</button>
       </div>
       </form>
@@ -24,7 +23,7 @@
       <label for="confirm_password" class="block my-1 text-sm text-gray-700 font-semibold">Confirm New Password</label>
       <input id="confirm_password" type="password" class="form-input text-gray-600 font-semibold" />
       <div class="text-right mt-6">
-        <button class="btn-black w-full hover:bg-gray-700 sm:w-auto">Update</button>
+        <button class="btn-black hover:bg-gray-700 sm:w-auto">Update</button>
       </div>
     </form>
   </div>

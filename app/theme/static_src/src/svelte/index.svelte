@@ -3,6 +3,7 @@
   import { fade } from "svelte/transition";
   import { createModelStore } from "./store/main"
   import Navbar from "./components/layout/Navbar";
+  import Avatar from "./components/layout/Avatar";
   import General from "./components/General";
   import Measures from "./components/Measures";
   import Photos from "./components/Photos";
@@ -25,21 +26,22 @@
   onMount(async () => {
     modelStore = await createModelStore()
   })
-  
 </script>
 
 {#if modelStore}
   <div transition:fade={{duration: 600 }}>
-    <Navbar on:changeTab={changeTab} userId={$modelStore.id} />
+    <Navbar on:changeTab={changeTab}>
+      <Avatar {modelStore} />
+    </Navbar>
 
     {#if tab === 0}
-      <General bind:modelStore />
+      <General {modelStore} />
     {:else if tab === 1}
       <Measures />
     {:else if tab === 2}
       <Photos />
     {:else if tab === 3}
-      <Settings bind:modelStore />
+      <Settings {modelStore} />
     {/if}
   </div>
 {:else}

@@ -2,8 +2,6 @@
   import { fly } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
 
-  export let userId
-
   const dispatch = createEventDispatcher();
 
   let navItems = [
@@ -64,32 +62,14 @@
 </button>
 
 <!-- Backdrop -->
-<div
-  on:click={toggle}
-  class="{isOpen ? 'block' : 'hidden'} mt-48 absolute inset-0 bg-black
-  opacity-25" />
+<div on:click={toggle} class="{isOpen ? 'block' : 'hidden'} h-full mt-48 absolute inset-0 bg-black opacity-25 sm:h-auto" />
 
 <!-- Profile Navigation -->
 {#if isOpen}
-  <nav
-    transition:fly={{ x: -200, duration: 500 }}
-    class="mt-48 absolute inset-y-0 lef-0 w-9/12 shadow-lg bg-gray-100 sm:w-5/12">
-    <div class="py-6 mb-2 flex items-center border-b-2 border-gray-900">
-      <div class="ml-8 h-8 w-8 border border-gray-500 rounded-full overflow-hidden">
-        <a href={`/models/${userId}`}>
-          <svg class="fill-current text-gray-700 w-full h-full" viewBox="0 0 20 20">
-            <path
-              d="M10,10.9c2.373,0,4.303-1.932,4.303-4.306c0-2.372-1.93-4.302-4.303-4.302S5.696,4.223,5.696,6.594C5.696,8.969,7.627,10.9,10,10.9z
-              M10,3.331c1.801,0,3.266,1.463,3.266,3.263c0,1.802-1.465,3.267-3.266,3.267c-1.8,0-3.265-1.465-3.265-3.267C6.735,4.794,8.2,3.331,10,3.331z" />
-            <path
-              d="M10,12.503c-4.418,0-7.878,2.058-7.878,4.685c0,0.288,0.231,0.52,0.52,0.52c0.287,0,0.519-0.231,0.519-0.52c0-1.976,3.132-3.646,6.84-3.646c3.707,0,6.838,1.671,6.838,3.646c0,0.288,0.234,0.52,0.521,0.52s0.52-0.231,0.52-0.52C17.879,14.561,14.418,12.503,10,12.503z" />
-          </svg>
-        </a> 
-      </div>
-      <a href={`/models/${userId}`} class="block ml-2 text-lg text-gray-700 tracking-wide font-semibold">
-        Profile
-      </a>
-    </div>
+  <nav transition:fly={{ x: -200, duration: 500 }} class="mt-48 w-9/12 h-full absolute inset-y-0 lef-0 shadow-lg bg-gray-100 sm:w-5/12 sm:h-auto">
+    <!-- AVATAR -->
+    <slot></slot>
+
     {#each navItems as item, i}
       <div class="text-gray-700 hover:text-white hover:bg-gray-400">
         <button
