@@ -1,7 +1,7 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from "svelte";
   import { fade } from "svelte/transition";
-  import { createModelStore } from "./store/main"
+  import modelStore from "./store/main";
   import Navbar from "./components/layout/Navbar";
   import Avatar from "./components/layout/Avatar";
   import General from "./components/General";
@@ -10,39 +10,48 @@
   import Settings from "./components/Settings";
   import Spinner from "./components/shared/Spinner";
 
-  let modelStore;
-  let tab = parseInt(localStorage.getItem('current_tab'));
+  let model;
+  let tab = parseInt(localStorage.getItem("current_tab"));
 
-  // check if there's a tab and 
+  // check if there's a tab and
   // tab is not greater than the pages we have
   if (!tab || tab > 3) tab = 0;
 
   const changeTab = ({ detail }) => {
     tab = detail;
     // Persist the current tab
-    localStorage.setItem('current_tab', JSON.stringify(detail))
+    localStorage.setItem("current_tab", JSON.stringify(detail));
   };
 
-  onMount(async () => {
-    modelStore = await createModelStore()
-  })
+  const unsub = modelStore.subscribe(modelData => (model = modelData));
+
+  onMount(() => {
+    modelStore.populate();
+  });
+
+  onDestroy(() => {
+    unsub();
+  });
 </script>
 
-{#if modelStore}
-  <div transition:fade={{duration: 600 }}>
+{#if model}
+  <div class="relative flex h-screen" transition:fade={{ duration: 600 }}>
+
     <Navbar on:changeTab={changeTab}>
-      <Avatar {modelStore} />
+      <Avatar {model} />
     </Navbar>
 
-    {#if tab === 0}
-      <General {modelStore} />
-    {:else if tab === 1}
-      <Measures />
-    {:else if tab === 2}
-      <Photos />
-    {:else if tab === 3}
-      <Settings {modelStore} />
-    {/if}
+    <div class="px-4 mt-4 w-full">
+      {#if tab === 0}
+        <General {model} />
+      {:else if tab === 1}
+        <Measures />
+      {:else if tab === 2}
+        <Photos />
+      {:else if tab === 3}
+        <Settings {model} />
+      {/if}
+    </div>
   </div>
 {:else}
   <Spinner />

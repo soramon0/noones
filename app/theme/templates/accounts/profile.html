@@ -1,13 +1,31 @@
-{% extends 'base.html' %} {% load static %}
+{% load static %}
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<meta name="description" content="Where models and clients gather">
+	<link rel="stylesheet" href="{% static 'css/styles.min.css' %}" />
+	<title>No One's Company {% block title %} {% endblock %}</title>
+</head>
+<body>
+	{% include 'partials/_navbar.html' %}
+	<div id="checkConnection" class="flex justify-between items-center px-4 w-2/3 h-16 rounded-b fixed top-0 z-50 text-white bg-gray-700 transition duration-300 ease-out transform -translate-x-1/2 -translate-y-full sm:w-64" style="left: 50%; right: 50%;">
+		<div class="flex justify-between items-center">
+			<div id="checkConnection-indicator" class="inline-block mr-2 w-4 h-4 rounded-full"></div>
+			<span id="checkConnection-text"></sp>
+		</div>
 
-<!-- Profile -->
-{% block content %}
+		<div>
+			<button id="checkConnection-reconnect" class="bg-gray-200 text-black px-3 py-1 rounded">Reconnect</button>
+		</div>
+	</div>
 
-<!-- Header -->
-{% include "partials/_header.html" with title="Welcome to your profile" %}
+	<!-- Header -->
+	{% include "partials/_header.html" with title="Welcome to your profile" %}
 
-<div id="svelte-app"></div>
+	<div id="svelte-app"></div>
 
-<script src="{% static 'js/svelte.bundle.js' %}"></script>
-
-{% endblock %}
+	<script src="{% static 'js/svelte.bundle.js' %}"></script>
+	<script src="{% static 'js/main.bundle.js' %}"></script>
+</body>
+</html>

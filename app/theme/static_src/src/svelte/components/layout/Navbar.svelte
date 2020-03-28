@@ -1,8 +1,8 @@
 <script>
-  import { fly } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher();
+  let activeLink = parseInt(localStorage.getItem("current_tab"));
 
   let navItems = [
     {
@@ -42,12 +42,25 @@
   const toggle = () => (isOpen = !isOpen);
 
   const chooseTab = key => {
+    activeLink = key;
     dispatch("changeTab", key);
-    toggle();
   };
 </script>
 
-<button class="mt-4 mx-4" on:click={toggle}>
+<style>
+  @media (max-width: 640px) {
+    .profile-sidedrawer {
+      transform: translateX(-100%);
+      transition: transform 0.3s ease-out;
+    }
+  }
+
+  .profile-sidedrawer.open {
+    transform: translateX(0);
+  }
+</style>
+
+<button class="absolute my-6 ml-2 sm:hidden" on:click={toggle}>
   <svg class="fill-current text-gray-600 h-6 w-6" viewBox="0 0 20 20">
     <path
       d="M1.683,3.39h16.676C18.713,3.39,19,3.103,19,2.749s-0.287-0.642-0.642-0.642H1.683
@@ -62,23 +75,28 @@
 </button>
 
 <!-- Backdrop -->
-<div on:click={toggle} class="{isOpen ? 'block' : 'hidden'} h-full mt-48 absolute inset-0 bg-black opacity-25 sm:h-auto" />
+<div
+  on:click={toggle}
+  class="absolute inset-0 bg-black opacity-50 {isOpen ? 'block' : 'hidden'}" />
 
 <!-- Profile Navigation -->
-{#if isOpen}
-  <nav transition:fly={{ x: -200, duration: 500 }} class="mt-48 w-9/12 h-full absolute inset-y-0 lef-0 shadow-lg bg-gray-100 sm:w-5/12 sm:h-auto">
-    <!-- AVATAR -->
-    <slot></slot>
+<nav
+  class="profile-sidedrawer w-56 h-screen absolute z-10 shadow-md border-r
+  border-gray-500 bg-gray-100 sm:relative sm:w-20 md:w-64 {isOpen ? 'open' : ''}">
+  <!-- AVATAR -->
+  <slot />
 
-    {#each navItems as item, i}
-      <div class="text-gray-700 hover:text-white hover:bg-gray-400">
-        <button
-          class="p-4 w-full flex focus:bg-gray-300 focus:outline-none"
-          on:click={chooseTab.bind(this, i)}>
-          {@html item.svg}
-          <span class="ml-2 font-medium">{item.text}</span>
-        </button>
-      </div>
-    {/each}
-  </nav>
-{/if}
+  {#each navItems as item, i}
+    <div
+      class="text-gray-700 hover:bg-gray-400 {i === activeLink ? 'border-l-4 border-indigo-400 bg-gray-200' : ''}">
+      <button
+        class="p-4 w-full flex focus:bg-gray-300 focus:outline-none"
+        on:click={chooseTab.bind(this, i)}>
+        {@html item.svg}
+        <span class="ml-2 font-medium md:block {isOpen ? 'block' : 'hidden'}">
+          {item.text}
+        </span>
+      </button>
+    </div>
+  {/each}
+</nav>
