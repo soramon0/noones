@@ -1,5 +1,6 @@
 <script>
   import { onMount, onDestroy } from "svelte";
+  import { fly } from "svelte/transition";
   import { fade } from "svelte/transition";
   import modelStore from "./store/main";
   import Navbar from "./components/layout/Navbar";
@@ -43,13 +44,21 @@
 
     <div class="px-4 mt-4 w-full">
       {#if tab === 0}
-        <General {model} />
+        <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
+          <General {model} />
+        </div>
       {:else if tab === 1}
-        <Measures />
+        <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
+          <Measures />
+        </div>
       {:else if tab === 2}
-        <Photos />
+        <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
+          <Photos />
+        </div>
       {:else if tab === 3}
-        <Settings {model} />
+        <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
+          <Settings {model} />
+        </div>
       {/if}
     </div>
   </div>

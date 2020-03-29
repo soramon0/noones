@@ -47,6 +47,7 @@
   };
 </script>
 
+<!-- TODO(karim): If I don't add more styles then add this to the main stylesheet -->
 <style>
   @media (max-width: 640px) {
     .profile-sidedrawer {
@@ -77,11 +78,11 @@
 <!-- Backdrop -->
 <div
   on:click={toggle}
-  class="absolute inset-0 bg-black opacity-50 {isOpen ? 'block' : 'hidden'}" />
+  class="absolute inset-0 bg-black z-10 opacity-50 {isOpen ? 'block' : 'hidden'}" />
 
 <!-- Profile Navigation -->
 <nav
-  class="profile-sidedrawer w-56 h-screen absolute z-10 shadow-md border-r
+  class="profile-sidedrawer w-56 h-screen absolute z-20 shadow-md border-r
   border-gray-500 bg-gray-100 sm:relative sm:w-20 md:w-64 {isOpen ? 'open' : ''}">
   <!-- AVATAR -->
   <slot />

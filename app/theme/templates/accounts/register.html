@@ -1,4 +1,8 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
 
 <!-- Header -->
 {% include "partials/_header.html" with title="Sign up" %}
@@ -27,10 +31,10 @@
     </div>
   </div>
 
-  <form class="mt-6" action="{% url 'register' %}" method="post">
+  <form class="register-form mt-6 px-4 sm:px-0 relative overflow-hidden" action="{% url 'register' %}" method="post">
     {% csrf_token %}
     {{ form.non_field_errors }}
-    <div class="block px-4">
+    <div class="current transition duration-300 ease-in-out transform">
       <h3 class="uppercase text-2xl font-normal mt-12 tracking-wide">Contact</h3>
       {% include "partials/_alerts.html" %}
       <div class="mt-4 sm:flex">
@@ -109,53 +113,60 @@
           </div>
         </div>
       </div>
+      <div class="button-container text-right mt-6 mx-2">
+        <button type="button" class="next w-full text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Next</button>
+      </div>
     </div>
-    <div class="block px-4">
+    <div class="absolute top-0 transition duration-500 ease-in-out transform translate-x-full opacity-0">
       <h3 class="mt-12 uppercase text-2xl font-normal tracking-wide">Racontez nous</h3>
-        <div class="mt-4 md:pl-0 md:flex md:flex-wrap">
-          <div class="mt-2 md:w-1/2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.q1.id_for_label }}">Qui étés vous?:</label>
-            {{ form.q1 }}
-            {% include "partials/_form_errors.html" with key=form.q1 %}
-          </div>
-          <div class="mt-2 md:w-1/2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.q2.id_for_label }}">Que connaissez-vous à propos de la MODE?:</label>
-            {{ form.q2 }}
-            {% include "partials/_form_errors.html" with key=form.q2 %}
-          </div>
-          <div class="mt-2 md:w-1/2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.q3.id_for_label }}">Pourquoi devons-nous approuver votre inscription?:</label>
-            {{ form.q3 }}
-            {% include "partials/_form_errors.html" with key=form.q3 %}
-          </div>
+      <div class="mt-4 md:pl-0 md:flex md:flex-wrap">
+        <div class="mt-2 md:w-1/2">
+          <label class="block text-gray-800 font-semibold" for="{{ form.q1.id_for_label }}">Qui étés vous?:</label>
+          {{ form.q1 }}
+          {% include "partials/_form_errors.html" with key=form.q1 %}
         </div>
-        <div class="mt-4 text-xs sm:text-sm">
-          <p>
-            Un NOC MODEL doit être considéré comme idole dans le monde de la MODE.
-          </p>
-          <p class="mt-2">
-            Vous devriez avoir le potentiel de renforcer votre talent, la
-            détermination pour travailler dur pour vos rêves et un bagage lourd de
-            valeurs et d’éthiques pour allumer votre parcours.
-          </p>
-          <p class="my-2">Un NOC MODEL est seulement officiel si :</p>
-          <ul class="ml-2 pl-4">
-            <li class="disc-list-item"><span class="list-disc"></span> Elle/il a suivi une formation de 3 mois fournie par l'agence</li>
-            <li class="disc-list-item"><span class="list-disc"></span> Elle/il obtient un certificat signé par No One’sCompany.</li>
-            <li class="disc-list-item"><span class="list-disc"></span> Elle/Il est à la UNE sur la page NOCMODELS dans www.nocmodels.com`</li>
-          </ul>
-          <div class="mt-2 mt-4">
-            <label class="block text-gray-800 font-semibold mb-2" for="{{ form.q4.id_for_label }}">Voulez-vous devenir un(e) NOC MODEL?:</label>
-            {% for radio in form.q4  %}
-              <div class="block mb-2">
-                {{ radio }}
-              </div>
-            {% endfor %}
-            {% include "partials/_form_errors.html" with key=form.q4 %}
-          </div>
+        <div class="mt-2 md:w-1/2">
+          <label class="block text-gray-800 font-semibold" for="{{ form.q2.id_for_label }}">Que connaissez-vous à propos de la MODE?:</label>
+          {{ form.q2 }}
+          {% include "partials/_form_errors.html" with key=form.q2 %}
         </div>
+        <div class="mt-2 md:w-1/2">
+          <label class="block text-gray-800 font-semibold" for="{{ form.q3.id_for_label }}">Pourquoi devons-nous approuver votre inscription?:</label>
+          {{ form.q3 }}
+          {% include "partials/_form_errors.html" with key=form.q3 %}
+        </div>
+      </div>
+      <div class="mt-4 text-xs sm:text-sm">
+        <p>
+          Un NOC MODEL doit être considéré comme idole dans le monde de la MODE.
+        </p>
+        <p class="mt-2">
+          Vous devriez avoir le potentiel de renforcer votre talent, la
+          détermination pour travailler dur pour vos rêves et un bagage lourd de
+          valeurs et d’éthiques pour allumer votre parcours.
+        </p>
+        <p class="my-2">Un NOC MODEL est seulement officiel si :</p>
+        <ul class="ml-2 pl-4">
+          <li class="disc-list-item"><span class="list-disc"></span> Elle/il a suivi une formation de 3 mois fournie par l'agence</li>
+          <li class="disc-list-item"><span class="list-disc"></span> Elle/il obtient un certificat signé par No One’sCompany.</li>
+          <li class="disc-list-item"><span class="list-disc"></span> Elle/Il est à la UNE sur la page NOCMODELS dans www.nocmodels.com`</li>
+        </ul>
+        <div class="mt-2 mt-4">
+          <label class="block text-gray-800 font-semibold mb-2" for="{{ form.q4.id_for_label }}">Voulez-vous devenir un(e) NOC MODEL?:</label>
+          {% for radio in form.q4  %}
+            <div class="block mb-2">
+              {{ radio }}
+            </div>
+          {% endfor %}
+          {% include "partials/_form_errors.html" with key=form.q4 %}
+        </div>
+      </div>
+      <div class="button-container text-right mt-6 mx-2">
+        <button type="button" class="previous w-full mb-2 text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Previous</button>
+        <button type="button" class="next w-full text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Next</button>
+      </div>
     </div>
-    <div class="block px-4">
+    <div class="absolute top-0 transition duration-500 ease-in-out transform translate-x-full opacity-0">
       <h3 class="uppercase text-2xl font-normal mt-12 tracking-wide">Mensurations</h3>
       <p class="mt-2 text-base text-center">C'est l'une des parties les plus importantes de votre inscription.
       Veuillez comprendre que n'importe quelle information fausse pourrait
@@ -221,11 +232,15 @@
         </span>
         {% include "partials/_form_errors.html" with key=form.permitted %}
       </div>
-    </div>
-    <div class="text-right mt-6 mx-2">
-      <button type="submit" class="w-full text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Register</button>
+      <div class="button-container text-right mt-6 mx-2">
+        <button type="button" class="previous w-full mb-2 text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Previous</button>
+        <button class="w-full text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Register</button>
+      </div>
     </div>
   </form>
 </section>
+
+<script src="{% static 'js/register.bundle.js' %}"></script>
+
 
 {% endblock %}

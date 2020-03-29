@@ -12,6 +12,7 @@ module.exports = {
     modelModal: "./src/main/modelModal.js",
     infiniteScroll: "./src/main/infiniteScroll.js",
     search: "./src/main/search.js",
+    register: "./src/main/register.js",
     svelte: "./src/svelte/index.js"
   },
   output: {
