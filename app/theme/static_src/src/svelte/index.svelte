@@ -1,17 +1,16 @@
 <script>
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
   import { fly } from "svelte/transition";
   import { fade } from "svelte/transition";
   import modelStore from "./store/main";
   import Navbar from "./components/layout/Navbar";
-  import Avatar from "./components/layout/Avatar";
+  import Avatar from "./components/Avatar";
   import General from "./components/General";
   import Measures from "./components/Measures";
   import Photos from "./components/Photos";
   import Settings from "./components/Settings";
   import Spinner from "./components/shared/Spinner";
 
-  let model;
   let tab = parseInt(localStorage.getItem("current_tab"));
 
   // check if there's a tab and
@@ -24,14 +23,10 @@
     localStorage.setItem("current_tab", JSON.stringify(detail));
   };
 
-  const unsub = modelStore.subscribe(modelData => (model = modelData));
+  $: model = $modelStore;
 
   onMount(() => {
     modelStore.populate();
-  });
-
-  onDestroy(() => {
-    unsub();
   });
 </script>
 
@@ -53,7 +48,7 @@
         </div>
       {:else if tab === 2}
         <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
-          <Photos />
+          <Photos profile={model.profilePicture} cover={model.coverPicture} />
         </div>
       {:else if tab === 3}
         <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
