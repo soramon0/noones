@@ -1,18 +1,24 @@
-from rest_framework import serializers, viewsets
+from rest_framework import serializers
 
-from models.models import Model
+from models.models import Model, Mensuration, History
+from core.models import User
 
-class MyModel(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    title = serializers.CharField(required=False, allow_blank=True, max_length=100)
 
-# Serializers define the API representation.
-class MyModelSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email']
+
+
+class ModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Model
-        fields = ['url', 'id']
+        fields = ['id', 'sexe', 'first_name', 'last_name', 'bio', 'birth_date', 'user', 'profilePicture', 'coverPicture',
+                  'facebook', 'instagram', 'phone', 'addresse', 'city', 'country', 'zipcode', 'cin']
 
-# ViewSets define the view behavior.
-class ModelsViewSet(viewsets.ModelViewSet):
-    queryset = Model.objects.all()
-    serializer_class = MyModelSerializer
+
+class MeasuresSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Mensuration
+        fields = ['id', 'taille', 'taillenombrill', 'buste', 'epaules',
+                  'hanches', 'poids', 'pointure', 'cheveux', 'yeux']

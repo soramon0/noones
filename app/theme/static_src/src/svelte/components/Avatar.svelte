@@ -10,7 +10,7 @@
     class="w-12 h-12 border border-gray-500 rounded-full overflow-hidden md:w-16
     md:h-16">
     {#if profilePicture}
-      <img src={`/media/${profilePicture}`} alt="user profile picture" />
+      <img src={`${profilePicture}`} alt="user profile picture" />
     {:else}
       <svg class="fill-current text-gray-700 w-full h-full" viewBox="0 0 20 20">
         <path

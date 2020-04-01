@@ -11,6 +11,7 @@ RADIO_CLASS = {'class': 'form-radio'}
 CHECKBOX_CLASS = {'class': 'form-checkbox'}
 HIDDEN_CLASS = {'class': 'form-input hidden'}
 
+
 class UserForm(MForm):
     class Meta:
         model = User
@@ -20,11 +21,12 @@ class UserForm(MForm):
             'password': forms.PasswordInput(attrs=INPUT_CLASS)
         }
 
+
 class ModelForm(MForm):
     class Meta:
         model = Model
-        fields = ['sexe', 'first_name','sexe', 'last_name','sexe', 'bio', 'birth_date',
-                'facebook', 'instagram', 'phone', 'addresse','city', 'country','zipcode', 'cin']
+        fields = ['sexe', 'first_name', 'last_name', 'bio', 'birth_date',
+                  'facebook', 'instagram', 'phone', 'addresse', 'city', 'country', 'zipcode', 'cin']
         widgets = {
             'first_name': TextInput(attrs=INPUT_CLASS),
             'last_name': TextInput(attrs=INPUT_CLASS),
@@ -52,10 +54,12 @@ class HistoryForm(MForm):
             'q4': forms.RadioSelect(attrs=RADIO_CLASS),
         }
 
+
 class MensurationForm(MForm):
     class Meta:
         model = Mensuration
-        fields = ['taille', 'taillenombrill' , 'buste' , 'epaules', 'hanches', 'poids', 'pointure', 'cheveux', 'yeux', 'permitted']
+        fields = ['taille', 'taillenombrill', 'buste', 'epaules',
+                  'hanches', 'poids', 'pointure', 'cheveux', 'yeux', 'permitted']
         widgets = {
             'taille': NumberInput(attrs=INPUT_CLASS),
             'taillenombrill': NumberInput(attrs=INPUT_CLASS),
@@ -69,8 +73,13 @@ class MensurationForm(MForm):
             'permitted': forms.CheckboxInput(attrs=CHECKBOX_CLASS),
         }
 
+
 class ModelContactForm(forms.Form):
-    model_id = forms.CharField(max_length=100, widget=TextInput(attrs=HIDDEN_CLASS))
-    model_nom = forms.CharField(min_length=3, max_length=100, widget=TextInput(attrs=INPUT_CLASS))
-    email = forms.EmailField(max_length=255, widget=forms.EmailInput(attrs=INPUT_CLASS))
-    phone = forms.CharField(min_length=6, max_length=100, widget=TextInput(attrs=INPUT_CLASS))
+    model_id = forms.CharField(
+        max_length=100, widget=TextInput(attrs=HIDDEN_CLASS))
+    model_nom = forms.CharField(
+        min_length=3, max_length=100, widget=TextInput(attrs=INPUT_CLASS))
+    email = forms.EmailField(
+        max_length=255, widget=forms.EmailInput(attrs=INPUT_CLASS))
+    phone = forms.CharField(min_length=6, max_length=100,
+                            widget=TextInput(attrs=INPUT_CLASS))

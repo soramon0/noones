@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
   import { fade } from "svelte/transition";
-  import modelStore from "./store/main";
+  import userStore from "./store/main";
   import Navbar from "./components/layout/Navbar";
   import Avatar from "./components/Avatar";
   import General from "./components/General";
@@ -23,24 +23,24 @@
     localStorage.setItem("current_tab", JSON.stringify(detail));
   };
 
-  $: model = $modelStore;
+  $: userData = $userStore;
 
   onMount(() => {
-    modelStore.populate();
+    userStore.populate();
   });
 </script>
 
-{#if model}
+{#if userData}
   <div class="relative flex h-screen" transition:fade={{ duration: 600 }}>
 
     <Navbar on:changeTab={changeTab}>
-      <Avatar {model} />
+      <Avatar model={userData.model} />
     </Navbar>
 
     <div class="px-4 mt-4 w-full">
       {#if tab === 0}
         <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
-          <General {model} />
+          <General model={userData.model} />
         </div>
       {:else if tab === 1}
         <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
@@ -48,11 +48,13 @@
         </div>
       {:else if tab === 2}
         <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
-          <Photos profile={model.profilePicture} cover={model.coverPicture} />
+          <Photos
+            profile={userData.model.profilePicture}
+            cover={userData.model.coverPicture} />
         </div>
       {:else if tab === 3}
         <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
-          <Settings {model} />
+          <Settings model={userData.model} />
         </div>
       {/if}
     </div>

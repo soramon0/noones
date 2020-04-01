@@ -150,7 +150,7 @@
       overflow-hidden">
       {#if cover}
         <img
-          src="/media/{cover}"
+          src={cover}
           alt="cover picture"
           class="w-full h-full object-cover" />
       {:else}
@@ -204,7 +204,7 @@
       <div class="rounded-md overflow-hidden">
         {#if profile}
           <img
-            src="/media/{profile}"
+            src={profile}
             alt="profile picture"
             class="w-full h-full object-cover" />
         {:else}
