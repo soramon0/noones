@@ -1,7 +1,7 @@
 from django.urls import path
 
-from . import views
+from .views import ModelAPIView
 
 urlpatterns = [
-    path('models/me/', views.me, name='me'),
+    path('models/me/', ModelAPIView.as_view(), name='me'),
 ]

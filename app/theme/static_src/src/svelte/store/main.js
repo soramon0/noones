@@ -8,8 +8,8 @@ export default {
   populate: async () => {
     const res = await fetch('/api/models/me');
 
-    if (!res.ok) {
-      window.location.replace('/');
+    if (res.status === 401) {
+      return window.location.replace('/');
     }
 
     const data = await res.json();
