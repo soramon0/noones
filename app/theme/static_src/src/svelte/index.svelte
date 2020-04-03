@@ -12,6 +12,8 @@
   import Spinner from "./components/shared/Spinner";
 
   let tab = parseInt(localStorage.getItem("current_tab"));
+  let loaded = false;
+  $: userData = $userStore;
 
   // check if there's a tab and
   // tab is not greater than the pages we have
@@ -22,15 +24,19 @@
     // Persist the current tab
     localStorage.setItem("current_tab", JSON.stringify(detail));
   };
-
-  $: userData = $userStore;
-
-  onMount(() => {
-    userStore.populate();
+ 
+  onMount(async () => {
+    await userStore.populate();
+    loaded = true;
   });
 </script>
 
-{#if userData}
+{#if loaded}
+  {#if userData.errors.detail}
+    <div transition:fly={{ x: -200, duration: 500 }} class="px-4 py-6 bg-red-500 text-white">
+      <p>{userData.errors.detail}</p>
+    </div>
+  {/if}
   <div class="relative flex h-screen" transition:fade={{ duration: 600 }}>
 
     <Navbar on:changeTab={changeTab}>
@@ -40,11 +46,11 @@
     <div class="px-4 mt-4 w-full">
       {#if tab === 0}
         <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
-          <General model={userData.model} />
+          <General model={userData.model} errors={userData.errors} />
         </div>
       {:else if tab === 1}
         <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
-          <Measures />
+          <Measures measures={userData.measures} errors={userData.errors} />
         </div>
       {:else if tab === 2}
         <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
@@ -54,7 +60,7 @@
         </div>
       {:else if tab === 3}
         <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
-          <Settings model={userData.model} />
+          <Settings email={userData.model.email} />
         </div>
       {/if}
     </div>

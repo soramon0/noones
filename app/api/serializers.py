@@ -13,12 +13,18 @@ class UserSerializer(serializers.ModelSerializer):
 class ModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Model
-        fields = ['id', 'sexe', 'first_name', 'last_name', 'bio', 'birth_date', 'user', 'profilePicture', 'coverPicture',
+        fields = ['id', 'user', 'sexe', 'first_name', 'last_name', 'bio', 'birth_date',
+                  'facebook', 'instagram', 'phone', 'addresse', 'city', 'country', 'zipcode', 'cin']
+    
+class ModelSerializerWithImages(serializers.ModelSerializer):
+    class Meta:
+        model = Model
+        fields = ['id', 'user', 'sexe', 'first_name', 'last_name', 'bio', 'birth_date', 'profilePicture', 'coverPicture',
                   'facebook', 'instagram', 'phone', 'addresse', 'city', 'country', 'zipcode', 'cin']
 
 
 class MeasuresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Mensuration
-        fields = ['id', 'taille', 'taillenombrill', 'buste', 'epaules',
+        fields = ['id', 'user', 'taille', 'taillenombrill', 'buste', 'epaules',
                   'hanches', 'poids', 'pointure', 'cheveux', 'yeux']

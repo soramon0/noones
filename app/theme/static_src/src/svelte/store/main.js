@@ -1,4 +1,6 @@
 import { writable } from 'svelte/store';
+import http from '../../main/http';
+
 const { subscribe, set, update } = writable(null);
 
 export default {
@@ -6,14 +8,31 @@ export default {
   update,
   set,
   populate: async () => {
-    const res = await fetch('/api/models/me');
+    try {
+      const { data } = await http.get(`/models/me/`);
+      data.errors = {};
 
-    if (res.status === 401) {
-      return window.location.replace('/');
+      set(data);
+    } catch ({ response }) {
+      if (response && response.status == 401) {
+        window.location.replace('/');
+      }
     }
-
-    const data = await res.json();
-
-    set(data);
-  }
+  },
+  updateModel: async (payload) => {
+    try {
+      const { data } = await http.put(`/models/${payload.id}/`, payload);
+      update((store) => ({ ...store, model: data, errors: {} }));
+    } catch ({ response }) {
+      update((store) => ({ ...store, errors: response.data }));
+    }
+  },
+  updateMeasures: async (payload) => {
+    try {
+      const { data } = await http.put(`/measures/${payload.id}/`, payload);
+      update((store) => ({ ...store, measures: data, errors: {} }));
+    } catch ({ response }) {
+      update((store) => ({ ...store, errors: response.data }));
+    }
+  },
 };

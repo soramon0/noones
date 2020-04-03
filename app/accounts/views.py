@@ -25,6 +25,7 @@ def signin(request):
         user = auth.authenticate(email=email, password=password)
 
         if user is None:
+            # TODO(karim): use a better message
             messages.error(request, 'Bad login! Please try again ')
             return render(request, 'accounts/signin.html', {'form': form})
 
@@ -86,8 +87,8 @@ def register(request):
         history = History(q1=q1, q2=q2, q3=q3, q4=q4)
 
         measures = Mensuration(taille=taille, taillenombrill=taillenombrill, buste=buste, epaules=epaules,
-                                hanches=hanches, poids=poids, pointure=pointure, cheveux=cheveux, yeux=yeux,
-                                permitted=permitted)
+                               hanches=hanches, poids=poids, pointure=pointure, cheveux=cheveux, yeux=yeux,
+                               permitted=permitted)
 
         model = Model(first_name=first_name, last_name=last_name, handle=handle, birth_date=birth_date, facebook=facebook,
                       instagram=instagram, phone=phone, addresse=addresse, city=city, country=country, zipcode=zipcode,
