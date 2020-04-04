@@ -1,28 +1,38 @@
 <script>
-  import userStore from '../store/main'
+  import userStore from "../store/main";
   import Breadcrumb from "./shared/Breadcrumb";
-  import Card from './shared/Card'
+  import Card from "./shared/Card";
   import FormInput from "./shared/FormInput";
+  import UpdateButton from "./shared/UpdateButton";
+  import SuccessNotifier from "./shared/SuccessNotifier";
 
   export let measures;
   export let errors;
-  let submitted = false;
+  export let response;
 
   const onValueChanged = ({ detail }) => {
     measures[detail.name] = detail.value;
   };
 
   const handleSubmit = async () => {
-    submitted = true;    
-    await userStore.updateMeasures(measures)
-    submitted = false
-  };
+    await userStore.updateMeasures(measures);
 
+    // Show a success message
+    if (response.success) {
+      // Hide the success message after 3 seconds
+      window.scrollTo(0, 0);
+      setTimeout(() => {
+        userStore.setSuccess(false);
+      }, 3000);
+    }
+  };
 </script>
 
 <Breadcrumb activeText="Measures" />
 
-<Card>
+<SuccessNotifier response={response.success} />
+
+<Card classes="mb-48">
   <form on:submit|preventDefault={handleSubmit}>
     <div class="sm:flex sm:justify-center">
       <div class="sm:w-64 md:w-5/12">
@@ -91,12 +101,6 @@
           on:valueChanged={onValueChanged} />
       </div>
     </div>
-    <div class="text-right mt-6">
-      <button
-        class="btn-black capitalize hover:bg-gray-700 sm:w-auto {submitted ? 'bg-gray-700 cursor-not-allowed' : ''}"
-        disabled={submitted}>
-        Update
-      </button>
-    </div>
+    <UpdateButton fetching={response.fetching} />
   </form>
 </Card>

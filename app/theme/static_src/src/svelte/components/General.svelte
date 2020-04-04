@@ -1,25 +1,38 @@
 <script>
-  import userStore from '../store/main'
+  import userStore from "../store/main";
   import Breadcrumb from "./shared/Breadcrumb";
-  import Card from './shared/Card'
+  import Card from "./shared/Card";
   import FormInput from "./shared/FormInput";
+  import SuccessNotifier from "./shared/SuccessNotifier";
+  import UpdateButton from "./shared/UpdateButton";
 
   export let model;
   export let errors;
-  let submitted = false;
+  export let response;
 
   const onValueChanged = ({ detail }) => {
     model[detail.name] = detail.value;
   };
 
   const handleSubmit = async () => {
-    submitted = true;
-    await userStore.updateModel(model)
-    submitted = false
+    await userStore.updateModel(model);
+
+    // Show a success message
+    if (response.success) {
+      // Hide the success message after 3 seconds
+      window.scrollTo(0, 0);
+      setTimeout(() => {
+        userStore.setSuccess(false);
+      }, 3000);
+    }
   };
+
+  $: console.log(model);
 </script>
 
 <Breadcrumb activeText="General" />
+
+<SuccessNotifier response={response.success} />
 
 <Card>
   <form on:submit|preventDefault={handleSubmit}>
@@ -102,18 +115,13 @@
           on:valueChanged={onValueChanged} />
         <FormInput
           value={model.bio}
+          type="textarea"
           name="bio"
           label="Bio"
           errors={errors['bio']}
           on:valueChanged={onValueChanged} />
       </div>
     </div>
-    <div class="text-right mt-6">
-      <button
-        class="btn-black capitalize hover:bg-gray-700 sm:w-auto {submitted ? 'bg-gray-700 cursor-not-allowed' : ''}"
-        disabled={submitted}>
-        Update
-      </button>
-    </div>
+    <UpdateButton fethcing={response.fetching} />
   </form>
 </Card>

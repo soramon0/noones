@@ -1,16 +1,15 @@
 <script>
-  export let model;
-
-  let { profilePicture, id } = model;
+  export let profile;
+  export let id;
 </script>
 
 <div
-  class="py-6 mb-2 flex items-center justify-center border-b-2 border-gray-900">
+  class="py-6 mb-2 flex items-center justify-center border-b-2 border-gray-300">
   <div
     class="w-12 h-12 border border-gray-500 rounded-full overflow-hidden md:w-16
     md:h-16">
-    {#if profilePicture}
-      <img src={`${profilePicture}`} alt="user profile picture" />
+    {#if profile}
+      <img src={`${profile}`} alt="user profile picture" />
     {:else}
       <svg class="fill-current text-gray-700 w-full h-full" viewBox="0 0 20 20">
         <path

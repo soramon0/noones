@@ -47,7 +47,6 @@
   };
 </script>
 
-<!-- TODO(karim): If I don't add more styles then add this to the main stylesheet -->
 <style>
   @media (max-width: 640px) {
     .profile-sidedrawer {
@@ -61,6 +60,7 @@
   }
 </style>
 
+<!-- TODO(karim): If I don't add more styles then add this to the main stylesheet -->
 <button class="absolute my-6 ml-2 sm:hidden" on:click={toggle}>
   <svg class="fill-current text-gray-600 h-6 w-6" viewBox="0 0 20 20">
     <path
@@ -82,8 +82,8 @@
 
 <!-- Profile Navigation -->
 <nav
-  class="profile-sidedrawer w-56 h-screen absolute z-20 shadow-md border-r
-  border-gray-500 bg-gray-100 sm:relative sm:w-20 md:w-64 {isOpen ? 'open' : ''}">
+  class="profile-sidedrawer w-56 absolute z-20 shadow-md border-r
+  border-gray-400 bg-gray-100 sm:relative sm:w-20 md:w-64 {isOpen ? 'open' : ''}">
   <!-- AVATAR -->
   <slot />
 

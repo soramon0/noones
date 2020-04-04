@@ -2,33 +2,32 @@
   import Breadcrumb from "./shared/Breadcrumb";
   import FormInput from "./shared/FormInput";
   import UpdateButton from "./shared/UpdateButton";
-  import Card from "./shared/Card"
+  import Card from "./shared/Card";
 
   export let email;
   let submitted = false;
   const userData = {
-    password: '',
-    new_password: '',
-    confirm_password: '',
-    email,
-  }
+    password: "",
+    new_password: "",
+    confirm_password: "",
+    email
+  };
 
   const onValueChanged = ({ detail }) => {
     userData[detail.name] = detail.value;
   };
 
   const emailUpdate = async () => {
-    submitted = true;    
+    submitted = true;
     console.log(userData);
-    submitted = false
+    submitted = false;
   };
 
   const passwordUpdate = async () => {
-    submitted = true;    
+    submitted = true;
     console.log(userData);
-    submitted = false
+    submitted = false;
   };
-  
 </script>
 
 <Breadcrumb activeText="User Settings" />
@@ -36,7 +35,9 @@
 <div class="py-4 border-b-2 border-gray-200">
   <h2 class="text-lg">Email/Password</h2>
 </div>
-<div class="mt-4 flex flex-wrap justify-center">
+
+<!-- NOTE(karim): Adding bottom margin for now to expand the side menu -->
+<div class="mt-4 mb-48 flex flex-wrap justify-center">
   <Card classes="mb-4 h-40 sm:w-5/12 sm:mr-4">
     <form on:submit|preventDefault={emailUpdate}>
       <FormInput
@@ -49,7 +50,7 @@
       <UpdateButton />
     </form>
   </Card>
-  
+
   <Card classes="sm:w-5/12">
     <form on:submit|preventDefault={passwordUpdate}>
       <FormInput
