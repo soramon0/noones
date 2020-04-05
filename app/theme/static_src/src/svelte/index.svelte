@@ -31,6 +31,8 @@
     await userStore.populate();
     loaded = true;
   });
+
+  $: console.log(userData);
 </script>
 
 {#if loaded}
@@ -50,17 +52,11 @@
     <div class="px-4 mt-4 w-full mb-8">
       {#if tab === 0}
         <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
-          <General
-            model={userData.model}
-            response={userData.response}
-            errors={userData.errors} />
+          <General model={userData.model} errors={userData.errors} />
         </div>
       {:else if tab === 1}
         <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
-          <Measures
-            measures={userData.measures}
-            response={userData.response}
-            errors={userData.errors} />
+          <Measures measures={userData.measures} errors={userData.errors} />
         </div>
       {:else if tab === 2}
         <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
@@ -68,7 +64,7 @@
         </div>
       {:else if tab === 3}
         <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
-          <Settings email={userData.model.email} />
+          <Settings email={userData.email} />
         </div>
       {/if}
     </div>

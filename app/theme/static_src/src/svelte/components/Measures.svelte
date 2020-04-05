@@ -1,5 +1,6 @@
 <script>
   import userStore from "../store/main";
+  import uiStore from "../store/ui";
   import Breadcrumb from "./shared/Breadcrumb";
   import Card from "./shared/Card";
   import FormInput from "./shared/FormInput";
@@ -8,7 +9,7 @@
 
   export let measures;
   export let errors;
-  export let response;
+  $: uiData = $uiStore;
 
   const onValueChanged = ({ detail }) => {
     measures[detail.name] = detail.value;
@@ -18,11 +19,11 @@
     await userStore.updateMeasures(measures);
 
     // Show a success message
-    if (response.success) {
+    if (uiData.success) {
       // Hide the success message after 3 seconds
       window.scrollTo(0, 0);
       setTimeout(() => {
-        userStore.setSuccess(false);
+        uiStore.setSuccess(false);
       }, 3000);
     }
   };
@@ -30,7 +31,7 @@
 
 <Breadcrumb activeText="Measures" />
 
-<SuccessNotifier response={response.success} />
+<SuccessNotifier response={uiData.success} />
 
 <Card classes="mb-48">
   <form on:submit|preventDefault={handleSubmit}>
@@ -101,6 +102,6 @@
           on:valueChanged={onValueChanged} />
       </div>
     </div>
-    <UpdateButton fetching={response.fetching} />
+    <UpdateButton fetching={uiData.fetching} />
   </form>
 </Card>
