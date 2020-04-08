@@ -82,7 +82,7 @@
 
 <!-- Profile Navigation -->
 <nav
-  class="profile-sidedrawer w-56 absolute z-20 shadow-md border-r
+  class="profile-sidedrawer min-h-full w-56 absolute z-20 shadow-md border-r
   border-gray-400 bg-gray-100 sm:relative sm:w-20 md:w-64 {isOpen ? 'open' : ''}">
   <!-- AVATAR -->
   <slot />

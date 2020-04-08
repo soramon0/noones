@@ -31,8 +31,6 @@
     await userStore.populate();
     loaded = true;
   });
-
-  $: console.log(userData);
 </script>
 
 {#if loaded}

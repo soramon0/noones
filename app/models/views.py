@@ -52,10 +52,10 @@ def contact(request):
         try:
             data = json.loads(request.body.decode('utf-8'))
         except RawPostDataException:
-            return JsonResponse({'errors': { 'json': ['data is not valid json'] }})
+            return JsonResponse({'errors': {'json': ['data is not valid json']}})
 
         form = ModelContactForm(data)
-        
+
         if not form.is_valid():
             context = {
                 'errors': form.errors,
@@ -67,7 +67,7 @@ def contact(request):
         email = form.cleaned_data.get('email')
         phone = form.cleaned_data.get('phone')
 
-        error = {'errors': { 'model_nom': ['model do not exist'] }}
+        error = {'errors': {'model_nom': ['model do not exist']}}
 
         try:
             model = Model.objects.get(pk=model_id)
@@ -86,10 +86,11 @@ def contact(request):
         )
 
         # TODO(karim): Send email to admin
-        contact = Contact(model_id=model_id, model_nom=model_nom, model_email=model_email, email=email, phone=phone)
+        contact = Contact(model_id=model_id, model_nom=model_nom,
+                          model_email=model_email, email=email, phone=phone)
         contact.save()
 
-        return JsonResponse({'message': 'Contact ws successful'})
+        return JsonResponse({'message': 'Contact was successful'})
 
 
 def subset(request):
@@ -99,11 +100,12 @@ def subset(request):
     except ValueError:
         start = 0
         count = 12
-    
+
     # TODO(karim): check for is_public
     models = serialize('json', Model.objects.all()[start:count])
 
     return JsonResponse({'models': models})
+
 
 def search(request):
     form = SearchForm(request.GET)
@@ -113,7 +115,7 @@ def search(request):
             'form': form,
         }
         return render(request, 'models/search.html', context)
-    
+
     pays = form.cleaned_data.get('pays')
     ville = form.cleaned_data.get('ville')
     sexe = form.cleaned_data.get('sexe')
@@ -150,7 +152,6 @@ def search(request):
         measures__cheveux__iexact=cheveux, measures__yeux__iexact=yeux,
         measures__taille__gte=taille[0], measures__taille__lte=taille[1],
     )[start:count]
-        
 
     # return json when asked by client
     if returnJson:
