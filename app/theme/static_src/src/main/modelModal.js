@@ -1,4 +1,4 @@
-import http from './http';
+import { fetch } from './http';
 
 const contactButton = document.getElementById('model-contact');
 const backdrop = document.getElementById('model-backdrop');
@@ -8,70 +8,103 @@ const sendContactButton = document.getElementById('send-contact');
 const cancelContactButton = document.getElementById('cancel-contact');
 const modalFlash = document.getElementById('modal-flash');
 const modalMessage = document.getElementById('modal-message');
+const errorContainers = document.querySelectorAll('.modal-errors');
 
 function toggleModal() {
-  if (modal.classList.contains('hidden')) {
+  if (modal.classList.contains('scale-0')) {
     backdrop.classList.remove('hidden');
-    modal.classList.remove('hidden');
+    modal.classList.remove('scale-0');
+    modal.classList.remove('opacity-0');
   } else {
+    modal.classList.add('opacity-0')
+    modal.classList.add('scale-0');
     backdrop.classList.add('hidden');
-    modal.classList.add('hidden');
   }
 }
 
-function handleErrorRes(errors) {
-  // const div = document.createElement('div')
-  // errors.email.forEach(e => {
-  //     div.textContent = e
-  //     id_email.insertBefore(div, id_email)
-  // });
-  console.log(errors);
+function updateUIWithErrors(errors) {
+  // Loop through all modal error containers
+  // and append error message
+  errorContainers.forEach(errorContainer => {
+    // unhide the error container
+    errorContainer.classList.remove('hidden')
+
+    // // get error field from errors object by key
+    const inputName = errorContainer.dataset.inputName
+    const errorMessages = errors[inputName]
+
+    // if inputName is not in the errors object
+    // errorMessages could be undefined
+    if (errorMessages) {
+      errorMessages.forEach(msg => {
+        const message = document.createElement('p')
+        message.classList = 'text-sm my-1 text-red-400'
+        message.textContent = msg
+
+        errorContainer.appendChild(message)
+      })
+    }
+  })
 }
 
 function disableSendingButton(sending) {
   if (sending) {
-    sendContactButton.disabled = sending;
+    sendContactButton.setAttribute('disabled', true)
     sendContactButton.textContent = 'sending';
   } else {
-    sendContactButton.disabled = sending;
+    sendContactButton.removeAttribute('disabled')
     sendContactButton.textContent = 'Contact Us';
   }
 }
 
+function showSuccessMessage(msg) {
+  if (modalFlash.classList.contains('absolute')) {
+    modalMessage.textContent = msg;
+    modalFlash.classList.remove('absolute');
+    modalFlash.classList.remove('opacity-0');
+    modalFlash.classList.remove('-translate-y-full');
+
+    // Remove the message after 3s
+    setTimeout(() => {
+      modalFlash.classList.add('-translate-y-full');
+      modalFlash.classList.add('opacity-0');
+      modalFlash.classList.add('absolute');
+    }, 3000);
+  }
+}
+
 async function sendContactRequest(e) {
-  // Disable button until request is done
+  e.preventDefault();
+
+  // Disable sending button until request is done
   disableSendingButton(true);
 
-  e.preventDefault();
   const payload = {
     model_id: document.getElementById('id_model_id').value,
     model_nom: document.getElementById('id_model_nom').value,
     email: document.getElementById('id_email').value,
-    phone: document.getElementById('id_phone').value,
+    phone: document.getElementById('id_phone').value
   };
 
-  //  Create a new url for this
   try {
-    await http({
-      method: 'post',
-      url: '/models/request',
-      data: payload,
-    });
+    const { data } = await fetch.post('models/request', payload);
+
+    // tell the user that he's request was successfull
+    showSuccessMessage(data.message)
+
+    // Clear old error messages
+    errorContainers.forEach(errorContainer => {
+      errorContainer.innerHTML = ''
+    })
+
+    disableSendingButton(false)
+
+  } catch ({ response }) {
     disableSendingButton(false);
 
-    // Request was successfull
-    modalMessage.textContent = res.message;
-    modalFlash.classList.remove('hidden');
-    modalFlash.classList.add('opacity-100');
-    setTimeout(() => {
-      modalFlash.classList.remove('opacity-100');
-      modalFlash.classList.add('hidden');
-    }, 3000);
-  } catch (error) {
-    console.log(error);
-
-    // handleErrorRes(response.data);
-    disableSendingButton(false);
+    if (response) {
+      updateUIWithErrors(response.data.errors);
+    }
   }
 }
 

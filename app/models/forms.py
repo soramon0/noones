@@ -10,6 +10,7 @@ SELECT_CLASS = {'class': 'form-select'}
 RADIO_CLASS = {'class': 'form-radio'}
 CHECKBOX_CLASS = {'class': 'form-checkbox'}
 HIDDEN_CLASS = {'class': 'form-input hidden'}
+INPUT_CLASS_DISABLED = {'class': 'form-input', 'disabled': 'true'}
 
 
 class UserForm(MForm):
@@ -78,7 +79,7 @@ class ModelContactForm(forms.Form):
     model_id = forms.CharField(
         max_length=100, widget=TextInput(attrs=HIDDEN_CLASS))
     model_nom = forms.CharField(
-        min_length=3, max_length=100, widget=TextInput(attrs=INPUT_CLASS))
+        min_length=3, max_length=100, widget=TextInput(attrs=INPUT_CLASS_DISABLED))
     email = forms.EmailField(
         max_length=255, widget=forms.EmailInput(attrs=INPUT_CLASS))
     phone = forms.CharField(min_length=6, max_length=100,

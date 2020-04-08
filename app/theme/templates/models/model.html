@@ -1,29 +1,21 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
 
 <section class="w-full w-full h-64 relative sm:h-500">
-    <div class="h-full w-full absolute inset-y-0">
-      {% if model.coverPicture %}
-      <img
-        class="w-full h-full object-cover"
-        src="{{model.coverPicture.url}}"
-        alt="background image"
-      />
-      {% else %}
-      <img
-        class="w-full h-full object-cover"
-        src="{% static 'images/cover.jpg' %}"
-        alt="background image"
-      />
-      {% endif %}
-      <div class="absolute top-0 mt-6 ml-6 text-white">
-        <h2 class="text-3xl text-white uppercase font-bold">
-          {{model.first_name}} {{model.last_name}}
-        </h2>
-        <span class="block h-px w-10 -mt-1 bg-red-500"></span>
-        <h3 class="mt-2 text-lg text-yellow-400 capitalize">{{model.city}}</h3>
-        <h3 class="text-lg uppercase">{{model.country}}</h3>
-      </div>
+  <div class="h-full w-full absolute inset-y-0">
+    {% if model.coverPicture %}
+    <img class="w-full h-full object-cover" src="{{model.coverPicture.url}}" alt="background image" />
+    {% else %}
+    <img class="w-full h-full object-cover" src="{% static 'images/cover.jpg' %}" alt="background image" />
+    {% endif %}
+    <div class="absolute top-0 mt-6 ml-6 text-white">
+      <h2 class="text-3xl text-white uppercase font-bold">
+        {{model.first_name}} {{model.last_name}}
+      </h2>
+      <span class="block h-px w-10 -mt-1 bg-red-500"></span>
+      <h3 class="mt-2 text-lg text-yellow-400 capitalize">{{model.city}}</h3>
+      <h3 class="text-lg uppercase">{{model.country}}</h3>
     </div>
+  </div>
 </section>
 
 <section class="px-4 md:flex">
@@ -47,53 +39,58 @@
     </div>
   </div>
   <div class="max-w-md pt-8 border mx-auto mt-16 shadow-lg rounded-lg md:flex-1">
-   <div class="-mt-20 flex justify-center items-center">
-     <div class="w-24 h-24 border-4 border-gray-400 rounded-full overflow-hidden">
-      {% if model.profilePicture %}
-        <img
-          class="w-full h-full object-fit"
-          src="{{ model.profilePicture.url }}"
-          alt="gender {{model.sexe}}"
-        />
-      {% else %}
-        <img
-          class="w-full h-full object-fit"
-          src="{% static 'images/noc-models-mission.jpg' %}"
-          alt="gender {{model.sexe}}"
-        />
-      {% endif %}
+    <div class="-mt-20 flex justify-center items-center">
+      <div class="w-24 h-24 border-4 border-gray-400 rounded-full overflow-hidden">
+        {% if model.profilePicture %}
+        <img class="w-full h-full object-fit" src="{{ model.profilePicture.url }}" alt="gender {{model.sexe}}" />
+        {% else %}
+        <img class="w-full h-full object-fit" src="{% static 'images/noc-models-mission.jpg' %}"
+          alt="gender {{model.sexe}}" />
+        {% endif %}
+      </div>
     </div>
-   </div>
     <div class="mt-4 text-center">
       <h3 class="text-2xl text-gray-500 font-bold tracking-wide uppercase">
         {{model.first_name}} {{model.last_name}}
       </h3>
     </div>
     <ul class="text-lg px-6 mt-4">
-      <li><span class="text-base text-gray-800 font-semibold">Taille</span>: <span class="ml-2 font-medium text-xl ">{{mensures.taille}}</span> cm</li>
-      <li><span class="text-base text-gray-800 font-semibold">Taillenombrill</span>: <span class="ml-2 font-medium text-xl ">{{mensures.taillenombrill}}</span> cm</li>
-      <li><span class="text-base text-gray-800 font-semibold">Buste</span>: <span class="ml-2 font-medium text-xl ">{{mensures.buste}}</span> cm</li>
-      <li><span class="text-base text-gray-800 font-semibold">Epaules</span>: <span class="ml-2 font-medium text-xl ">{{mensures.epaules}}</span> cm</li>
-      <li><span class="text-base text-gray-800 font-semibold">Hanches</span>: <span class="ml-2 font-medium text-xl ">{{mensures.hanches}}</span> cm</li>
-      <li><span class="text-base text-gray-800 font-semibold">Poids</span>: <span class="ml-2 font-medium text-xl ">{{mensures.poids}}</span> cm</li>
-      <li><span class="text-base text-gray-800 font-semibold">Pointure</span>: <span class="ml-2 font-medium text-xl ">{{mensures.pointure}}</span> cm</li>
-      <li><span class="text-base text-gray-800 font-semibold">Cheveux</span>: <span class="ml-2 text-xl ">{{mensures.cheveux}}</span></li>
-      <li><span class="text-base text-gray-800 font-semibold">Yeux</span>: <span class="ml-2 text-xl ">{{mensures.yeux}}</span></li>
+      <li><span class="text-base text-gray-800 font-semibold">Taille</span>: <span
+          class="ml-2 font-medium text-xl ">{{mensures.taille}}</span> cm</li>
+      <li><span class="text-base text-gray-800 font-semibold">Taillenombrill</span>: <span
+          class="ml-2 font-medium text-xl ">{{mensures.taillenombrill}}</span> cm</li>
+      <li><span class="text-base text-gray-800 font-semibold">Buste</span>: <span
+          class="ml-2 font-medium text-xl ">{{mensures.buste}}</span> cm</li>
+      <li><span class="text-base text-gray-800 font-semibold">Epaules</span>: <span
+          class="ml-2 font-medium text-xl ">{{mensures.epaules}}</span> cm</li>
+      <li><span class="text-base text-gray-800 font-semibold">Hanches</span>: <span
+          class="ml-2 font-medium text-xl ">{{mensures.hanches}}</span> cm</li>
+      <li><span class="text-base text-gray-800 font-semibold">Poids</span>: <span
+          class="ml-2 font-medium text-xl ">{{mensures.poids}}</span> cm</li>
+      <li><span class="text-base text-gray-800 font-semibold">Pointure</span>: <span
+          class="ml-2 font-medium text-xl ">{{mensures.pointure}}</span> cm</li>
+      <li><span class="text-base text-gray-800 font-semibold">Cheveux</span>: <span
+          class="ml-2 text-xl ">{{mensures.cheveux}}</span></li>
+      <li><span class="text-base text-gray-800 font-semibold">Yeux</span>: <span
+          class="ml-2 text-xl ">{{mensures.yeux}}</span></li>
     </ul>
     <div class="overflow-hidden rounded-lg">
-      <button id="model-contact" class="mt-4 py-3 w-full bg-black text-white text-xl uppercase tracking-wider">Contact</button>
+      <button id="model-contact"
+        class="mt-4 py-3 w-full bg-black text-white text-xl uppercase tracking-wider">Contact</button>
     </div>
   </div>
 </section>
 
 <div id="model-backdrop" class="hidden bg-black fixed inset-0 opacity-75">
 </div>
-<div id="model-modal" class="hidden w-95 mx-auto mt-20 top-0 inset-x-0 p-4 fixed bg-white rounded-lg sm:w-auto sm:max-w-md">
+<div id="model-modal"
+  class="w-95 mx-auto mt-20 top-0 inset-x-0 p-4 fixed bg-white rounded-lg transform scale-0 opacity-0 transition duration-500 ease-in-out sm:w-auto sm:max-w-md">
   <div class="text-center py-4 border-b-2 border-gray-200">
     <p class="font-semibold sm:text-2xl">Where can we find you</p>
   </div>
-  <div id="modal-flash" class="hidden transition duration-500 ease-in-out opacity-0 text-center py-4 text-white font-bold rounded mb-2 text-sm bg-indigo-300">
-    <p id="modal-message">Was Sent</p>
+  <div id="modal-flash"
+    class="text-center py-4 text-white font-bold rounded mb-2 text-sm bg-indigo-300 transform absolute opacity-0 -translate-y-full  transition duration-300 ease-in-out">
+    <p id="modal-message"></p>
   </div>
   <form id='model-form' class="mt-4" method="post">
     {% include "partials/_alerts.html" %}
@@ -104,28 +101,30 @@
       {% include "partials/_form_errors.html" with key=form.model_id %}
     </div>
     <div>
-      <label class="mb-2 ml-1 block text-gray-800 font-semibold" for="{{ form.model_nom.id_for_label }}">Nom du Modele:</label>
+      <label class="mb-2 ml-1 block text-gray-800 font-semibold" for="{{ form.model_nom.id_for_label }}">Nom du
+        Modele:</label>
       {{ form.model_nom }}
       {% include "partials/_form_errors.html" with key=form.model_nom %}
+      <div class="modal-errors hidden" data-input-name="model_nom">
+      </div>
     </div>
     <div class="mt-2">
       <label class="mb-2 ml-1 block text-gray-800 font-semibold" for="{{ form.email.id_for_label }}">Your Email</label>
       {{ form.email }}
       {% include "partials/_form_errors.html" with key=form.email %}
+      <div class="modal-errors hidden" data-input-name="email">
+      </div>
     </div>
     <div class="mt-2">
       <label class="mb-2 ml-1 block text-gray-800 font-semibold" for="{{ form.phone.id_for_label }}">Your Phone</label>
       {{ form.phone }}
       {% include "partials/_form_errors.html" with key=form.phone %}
+      <div class="modal-errors hidden" data-input-name="phone">
+      </div>
     </div>
-     <div
-      class="p-4 flex justify-evenly items-center">
+    <div class="p-4 flex justify-evenly items-center">
       <button id="cancel-contact" type="button" class="px-6 py-3 hover:bg-gray-400 rounded-md">Cancel</button>
-
-
-      <button
-        type="submit" id="send-contact"
-        class="px-4 py-3 text-sm rounded-md bg-indigo-600 text-white
+      <button type="submit" id="send-contact" class="px-4 py-3 text-sm rounded-md bg-indigo-600 text-white
           hover:bg-indigo-700 transition-transform duration-200 ease-in-out transform
           hover:scale-110 sm:text-base">
         Contact Us
@@ -142,15 +141,11 @@
     </div>
     <div class="w-full flex flex-wrap">
       {% for photo in photos %}
-        <div class="w-full h-56 mr-4 mb-4 flex-shrink-0 rounded-lg overflow-hidden shadow cursor-pointer sm:w-64 sm:h-64">
-          <img
-            class="w-full h-full object-cover"
-            src="{{photo.image.url}}"
-            alt="model photo {{forloop.counter}}"
-          />
-        </div>
+      <div class="w-full h-56 mr-4 mb-4 flex-shrink-0 rounded-lg overflow-hidden shadow cursor-pointer sm:w-64 sm:h-64">
+        <img class="w-full h-full object-cover" src="{{photo.image.url}}" alt="model photo {{forloop.counter}}" />
+      </div>
       {% empty %}
-        <p>No Photos</p>
+      <p>No Photos</p>
       {% endfor %}
     </div>
   </div>

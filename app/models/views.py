@@ -5,6 +5,10 @@ from django.http.request import RawPostDataException
 from django.core.mail import send_mail
 from django.core.serializers import serialize
 from django.conf import settings
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework import status
+
 
 from pages.forms import SearchForm
 from .forms import ModelContactForm
@@ -45,52 +49,44 @@ def model(request, id):
 
     return render(request, 'models/model.html', context)
 
-
+@api_view(['POST'])
 def contact(request):
-    if request.method == 'POST':
-        # TODO(karim): check if this the right exception
-        try:
-            data = json.loads(request.body.decode('utf-8'))
-        except RawPostDataException:
-            return JsonResponse({'errors': {'json': ['data is not valid json']}})
+    form = ModelContactForm(request.data)
 
-        form = ModelContactForm(data)
+    if not form.is_valid():
+        return Response({'errors': form.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-        if not form.is_valid():
-            context = {
-                'errors': form.errors,
-            }
-            return JsonResponse(context)
+    model_id = form.cleaned_data.get('model_id')
+    model_nom = form.cleaned_data.get('model_nom')
+    email = form.cleaned_data.get('email')
+    phone = form.cleaned_data.get('phone')
 
-        model_id = form.cleaned_data.get('model_id')
-        model_nom = form.cleaned_data.get('model_nom')
-        email = form.cleaned_data.get('email')
-        phone = form.cleaned_data.get('phone')
-
+    if request.data.get('resend'):
         error = {'errors': {'model_nom': ['model do not exist']}}
+        return Response(error, status=status.HTTP_400_BAD_REQUEST)
+    
 
-        try:
-            model = Model.objects.get(pk=model_id)
-            model_email = model.user.email
-        except Model.DoesNotExist:
-            return JsonResponse(error)
-        except ValidationError:
-            return JsonResponse(error)
+    try:
+        model = Model.objects.get(pk=model_id)
+        model_email = model.user.email
+    except Model.DoesNotExist:
+        error = {'errors': {'model_nom': ['model do not exist']}}
+        return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
-        send_mail(
-            f'Contact Request for {model_email}',
-            f'Client {email} {phone} wants to contact {model_email}',
-            email,
-            [settings.EMAIL_HOST_USER],
-            fail_silently=False,
-        )
+    send_mail(
+        f'Contact Request for {model_email}',
+        f'Client {email} {phone} wants to contact {model_email}',
+        email,
+        [settings.EMAIL_HOST_USER],
+        fail_silently=False,
+    )
 
-        # TODO(karim): Send email to admin
-        contact = Contact(model_id=model_id, model_nom=model_nom,
-                          model_email=model_email, email=email, phone=phone)
-        contact.save()
+    # TODO(karim): Send email to admin
+    contact = Contact(model_id=model_id, model_nom=model_nom,
+                      model_email=model_email, email=email, phone=phone)
+    contact.save()
 
-        return JsonResponse({'message': 'Contact was successful'})
+    return Response({'message': "Thanks! We'll get back to you soon."})
 
 
 def subset(request):

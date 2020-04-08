@@ -60,7 +60,8 @@
             {% include "partials/_form_errors.html" with key=form.password %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.birth_date.id_for_label }}">Date De Niassance</label>
+            <label class="block text-gray-800 font-semibold" for="{{ form.birth_date.id_for_label }}">Date De
+              Niassance</label>
             {{ form.birth_date }}
             {% include "partials/_form_errors.html" with key=form.birth_date %}
           </div>
@@ -97,7 +98,8 @@
             {% include "partials/_form_errors.html" with key=form.sexe %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.cin.id_for_label }}">CNI or Numéro de Passport</label>
+            <label class="block text-gray-800 font-semibold" for="{{ form.cin.id_for_label }}">CNI or Numéro de
+              Passport</label>
             {{ form.cin }}
             {% include "partials/_form_errors.html" with key=form.cin %}
           </div>
@@ -114,7 +116,8 @@
         </div>
       </div>
       <div class="button-container text-right mt-6 mx-2">
-        <button type="button" class="next w-full text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Next</button>
+        <button type="button"
+          class="next w-full text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Next</button>
       </div>
     </div>
     <div class="absolute top-0 transition duration-500 ease-in-out transform translate-x-full opacity-0">
@@ -126,12 +129,14 @@
           {% include "partials/_form_errors.html" with key=form.q1 %}
         </div>
         <div class="mt-2 md:w-1/2">
-          <label class="block text-gray-800 font-semibold" for="{{ form.q2.id_for_label }}">Que connaissez-vous à propos de la MODE?:</label>
+          <label class="block text-gray-800 font-semibold" for="{{ form.q2.id_for_label }}">Que connaissez-vous à propos
+            de la MODE?:</label>
           {{ form.q2 }}
           {% include "partials/_form_errors.html" with key=form.q2 %}
         </div>
         <div class="mt-2 md:w-1/2">
-          <label class="block text-gray-800 font-semibold" for="{{ form.q3.id_for_label }}">Pourquoi devons-nous approuver votre inscription?:</label>
+          <label class="block text-gray-800 font-semibold" for="{{ form.q3.id_for_label }}">Pourquoi devons-nous
+            approuver votre inscription?:</label>
           {{ form.q3 }}
           {% include "partials/_form_errors.html" with key=form.q3 %}
         </div>
@@ -147,32 +152,38 @@
         </p>
         <p class="my-2">Un NOC MODEL est seulement officiel si :</p>
         <ul class="ml-2 pl-4">
-          <li class="disc-list-item"><span class="list-disc"></span> Elle/il a suivi une formation de 3 mois fournie par l'agence</li>
-          <li class="disc-list-item"><span class="list-disc"></span> Elle/il obtient un certificat signé par No One’sCompany.</li>
-          <li class="disc-list-item"><span class="list-disc"></span> Elle/Il est à la UNE sur la page NOCMODELS dans www.nocmodels.com`</li>
+          <li class="disc-list-item"><span class="list-disc"></span> Elle/il a suivi une formation de 3 mois fournie par
+            l'agence</li>
+          <li class="disc-list-item"><span class="list-disc"></span> Elle/il obtient un certificat signé par No
+            One’sCompany.</li>
+          <li class="disc-list-item"><span class="list-disc"></span> Elle/Il est à la UNE sur la page NOCMODELS dans
+            www.nocmodels.com`</li>
         </ul>
         <div class="mt-2 mt-4">
-          <label class="block text-gray-800 font-semibold mb-2" for="{{ form.q4.id_for_label }}">Voulez-vous devenir un(e) NOC MODEL?:</label>
+          <label class="block text-gray-800 font-semibold mb-2" for="{{ form.q4.id_for_label }}">Voulez-vous devenir
+            un(e) NOC MODEL?:</label>
           {% for radio in form.q4  %}
-            <div class="block mb-2">
-              {{ radio }}
-            </div>
+          <div class="block mb-2">
+            {{ radio }}
+          </div>
           {% endfor %}
           {% include "partials/_form_errors.html" with key=form.q4 %}
         </div>
       </div>
       <div class="button-container text-right mt-6 mx-2">
-        <button type="button" class="previous w-full mb-2 text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Previous</button>
-        <button type="button" class="next w-full text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Next</button>
+        <button type="button"
+          class="previous w-full mb-2 text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Previous</button>
+        <button type="button"
+          class="next w-full text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Next</button>
       </div>
     </div>
     <div class="absolute top-0 transition duration-500 ease-in-out transform translate-x-full opacity-0">
       <h3 class="uppercase text-2xl font-normal mt-12 tracking-wide">Mensurations</h3>
       <p class="mt-2 text-base text-center">C'est l'une des parties les plus importantes de votre inscription.
-      Veuillez comprendre que n'importe quelle information fausse pourrait
-      bannir votre profil de www.nocmodels.com. Veuillez s'assurer que vous
-      portez un maillot de bain, et qu'une autre personne prend vos mesures à
-      l'aide du mètre à ruban.</p>
+        Veuillez comprendre que n'importe quelle information fausse pourrait
+        bannir votre profil de www.nocmodels.com. Veuillez s'assurer que vous
+        portez un maillot de bain, et qu'une autre personne prend vos mesures à
+        l'aide du mètre à ruban.</p>
       <div class="mt-4 sm:flex">
         <div class="sm:flex-1">
           <div class="mt-2">
@@ -196,14 +207,16 @@
             {% include "partials/_form_errors.html" with key=form.epaules %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.cheveux.id_for_label }}">Couleurs de Cheveux</label>
+            <label class="block text-gray-800 font-semibold" for="{{ form.cheveux.id_for_label }}">Couleurs de
+              Cheveux</label>
             {{ form.cheveux }}
             {% include "partials/_form_errors.html" with key=form.cheveux %}
           </div>
         </div>
         <div class="sm:flex-1 sm:ml-12">
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.taillenombrill.id_for_label }}">Taille (Nombrill) en cm:</label>
+            <label class="block text-gray-800 font-semibold" for="{{ form.taillenombrill.id_for_label }}">Taille
+              (Nombrill) en cm:</label>
             {{ form.taillenombrill }}
             {% include "partials/_form_errors.html" with key=form.taillenombrill %}
           </div>
@@ -225,16 +238,20 @@
         </div>
       </div>
       <div class="mt-6">
-        <label class="block text-gray-800 font-bold mb-2" for="{{ form.permitted.id_for_label }}">Veuillez notre que non toute information que vous avez écrite sur l'application sera vue sur www.nocmodels.com:</label>
+        <label class="block text-gray-800 font-bold mb-2" for="{{ form.permitted.id_for_label }}">Veuillez notre que non
+          toute information que vous avez écrite sur l'application sera vue sur www.nocmodels.com:</label>
         {{ form.permitted }} <span class="text-xs ml-2">
           <!-- TODO(sora): check this for spelling -->
-          Moi, le candidat confirme que je soumets mes propres photos et informations. Je prends lal'entiére responsabilité de mon inscription
+          Moi, le candidat confirme que je soumets mes propres photos et informations. Je prends lal'entiére
+          responsabilité de mon inscription
         </span>
         {% include "partials/_form_errors.html" with key=form.permitted %}
       </div>
       <div class="button-container text-right mt-6 mx-2">
-        <button type="button" class="previous w-full mb-2 text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Previous</button>
-        <button class="w-full text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Register</button>
+        <button type="button"
+          class="previous w-full mb-2 text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Previous</button>
+        <button type="submit"
+          class="w-full text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Register</button>
       </div>
     </div>
   </form>
