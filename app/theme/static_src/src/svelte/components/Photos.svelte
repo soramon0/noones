@@ -4,6 +4,7 @@
   import SaveButton from "./shared/SaveButton";
   import CancelButton from "./shared/CancelButton";
 
+  export let photos;
   export let profile;
   export let cover;
   let showUploadModal = false;
@@ -311,29 +312,18 @@
 </div>
 
 <h1 class="text-2xl mt-4">Gallery</h1>
-<div class="mt-2 flex flex-wrap justify-evenly">
-  <div
-    class="h-32 w-32 bg-gray-300 cursor-pointer mb-2 border border-gray-300
-    hover:border-indigo-400" />
-  <div
-    class="h-32 w-32 bg-gray-300 cursor-pointer mb-2 border border-gray-300
-    hover:border-indigo-400" />
-  <div
-    class="h-32 w-32 bg-gray-300 cursor-pointer mb-2 border border-gray-300
-    hover:border-indigo-400" />
-  <div
-    class="h-32 w-32 bg-gray-300 cursor-pointer mb-2 border border-gray-300
-    hover:border-indigo-400" />
-  <div
-    class="h-32 w-32 bg-gray-300 cursor-pointer mb-2 border border-gray-300
-    hover:border-indigo-400" />
-  <div
-    class="h-32 w-32 bg-gray-300 cursor-pointer mb-2 border border-gray-300
-    hover:border-indigo-400" />
-  <div
-    class="h-32 w-32 bg-gray-300 cursor-pointer mb-2 border border-gray-300
-    hover:border-indigo-400" />
-  <div
-    class="h-32 w-32 bg-gray-300 cursor-pointer mb-2 border border-gray-300
-    hover:border-indigo-400" />
+<div class="mt-4 flex flex-wrap">
+  {#each photos as photo, i}
+    <div
+      class="h-40 w-40 bg-gray-300 cursor-pointer mb-2 mr-2 rounded-md
+      overflow-hidden border-2 hover:border-indigo-400 transform hover:scale-105
+      transition-all duration-200 ease-out">
+      <img
+        src={photo.image}
+        class="w-full h-full object-cover"
+        alt="user image {i}" />
+    </div>
+  {:else}
+    <p>No pictures.</p>
+  {/each}
 </div>

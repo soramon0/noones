@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from models.models import Model, Mensuration, History
+from models.models import Model, Mensuration, Photo
 from core.models import User
 
 
@@ -28,3 +28,9 @@ class MeasuresSerializer(serializers.ModelSerializer):
         model = Mensuration
         fields = ['id', 'user', 'taille', 'taillenombrill', 'buste', 'epaules',
                   'hanches', 'poids', 'pointure', 'cheveux', 'yeux']
+
+
+class PhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Photo
+        fields = ['id', 'image', 'model']

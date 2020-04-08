@@ -59,12 +59,7 @@ def contact(request):
     model_id = form.cleaned_data.get('model_id')
     model_nom = form.cleaned_data.get('model_nom')
     email = form.cleaned_data.get('email')
-    phone = form.cleaned_data.get('phone')
-
-    if request.data.get('resend'):
-        error = {'errors': {'model_nom': ['model do not exist']}}
-        return Response(error, status=status.HTTP_400_BAD_REQUEST)
-    
+    phone = form.cleaned_data.get('phone') 
 
     try:
         model = Model.objects.get(pk=model_id)

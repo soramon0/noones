@@ -28,8 +28,6 @@
       }, 3000);
     }
   };
-
-  $: console.log(uiData);
 </script>
 
 <Breadcrumb activeText="General" />
@@ -124,6 +122,6 @@
           on:valueChanged={onValueChanged} />
       </div>
     </div>
-    <UpdateButton fethcing={uiData.fetching} />
+    <UpdateButton fetching={uiData.fetching} />
   </form>
 </Card>

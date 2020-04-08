@@ -7,8 +7,8 @@ from rest_framework.views import APIView
 from django.http import Http404
 
 from core.models import User
-from models.models import Model, Mensuration
-from .serializers import ModelSerializer, UserSerializer, MeasuresSerializer, ModelSerializerWithImages
+from models.models import Model, Mensuration, Photo
+from .serializers import ModelSerializer, UserSerializer, MeasuresSerializer, ModelSerializerWithImages, PhotoSerializer
 from .permissoins import IsOwner
 
 
@@ -18,13 +18,19 @@ from .permissoins import IsOwner
 def me(request):
     try:
         user = request.user
+        model = user.model
         user_serializer = UserSerializer(user)
-        model_serializer = ModelSerializerWithImages(user.model)
-        measures_serializer = MeasuresSerializer(user.model.measures)
+        model_serializer = ModelSerializerWithImages(model)
+        measures_serializer = MeasuresSerializer(model.measures)
+
+        # Get 8 user uploaded pictures that are in use 
+        photos = Photo.objects.filter(model=model, inUse=True)[:8]
+        photo_serializer = PhotoSerializer(photos, many=True)
 
         res = {'model': model_serializer.data}
         res['model'].update({'email': user_serializer.data['email']})
         res['measures'] = measures_serializer.data
+        res['photos'] = photo_serializer.data
 
         return Response(res)
 

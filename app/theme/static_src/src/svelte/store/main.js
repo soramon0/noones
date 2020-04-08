@@ -17,6 +17,7 @@ export default {
       data.cover = data.model.coverPicture;
       data.profile = data.model.profilePicture;
       data.email = data.model.email;
+      data.photos = data.photos
 
       set(data);
     } catch ({ response }) {

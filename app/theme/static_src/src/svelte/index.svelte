@@ -58,7 +58,10 @@
         </div>
       {:else if tab === 2}
         <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
-          <Photos profile={userData.profile} cover={userData.cover} />
+          <Photos
+            photos={userData.photos}
+            profile={userData.profile}
+            cover={userData.cover} />
         </div>
       {:else if tab === 3}
         <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
