@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store';
 import http from '../../main/http';
 import uiStore from './ui';
+import photosStore from './photo'
 
 const { subscribe, set, update } = writable(null);
 
@@ -14,10 +15,11 @@ export default {
 
       // Shaping the store data
       data.errors = {};
-      data.cover = data.model.coverPicture;
-      data.profile = data.model.profilePicture;
       data.email = data.model.email;
-      data.photos = data.photos
+
+      // create the photos' store
+      const { coverPicture, profilePicture } = data.model
+      photosStore.populate({ photos: data.photos, cover: coverPicture, profile: profilePicture })
 
       set(data);
     } catch ({ response }) {

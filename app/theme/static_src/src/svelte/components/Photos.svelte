@@ -1,18 +1,24 @@
 <script>
   import { scale, fade } from "svelte/transition";
+  import photoStore from "../store/photo";
   import Breadcrumb from "./shared/Breadcrumb";
   import SaveButton from "./shared/SaveButton";
   import CancelButton from "./shared/CancelButton";
 
-  export let photos;
-  export let profile;
-  export let cover;
   let showUploadModal = false;
   let showConfirmPictureUpload = false;
+  let selectedGalleryImage = 0;
+
+  // Subscribe to the store
+  $: photoData = $photoStore;
 
   const toggleUploadModal = () => (showUploadModal = !showUploadModal);
-  const toggleConfirmPictureUpload = () =>
-    (showConfirmPictureUpload = !showConfirmPictureUpload);
+  const toggleConfirmPictureUpload = () => {
+    showConfirmPictureUpload = !showConfirmPictureUpload;
+  };
+  const setSelectedGalleryImage = index => {
+    selectedGalleryImage = index;
+  };
 </script>
 
 <style>
@@ -149,9 +155,9 @@
     <div
       class="w-full h-64 flex justify-center items-center bg-gray-200 rounded
       overflow-hidden">
-      {#if cover}
+      {#if photoData.cover}
         <img
-          src={cover}
+          src={photoData.cover}
           alt="cover picture"
           class="w-full h-full object-cover" />
       {:else}
@@ -203,9 +209,9 @@
       class="add-profile w-32 h-40 ml-4 -mb-4 absolute bottom-0 left-0
       bg-gray-200 rounded-md sm:overflow-hidden">
       <div class="rounded-md overflow-hidden">
-        {#if profile}
+        {#if photoData.profile}
           <img
-            src={profile}
+            src={photoData.profile}
             alt="profile picture"
             class="w-full h-full object-cover" />
         {:else}
@@ -312,18 +318,37 @@
 </div>
 
 <h1 class="text-2xl mt-4">Gallery</h1>
-<div class="mt-4 flex flex-wrap">
-  {#each photos as photo, i}
-    <div
-      class="h-40 w-40 bg-gray-300 cursor-pointer mb-2 mr-2 rounded-md
-      overflow-hidden border-2 hover:border-indigo-400 transform hover:scale-105
-      transition-all duration-200 ease-out">
+<div class="mt-4 flex flex-col sm:flex-row">
+  <div
+    class="w-full h-80 bg-grey-300 flex justify-center items-center shadow-2xl
+    rounded-md overflow-hidden border-2 hover:border-indigo-400 sm:w-10/12">
+    {#if photoData.photos.length > 0}
       <img
-        src={photo.image}
-        class="w-full h-full object-cover"
-        alt="user image {i}" />
-    </div>
-  {:else}
-    <p>No pictures.</p>
-  {/each}
+        src={photoData.photos[selectedGalleryImage].image}
+        alt="user image"
+        class="w-full h-full object-cover hover:scale-125 transform
+        transition-all duration-500 ease-out" />
+    {:else}
+      <SaveButton text="START UPLOADING" />
+    {/if}
+  </div>
+  <div
+    class="pt-3 h-40 whitespace-no-wrap overflow-auto sm:w-3/12 sm:h-80 sm:ml-4
+    sm:block sm:pt-0">
+    {#each photoData.photos as photo, i}
+      <div
+        class="inline-block w-68 h-32 mr-2 bg-gray-200 cursor-pointer rounded-md
+        overflow-hidden border-2 hover:border-indigo-400 hover:opacity-100
+        sm:block sm:w-auto sm:mb-2 {selectedGalleryImage == i ? 'opacity-100' : 'opacity-50'}"
+        on:click={() => setSelectedGalleryImage(i)}>
+        <img
+          src={photo.image}
+          class="w-full h-full object-cover hover:scale-125 transform
+          transition-all duration-500 ease-out"
+          alt="user image {i}" />
+      </div>
+    {:else}
+      <p>No pictures.</p>
+    {/each}
+  </div>
 </div>

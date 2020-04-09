@@ -1,44 +1,30 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
 
 <section class="w-full h-64 relative overflow-hidden sm:h-500">
-  <button class="carousel-button carousel-left ml-2 absolute z-10 left-0 bg-gray-400 rounded-full p-2 focus:outline-none focus:bg-gray-500">
-    <svg
-      class="h-4 w-4 sm:h-6 sm:w-6 fill-current text-gray-700"
-      viewBox="0 0 20 20"
-    >
+  <button
+    class="carousel-button carousel-left ml-2 absolute z-10 left-0 bg-gray-400 rounded-full p-2 focus:outline-none focus:bg-gray-500">
+    <svg class="h-4 w-4 sm:h-6 sm:w-6 fill-current text-gray-700" viewBox="0 0 20 20">
       <path
-        d="M8.388,10.049l4.76-4.873c0.303-0.31,0.297-0.804-0.012-1.105c-0.309-0.304-0.803-0.293-1.105,0.012L6.726,9.516c-0.303,0.31-0.296,0.805,0.012,1.105l5.433,5.307c0.152,0.148,0.35,0.223,0.547,0.223c0.203,0,0.406-0.08,0.559-0.236c0.303-0.309,0.295-0.803-0.012-1.104L8.388,10.049z"
-      ></path>
+        d="M8.388,10.049l4.76-4.873c0.303-0.31,0.297-0.804-0.012-1.105c-0.309-0.304-0.803-0.293-1.105,0.012L6.726,9.516c-0.303,0.31-0.296,0.805,0.012,1.105l5.433,5.307c0.152,0.148,0.35,0.223,0.547,0.223c0.203,0,0.406-0.08,0.559-0.236c0.303-0.309,0.295-0.803-0.012-1.104L8.388,10.049z">
+      </path>
     </svg>
   </button>
   <div class="carousel-track h-full relative">
     {% if carousel %} {% for slide in carousel %}
     <div class="w-full h-full absolute inset-y-0">
-      <span class="carousel-title text-5xl text-white absolute z-10 sm:text-6xl"
-        >{{slide.title}}</span
-      >
-      <img
-        class="w-full h-full object-cover"
-        src="{{slide.image.url}}"
-        alt="slide image"
-      />
+      <span class="carousel-title text-5xl text-white absolute z-10 sm:text-6xl">{{slide.title}}</span>
+      <img class="w-full h-full object-cover" src="{{slide.image.url}}" alt="slide image" />
     </div>
     {% endfor %} {% else %}
-    <img
-      class="w-full h-full object-cover"
-      src="{% static 'images/home-bg.jpg' %}"
-      alt="background image"
-    />
+    <img class="w-full h-full object-cover" src="{% static 'images/home-bg.jpg' %}" alt="background image" />
     {% endif %}
   </div>
-  <button class="carousel-button carousel-right mr-2 absolute z-10 right-0 bg-gray-400 rounded-full p-2 focus:outline-none focus:bg-gray-500">
-    <svg
-      class="h-4 w-4 sm:h-6 sm:w-6 fill-current text-gray-700"
-      viewBox="0 0 20 20"
-    >
+  <button
+    class="carousel-button carousel-right mr-2 absolute z-10 right-0 bg-gray-400 rounded-full p-2 focus:outline-none focus:bg-gray-500">
+    <svg class="h-4 w-4 sm:h-6 sm:w-6 fill-current text-gray-700" viewBox="0 0 20 20">
       <path
-        d="M11.611,10.049l-4.76-4.873c-0.303-0.31-0.297-0.804,0.012-1.105c0.309-0.304,0.803-0.293,1.105,0.012l5.306,5.433c0.304,0.31,0.296,0.805-0.012,1.105L7.83,15.928c-0.152,0.148-0.35,0.223-0.547,0.223c-0.203,0-0.406-0.08-0.559-0.236c-0.303-0.309-0.295-0.803,0.012-1.104L11.611,10.049z"
-      ></path>
+        d="M11.611,10.049l-4.76-4.873c-0.303-0.31-0.297-0.804,0.012-1.105c0.309-0.304,0.803-0.293,1.105,0.012l5.306,5.433c0.304,0.31,0.296,0.805-0.012,1.105L7.83,15.928c-0.152,0.148-0.35,0.223-0.547,0.223c-0.203,0-0.406-0.08-0.559-0.236c-0.303-0.309-0.295-0.803,0.012-1.104L11.611,10.049z">
+      </path>
     </svg>
   </button>
 </section>
@@ -49,38 +35,23 @@
 
 <section class="mt-10 mx-4 sm:max-w-6xl md:mx-auto">
   {% if models %}
-  <div class="drag-slider flex justify-around overflow-x-scroll">
+  <div class="drag-slider overflow-x-scroll whitespace-no-wrap pb-2">
     {% for model in models %}
-    <a
-      class="w-64 h-56 mr-4 block flex-shrink-0 rounded-lg shadow overflow-hidden cursor-pointer sm:h-64"
-      href="{% url 'model' model.id %}"
-    >
+    <a class="w-64 h-56 mr-4 inline-block rounded-lg shadow overflow-hidden cursor-pointer sm:h-64"
+      href="{% url 'model' model.id %}">
       {% if model.profilePicture %}
-      <img
-        class="w-full h-full object-cover"
-        src="{{model.profilePicture.url}}"
-        alt="{{model.first_name}}"
-      />
+      <img class="w-full h-full object-cover" src="{{model.profilePicture.url}}" alt="{{model.first_name}}" />
       {% else %}
-      <img
-        class="w-full h-full object-cover"
-        src="{% static 'images/noc-models-mission.jpg' %}"
-        alt="{{model.first_name}}"
-      />
+      <img class="w-full h-full object-cover" src="{% static 'images/noc-models-mission.jpg' %}"
+        alt="{{model.first_name}}" />
       {% endif %}
     </a>
     {% endfor %}
   </div>
   <div class="w-12 mx-auto mt-6 flex justify-between">
-    <span
-      class="w-3 h-3 bg-gray-900 rounded-full cursor-pointer hover:bg-gray-600 focus:bg-gray-600"
-    ></span>
-    <span
-      class="w-3 h-3 bg-gray-900 rounded-full cursor-pointer hover:bg-gray-600 focus:bg-gray-600"
-    ></span>
-    <span
-      class="w-3 h-3 bg-gray-900 rounded-full cursor-pointer hover:bg-gray-600 focus:bg-gray-600"
-    ></span>
+    <span class="w-3 h-3 bg-gray-900 rounded-full cursor-pointer hover:bg-gray-600 focus:bg-gray-600"></span>
+    <span class="w-3 h-3 bg-gray-900 rounded-full cursor-pointer hover:bg-gray-600 focus:bg-gray-600"></span>
+    <span class="w-3 h-3 bg-gray-900 rounded-full cursor-pointer hover:bg-gray-600 focus:bg-gray-600"></span>
   </div>
   {% else %}
   <div class="text-center">
@@ -90,20 +61,13 @@
 </section>
 
 <section class="mt-12 relative">
-  <img
-    class="h-64 w-full sm:h-full"
-    src="{% static 'images/cta-bg-1024.jpg' %}"
-    alt="model smiling"
-  />
+  <img class="h-64 w-full sm:h-full" src="{% static 'images/cta-bg-1024.jpg' %}" alt="model smiling" />
   <div class="signup-text-container absolute mr-2">
     <h2 class="text-2xl text-white uppercase md:text-4xl lg:text-5xl">
       Devenir notre <br /><span class="font-semibold">model</span>
     </h2>
-    <a
-      class="inline-block mt-2 px-10 py-1 text-lg text-black bg-white rounded-lg"
-      href="{% url 'register' %}"
-      >S'inscrire</a
-    >
+    <a class="inline-block mt-2 px-10 py-1 text-lg text-black bg-white rounded-lg"
+      href="{% url 'register' %}">S'inscrire</a>
   </div>
 </section>
 

@@ -44,7 +44,7 @@
 
   <div class="relative flex" transition:fade={{ duration: 600 }}>
     <Navbar on:changeTab={changeTab}>
-      <Avatar profile={userData.profile} id={userData.model.id} />
+      <Avatar id={userData.model.id} />
     </Navbar>
 
     <div class="px-4 mt-4 w-full mb-8">
@@ -58,10 +58,7 @@
         </div>
       {:else if tab === 2}
         <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
-          <Photos
-            photos={userData.photos}
-            profile={userData.profile}
-            cover={userData.cover} />
+          <Photos />
         </div>
       {:else if tab === 3}
         <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>

@@ -1,6 +1,10 @@
 <script>
-  export let profile;
+  import photoStore from "../store/photo";
+
   export let id;
+
+  // Subscribe to the store
+  $: photoData = $photoStore;
 </script>
 
 <div
@@ -8,8 +12,8 @@
   <div
     class="w-12 h-12 border border-gray-500 rounded-full overflow-hidden md:w-16
     md:h-16">
-    {#if profile}
-      <img src={profile} alt="user profile picture" />
+    {#if photoData.profile}
+      <img src={photoData.profile} alt="user profile picture" />
     {:else}
       <svg class="fill-current text-gray-700 w-full h-full" viewBox="0 0 20 20">
         <path
