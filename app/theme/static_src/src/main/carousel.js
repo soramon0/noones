@@ -1,5 +1,4 @@
 import 'simplebar';
-import 'simplebar/dist/simplebar.css';
 
 const track = document.querySelector('.carousel-track')
 const prevButton = document.querySelector('.carousel-left')
