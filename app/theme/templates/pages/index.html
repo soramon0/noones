@@ -35,7 +35,7 @@
 
 <section class="mt-10 mx-4 sm:max-w-6xl md:mx-auto">
   {% if models %}
-  <div class="drag-slider overflow-x-scroll whitespace-no-wrap pb-2">
+  <div class="drag-slider whitespace-no-wrap pb-2" data-simplebar>
     {% for model in models %}
     <a class="w-64 h-56 mr-4 inline-block rounded-lg shadow overflow-hidden cursor-pointer sm:h-64"
       href="{% url 'model' model.id %}">

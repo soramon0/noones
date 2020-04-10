@@ -1,3 +1,5 @@
+import 'simplebar';
+import 'simplebar/dist/simplebar.css';
 import App from "./index.svelte";
 
 const app = new App({

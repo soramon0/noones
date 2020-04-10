@@ -42,8 +42,9 @@
     class="fixed inset-0 bg-black z-20 opacity-50" />
   <div
     transition:scale={{ delay: 150 }}
-    class="max-w-2xl w-4/5 h-500 overflow-y-scroll m-auto fixed inset-0 bg-white
-    z-30 rounded-lg sm:1/2">
+    class="max-w-2xl w-4/5 h-500 m-auto fixed inset-0 bg-white z-30 rounded-lg
+    sm:1/2"
+    data-simplebar>
     <div class="text-center py-4 border-b-2 border-gray-200">
       <p class="font-semibold sm:text-2xl">Change your picture</p>
     </div>
@@ -333,8 +334,9 @@
     {/if}
   </div>
   <div
-    class="pt-3 h-40 whitespace-no-wrap overflow-auto sm:w-3/12 sm:h-80 sm:ml-4
-    sm:block sm:pt-0">
+    class="pt-3 h-40 whitespace-no-wrap sm:w-3/12 sm:h-80 sm:ml-4 sm:block
+    sm:pt-0 sm:pr-2"
+    data-simplebar>
     {#each photoData.photos as photo, i}
       <div
         class="inline-block w-68 h-32 mr-2 bg-gray-200 cursor-pointer rounded-md
