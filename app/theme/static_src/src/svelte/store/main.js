@@ -11,7 +11,7 @@ export default {
   set,
   populate: async () => {
     try {
-      const { data } = await http.get(`/models/me/`);
+      const { data } = await http.get(`models/me/`);
 
       // Shaping the store data
       data.errors = {};
@@ -32,7 +32,7 @@ export default {
     try {
       uiStore.setFetchAndSuccess(true, false);
 
-      const { data } = await http.put(`/models/${payload.id}/`, payload);
+      const { data } = await http.put(`models/${payload.id}/`, payload);
 
       update((store) => ({
         ...store,
@@ -54,7 +54,7 @@ export default {
     try {
       uiStore.setFetchAndSuccess(true, false);
 
-      const { data } = await http.put(`/measures/${payload.id}/`, payload);
+      const { data } = await http.put(`models/measures/${payload.id}/`, payload);
 
       update((store) => ({
         ...store,

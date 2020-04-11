@@ -1,34 +1,45 @@
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from django.http import Http404
 
+from accounts.api.permissions import IsOwner
 from core.models import User
 from models.models import Model, Mensuration, Photo
-from .serializers import ModelSerializer, UserSerializer, MeasuresSerializer, ModelSerializerWithImages, PhotoSerializer
-from .permissoins import IsOwner
+from .serializers import (
+    ModelSerializer,
+    UserSerializer,
+    MeasuresSerializer,
+    ProfileImageSerializer,
+    CoverImageSerializer,
+    PhotoSerializer
+)
 
 
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
 def me(request):
     try:
         user = request.user
         model = user.model
         user_serializer = UserSerializer(user)
-        model_serializer = ModelSerializerWithImages(model)
+        model_serializer = ModelSerializer(model)
         measures_serializer = MeasuresSerializer(model.measures)
+        profileImage_serializer = ProfileImageSerializer(model)
+        coverImage_serializer = CoverImageSerializer(model)
 
         # Get 8 user uploaded pictures that are in use 
         photos = Photo.objects.filter(model=model, inUse=True)[:8]
         photo_serializer = PhotoSerializer(photos, many=True)
 
         res = {'model': model_serializer.data}
-        res['model'].update({'email': user_serializer.data['email']})
+        res['model'].update({
+          'email': user_serializer.data['email'],
+          'profilePicture': profileImage_serializer.data['profilePicture'],
+          'coverPicture': coverImage_serializer.data['coverPicture'],
+        })
         res['measures'] = measures_serializer.data
         res['photos'] = photo_serializer.data
 
@@ -43,7 +54,6 @@ def me(request):
 
 
 class ModelAPIView(APIView):
-    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated, IsOwner]
 
     def get_object(self, pk):
@@ -67,7 +77,6 @@ class ModelAPIView(APIView):
 
 
 class MeasuresAPIView(APIView):
-    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated, IsOwner]
 
     def get_object(self, pk):

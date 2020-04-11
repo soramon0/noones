@@ -26,7 +26,7 @@ def signin(request):
 
         if user is None:
             # TODO(karim): use a better message
-            messages.error(request, 'Bad login! Please try again ')
+            messages.error(request, 'Invalid credentials')
             return render(request, 'accounts/signin.html', {'form': form})
 
         auth.login(request, user)

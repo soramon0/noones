@@ -2,8 +2,10 @@ from django.urls import path
 
 from . import views
 
+app_name = 'models'
+
 urlpatterns = [
-    path('models/me/', views.me, name='me'),
-    path('models/<uuid:pk>/', views.ModelAPIView.as_view()),
+    path('me/', views.me, name='me'),
+    path('<uuid:pk>/', views.ModelAPIView.as_view()),
     path('measures/<uuid:pk>/', views.MeasuresAPIView.as_view()),
 ]

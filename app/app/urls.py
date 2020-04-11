@@ -4,11 +4,15 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
+    # Website URLS 
     path('admin/', admin.site.urls),
     path('', include('pages.urls')),
     path('models/', include('models.urls')),
     path('accounts/', include('accounts.urls')),
-    path('api/v1/', include('api.urls')),
+
+    # API endpoints
+    path('api/v1/models/', include('models.api.urls')),
+    path('api/v1/accounts/', include('accounts.api.urls')),
 ]
 
 if settings.DEBUG:

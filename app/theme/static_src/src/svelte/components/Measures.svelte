@@ -19,12 +19,12 @@
     await userStore.updateMeasures(measures);
 
     // Show a success message
+    window.scrollTo(0, 0);
     if (uiData.success) {
-      // Hide the success message after 3 seconds
-      window.scrollTo(0, 0);
+      // Hide the success message after 2 seconds
       setTimeout(() => {
         uiStore.setSuccess(false);
-      }, 3000);
+      }, 2000);
     }
   };
 </script>
