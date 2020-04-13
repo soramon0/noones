@@ -101,6 +101,13 @@ class MeasuresAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+def delete_old_image(image):
+    # if we have an old image; delete it
+    if image and os.path.isfile(image.path):
+        # Get full path to old image
+        os.remove(image.path)
+
+
 class ProfilePictureAPIView(APIView):
     permission_classes = [IsAuthenticated, IsOwner]
 
@@ -122,11 +129,35 @@ class ProfilePictureAPIView(APIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        # if we have an old image; delete it
-        old_image = model.profilePicture
-        if old_image and os.path.isfile(old_image.path):
-            # Get full path to old image
-            os.remove(old_image.path)
+        delete_old_image(model.profilePicture)
+
+        # Save the new image
+        serializer.save()
+        return Response(serializer.data)
+
+
+class CoverPictureAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    def get_object(self, user):
+        try:
+            return Model.objects.filter(user=user).get()
+        except Model.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk=None):
+        model = self.get_object(user=request.user)
+        serializer = CoverPictureSerializer(model)
+        return Response(serializer.data)
+
+    def put(self, request, pk=None):
+        model = self.get_object(user=request.user)
+        serializer = CoverPictureSerializer(model, data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        delete_old_image(model.coverPicture)
 
         # Save the new image
         serializer.save()

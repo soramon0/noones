@@ -29,22 +29,23 @@ function onUploadProgress(progressEvent) {
   }
 }
 
-function fileIsValid(file) {
+function fileIsValid(file, key, sizeLimit) {
   // TODO(kairm): check with project manager for supported mimetypes
   if (!file.type.startsWith("image/")) {
     update((store) => ({
       ...store,
-      errors: { profilePicture: ["selected file is not an image"] },
+      errors: { [key]: ["selected file is not an image"] },
     }));
     return false;
   }
 
-  // 1mb limit for profile picture
-  if (file.size > 1000000) {
+  // if sizeLimit = 1 => 1mb || 2 => 2mb. etc
+  const size = 1024 * 1024 * sizeLimit;
+  if (file.size > size) {
     update((store) => ({
       ...store,
       errors: {
-        profilePicture: ["profile image should not be greater than 1mb"],
+        key: [`image should not be greater than ${sizeLimit}mb`],
       },
     }));
 
@@ -60,7 +61,7 @@ export default {
   set,
   populate: (data) => update((store) => ({ ...store, ...data })),
   uploadProfilePicture: async (file) => {
-    if (!fileIsValid(file)) {
+    if (!fileIsValid(file, "profilePicture", 1)) {
       return;
     }
 
@@ -80,6 +81,36 @@ export default {
         ...store,
         errors: {},
         profile: data.profilePicture,
+      }));
+
+      UIStore.setFetchAndSuccess(false, true);
+    } catch ({ response }) {
+      UIStore.setFetchAndSuccess(false, false);
+
+      update((store) => ({ ...store, errors: response.data }));
+    }
+  },
+  uploadCoverPicture: async (file) => {
+    if (!fileIsValid(file, "coverPicture", 2)) {
+      return;
+    }
+
+    try {
+      UIStore.setFetchAndSuccess(true, false);
+
+      // Create image data and send it
+      const imageData = new FormData();
+      imageData.append("coverPicture", file);
+
+      const { data } = await http.put("/models/picture/cover/", imageData, {
+        onUploadProgress,
+      });
+
+      // Update store with new image
+      update((store) => ({
+        ...store,
+        errors: {},
+        cover: data.coverPicture,
       }));
 
       UIStore.setFetchAndSuccess(false, true);

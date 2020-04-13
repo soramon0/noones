@@ -38,6 +38,10 @@
     if (file && uploadType === UPLOADPROFILE) {
       photoStore.uploadProfilePicture(file);
     }
+
+    if (file && uploadType === UPLOADCOVER) {
+      photoStore.uploadCoverPicture(file);
+    }
   };
 </script>
 
@@ -82,10 +86,17 @@
       <p class="font-semibold sm:text-2xl">Change your picture</p>
     </div>
 
+    <!-- Error Handling -->
     <div class="text-center px-4 text-sm sm:text-base">
       {#if photoData.errors['profilePicture']}
         <div transition:fade>
           {#each photoData.errors['profilePicture'] as error}
+            <p class="text-sm my-1 text-red-400">{error}</p>
+          {/each}
+        </div>
+      {:else if photoData.errors['coverPicture']}
+        <div transition:fade>
+          {#each photoData.errors['coverPicture'] as error}
             <p class="text-sm my-1 text-red-400">{error}</p>
           {/each}
         </div>
