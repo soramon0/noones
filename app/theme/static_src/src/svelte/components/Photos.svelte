@@ -1,23 +1,43 @@
 <script>
-  import { scale, fade } from "svelte/transition";
+  import { scale, fade, fly } from "svelte/transition";
   import photoStore from "../store/photo";
+  import UIStore from "../store/ui";
   import Breadcrumb from "./shared/Breadcrumb";
   import SaveButton from "./shared/SaveButton";
   import CancelButton from "./shared/CancelButton";
+  import SuccessNotifier from "./shared/SuccessNotifier";
 
   let showUploadModal = false;
   let showConfirmPictureUpload = false;
   let selectedGalleryImage = 0;
+  let uploadType = "";
+  const UPLOADCOVER = "UPLOADCOVER";
+  const UPLOADPROFILE = "UPLOADPROFILE";
 
   // Subscribe to the store
   $: photoData = $photoStore;
+  $: uiData = $UIStore;
 
-  const toggleUploadModal = () => (showUploadModal = !showUploadModal);
+  // This will recieve a constant that sets the upload type
+  // for the upload function
+  const toggleUploadModal = (type = "") => {
+    uploadType = type;
+    showUploadModal = !showUploadModal;
+  };
   const toggleConfirmPictureUpload = () => {
     showConfirmPictureUpload = !showConfirmPictureUpload;
   };
   const setSelectedGalleryImage = index => {
     selectedGalleryImage = index;
+  };
+
+  const uploadPicture = ({ target }) => {
+    const file = target.files[0];
+
+    // Upload type is set in toggleUploadModal
+    if (file && uploadType === UPLOADPROFILE) {
+      photoStore.uploadProfilePicture(file);
+    }
   };
 </script>
 
@@ -35,57 +55,78 @@
 
 <Breadcrumb activeText="Photos" />
 
+<SuccessNotifier />
+
+<!-- upload modal -->
 {#if showUploadModal}
+  <!-- Backdrop -->
   <div
     transition:fade
-    on:click={toggleUploadModal}
-    class="fixed inset-0 bg-black z-20 opacity-50" />
+    on:click={() => toggleUploadModal('')}
+    class="fixed inset-0 bg-black z-10 opacity-50" />
+
+  <!-- Upload Modal -->
   <div
     transition:scale={{ delay: 150 }}
     class="max-w-2xl w-4/5 h-500 m-auto fixed inset-0 bg-white z-30 rounded-lg
-    sm:1/2"
+    sm:1/2 "
     data-simplebar>
+
+    <!-- Progress indicator -->
+    <div
+      class="border-4 border-indigo-400 overflow-hidden transform
+      transition-transform duration-500 ease-out"
+      style="transform: translateX({uiData.fileUploadPercentage === 0 ? -100 : 0}%)" />
+
     <div class="text-center py-4 border-b-2 border-gray-200">
       <p class="font-semibold sm:text-2xl">Change your picture</p>
     </div>
 
-    <div
-      class="p-4 flex justify-evenly items-center bg-white border-b-2
-      border-gray-200 ">
-      <CancelButton on:click={toggleUploadModal} />
+    <div class="text-center px-4 text-sm sm:text-base">
+      {#if photoData.errors['profilePicture']}
+        <div transition:fade>
+          {#each photoData.errors['profilePicture'] as error}
+            <p class="text-sm my-1 text-red-400">{error}</p>
+          {/each}
+        </div>
+      {/if}
+    </div>
 
-      <SaveButton text="Upload New Photo" />
+    <div
+      class="p-4 flex justify-center items-center bg-white border-b-2
+      border-gray-200 ">
+      <CancelButton on:click={() => toggleUploadModal('')} />
+
+      <input
+        type="file"
+        id="uploadFile"
+        accept="image/*"
+        class="ml-2 w-1 h-1 opacity-0 invisible"
+        on:change={uploadPicture} />
+      <SaveButton
+        text="Upload New Photo"
+        on:click={() => document.getElementById('uploadFile').click()} />
     </div>
 
     <div class="p-4">
       <p class="text-lg font-semibold">From Gallery</p>
-      <div class="mt-2 flex flex-wrap justify-evenly">
-        <div
-          on:click={toggleConfirmPictureUpload}
-          class="h-32 w-32 bg-gray-300 cursor-pointer mb-2 border
-          border-gray-300 hover:border-indigo-400" />
-        <div
-          class="h-32 w-32 bg-gray-300 cursor-pointer mb-2 border
-          border-gray-300 hover:border-indigo-400" />
-        <div
-          class="h-32 w-32 bg-gray-300 cursor-pointer mb-2 border
-          border-gray-300 hover:border-indigo-400" />
-        <div
-          class="h-32 w-32 bg-gray-300 cursor-pointer mb-2 border
-          border-gray-300 hover:border-indigo-400" />
-        <div
-          class="h-32 w-32 bg-gray-300 cursor-pointer mb-2 border
-          border-gray-300 hover:border-indigo-400" />
-        <div
-          class="h-32 w-32 bg-gray-300 cursor-pointer mb-2 border
-          border-gray-300 hover:border-indigo-400" />
-        <div
-          class="h-32 w-32 bg-gray-300 cursor-pointer mb-2 border
-          border-gray-300 hover:border-indigo-400" />
-        <div
-          class="h-32 w-32 bg-gray-300 cursor-pointer mb-2 border
-          border-gray-300 hover:border-indigo-400" />
+      <div class="mt-4 flex flex-wrap justify-center sm:justify-start">
+        {#each photoData.photos as photo, i}
+          <div
+            class="h-32 w-32 bg-gray-300 cursor-pointer mb-2 mr-2 border
+            border-gray-300 hover:border-indigo-400 overflow-hidden"
+            on:click={toggleConfirmPictureUpload}>
+            <img
+              src={photo.image}
+              class="w-full h-full object-cover hover:scale-125 transform
+              transition-all duration-500 ease-out"
+              alt="user image {i}" />
+          </div>
+        {:else}
+          <p>Gallery Is Empty</p>
+        {/each}
       </div>
+
       {#if showConfirmPictureUpload}
         <div
           transition:scale
@@ -95,55 +136,30 @@
           <SaveButton />
         </div>
       {/if}
+
     </div>
   </div>
 {/if}
 
 <div class="mt-4 pb-8 border-b border-gray-500">
   <div class="relative">
+    <!-- Cover picture section -->
     <div
-      on:click={toggleUploadModal}
+      on:click={() => toggleUploadModal(UPLOADCOVER)}
       class="add-cover-container px-3 py-2 flex justify-evenly items-center
       absolute bottom-0 right-0 bg-gray-300 hover:bg-gray-300 cursor-pointer
       rounded-tl-md transition-colors duration-300 ease-out sm:bottom-auto
       sm:right-auto sm:top-0 sm:left-0 sm:ml-2 sm:mt-4 sm:bg-transparent
       sm:rounded">
-      <svg class="w-6 h-6 sm:w-8 sm:h-8" viewBox="0 0 60 60">
-        <g>
-          <path
-            d="M55.201,15.5h-8.524l-4-10H17.323l-4,10H12v-5H6v5H4.799C2.152,15.5,0,17.652,0,20.299v29.368
-            C0,52.332,2.168,54.5,4.833,54.5h50.334c2.665,0,4.833-2.168,4.833-4.833V20.299C60,17.652,57.848,15.5,55.201,15.5z
-            M8,12.5h2v3H8 V12.5z
-            M58,49.667c0,1.563-1.271,2.833-2.833,2.833H4.833C3.271,52.5,2,51.229,2,49.667V20.299C2,18.756,3.256,17.5,4.799,17.5H6h6
-            h2.677l4-10h22.646l4,10h9.878c1.543,0,2.799,1.256,2.799,2.799V49.667z" />
-          <path
-            d="M30,14.5c-9.925,0-18,8.075-18,18s8.075,18,18,18s18-8.075,18-18S39.925,14.5,30,14.5z
-            M30,48.5c-8.822,0-16-7.178-16-16
-            s7.178-16,16-16s16,7.178,16,16S38.822,48.5,30,48.5z" />
-          <path
-            d="M30,20.5c-6.617,0-12,5.383-12,12s5.383,12,12,12s12-5.383,12-12S36.617,20.5,30,20.5z
-            M30,42.5c-5.514,0-10-4.486-10-10
-            s4.486-10,10-10s10,4.486,10,10S35.514,42.5,30,42.5z" />
-          <path
-            d="M52,19.5c-2.206,0-4,1.794-4,4s1.794,4,4,4s4-1.794,4-4S54.206,19.5,52,19.5z
-            M52,25.5c-1.103,0-2-0.897-2-2s0.897-2,2-2
-            s2,0.897,2,2S53.103,25.5,52,25.5z" />
-        </g>
-        <g />
-        <g />
-        <g />
-        <g />
-        <g />
-        <g />
-        <g />
-        <g />
-        <g />
-        <g />
-        <g />
-        <g />
-        <g />
-        <g />
-        <g />
+      <svg
+        class="w-6 h-6 fill-current text-gray-600 sm:w-8 sm:h-8"
+        viewBox="0 0 20 20">
+        <path
+          d="M9.999,8.472c-1.314,0-2.385,1.069-2.385,2.384c0,1.317,1.07,2.385,2.385,2.385c1.316,0,2.386-1.068,2.386-2.385C12.385,9.541,11.314,8.472,9.999,8.472z
+          M9.999,12.238c-0.76,0-1.38-0.622-1.38-1.382c0-0.761,0.62-1.38,1.38-1.38c0.761,0,1.38,0.62,1.38,1.38C11.379,11.616,10.76,12.238,9.999,12.238z" />
+        <path
+          d="M15.232,5.375H9.398C9.159,4.366,8.247,3.61,7.174,3.61c-1.073,0-1.985,0.756-2.224,1.765H4.769c-1.246,0-2.259,1.012-2.259,2.257v6.499c0,1.247,1.014,2.259,2.259,2.259h10.464c1.244,0,2.258-1.012,2.258-2.259V7.632C17.49,6.387,16.477,5.375,15.232,5.375z
+          M16.486,14.131c0,0.69-0.564,1.256-1.254,1.256H4.769c-0.692,0-1.256-0.565-1.256-1.256V7.632c0-0.691,0.563-1.254,1.256-1.254H5.39c0.275,0,0.499-0.221,0.502-0.495c0.01-0.7,0.585-1.269,1.282-1.269s1.272,0.569,1.282,1.269c0.003,0.274,0.228,0.495,0.502,0.495h6.275c0.689,0,1.254,0.563,1.254,1.254V14.131z" />
       </svg>
 
       <span
@@ -163,49 +179,17 @@
           class="w-full h-full object-cover" />
       {:else}
         <svg
-          class="w-24 h-24"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          viewBox="0 0 415 415"
-          style="enable-background:new 0 0 415 415;"
-          xml:space="preserve">
-          <g>
-            <path
-              d="M67.5,400H15v-52.5c0-4.143-3.358-7.5-7.5-7.5S0,343.357,0,347.5v60c0,4.143,3.358,7.5,7.5,7.5h60
-              c4.142,0,7.5-3.357,7.5-7.5S71.642,400,67.5,400z" />
-            <path
-              d="M407.5,340c-4.142,0-7.5,3.357-7.5,7.5V400h-52.5c-4.142,0-7.5,3.357-7.5,7.5s3.358,7.5,7.5,7.5h60
-              c4.142,0,7.5-3.357,7.5-7.5v-60C415,343.357,411.642,340,407.5,340z" />
-            <path
-              d="M67.5,0h-60C3.358,0,0,3.357,0,7.5v60C0,71.643,3.358,75,7.5,75s7.5-3.357,7.5-7.5V15h52.5c4.142,0,7.5-3.357,7.5-7.5
-              S71.642,0,67.5,0z" />
-            <path
-              d="M407.5,0h-60c-4.142,0-7.5,3.357-7.5,7.5s3.358,7.5,7.5,7.5H400v52.5c0,4.143,3.358,7.5,7.5,7.5s7.5-3.357,7.5-7.5v-60
-              C415,3.357,411.642,0,407.5,0z" />
-            <path
-              d="M267.5,200H215v-52.5c0-4.143-3.358-7.5-7.5-7.5s-7.5,3.357-7.5,7.5V200h-52.5c-4.142,0-7.5,3.357-7.5,7.5
-              s3.358,7.5,7.5,7.5H200v52.5c0,4.143,3.358,7.5,7.5,7.5s7.5-3.357,7.5-7.5V215h52.5c4.142,0,7.5-3.357,7.5-7.5
-              S271.642,200,267.5,200z" />
-          </g>
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
+          class="w-12 h-12 fill-current text-gray-500 cursor-pointer"
+          viewBox="0 0 20 20"
+          on:click={() => toggleUploadModal(UPLOADCOVER)}>
+          <path
+            d="M8.416,3.943l1.12-1.12v9.031c0,0.257,0.208,0.464,0.464,0.464c0.256,0,0.464-0.207,0.464-0.464V2.823l1.12,1.12c0.182,0.182,0.476,0.182,0.656,0c0.182-0.181,0.182-0.475,0-0.656l-1.744-1.745c-0.018-0.081-0.048-0.16-0.112-0.224C10.279,1.214,10.137,1.177,10,1.194c-0.137-0.017-0.279,0.02-0.384,0.125C9.551,1.384,9.518,1.465,9.499,1.548L7.76,3.288c-0.182,0.181-0.182,0.475,0,0.656C7.941,4.125,8.234,4.125,8.416,3.943z
+            M15.569,6.286h-2.32v0.928h2.32c0.512,0,0.928,0.416,0.928,0.928v8.817c0,0.513-0.416,0.929-0.928,0.929H4.432c-0.513,0-0.928-0.416-0.928-0.929V8.142c0-0.513,0.416-0.928,0.928-0.928h2.32V6.286h-2.32c-1.025,0-1.856,0.831-1.856,1.856v8.817c0,1.025,0.832,1.856,1.856,1.856h11.138c1.024,0,1.855-0.831,1.855-1.856V8.142C17.425,7.117,16.594,6.286,15.569,6.286z" />
         </svg>
       {/if}
     </div>
 
+    <!-- Profile picture section -->
     <div
       class="add-profile w-32 h-40 ml-4 -mb-4 absolute bottom-0 left-0
       bg-gray-200 rounded-md sm:overflow-hidden">
@@ -227,91 +211,21 @@
       </div>
 
       <div
-        on:click={toggleUploadModal}
+        on:click={() => toggleUploadModal(UPLOADPROFILE)}
         class="add-profile-container h-10 w-10 absolute top-0 right-0 mt-2 -mr-4
         flex justify-center items-center bg-white rounded-full cursor-pointer
         sm:w-full sm:h-20 sm:top-auto sm:bottom-0 sm:bg-black sm:opacity-75
         sm:m-0 sm:rounded-bl-none sm:rounded-br-none sm:rounded-md
         sm:translate-y-full transform transition duration-300 ease-in-out">
         <svg
-          class="w-4 h-4 fill-current text-black sm:text-white sm:w-10 sm:h-10"
-          viewBox="0 0 60 60">
-          <g>
-            <path
-              d="M55.201,15.5h-8.524l-4-10H17.323l-4,10H12v-5H6v5H4.799C2.152,15.5,0,17.652,0,20.299v29.368
-              C0,52.332,2.168,54.5,4.833,54.5h50.334c2.665,0,4.833-2.168,4.833-4.833V20.299C60,17.652,57.848,15.5,55.201,15.5z
-              M8,12.5h2v3H8 V12.5z
-              M58,49.667c0,1.563-1.271,2.833-2.833,2.833H4.833C3.271,52.5,2,51.229,2,49.667V20.299C2,18.756,3.256,17.5,4.799,17.5H6h6
-              h2.677l4-10h22.646l4,10h9.878c1.543,0,2.799,1.256,2.799,2.799V49.667z" />
-            <path
-              d="M30,14.5c-9.925,0-18,8.075-18,18s8.075,18,18,18s18-8.075,18-18S39.925,14.5,30,14.5z
-              M30,48.5c-8.822,0-16-7.178-16-16
-              s7.178-16,16-16s16,7.178,16,16S38.822,48.5,30,48.5z" />
-            <path
-              d="M30,20.5c-6.617,0-12,5.383-12,12s5.383,12,12,12s12-5.383,12-12S36.617,20.5,30,20.5z
-              M30,42.5c-5.514,0-10-4.486-10-10
-              s4.486-10,10-10s10,4.486,10,10S35.514,42.5,30,42.5z" />
-            <path
-              d="M52,19.5c-2.206,0-4,1.794-4,4s1.794,4,4,4s4-1.794,4-4S54.206,19.5,52,19.5z
-              M52,25.5c-1.103,0-2-0.897-2-2s0.897-2,2-2
-              s2,0.897,2,2S53.103,25.5,52,25.5z" />
-          </g>
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <svg
-            class="w-8 h-8 "
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            viewBox="0 0 415 415"
-            style="enable-background:new 0 0 415 415;"
-            xml:space="preserve">
-            <g>
-              <path
-                d="M67.5,400H15v-52.5c0-4.143-3.358-7.5-7.5-7.5S0,343.357,0,347.5v60c0,4.143,3.358,7.5,7.5,7.5h60
-                c4.142,0,7.5-3.357,7.5-7.5S71.642,400,67.5,400z" />
-              <path
-                d="M407.5,340c-4.142,0-7.5,3.357-7.5,7.5V400h-52.5c-4.142,0-7.5,3.357-7.5,7.5s3.358,7.5,7.5,7.5h60
-                c4.142,0,7.5-3.357,7.5-7.5v-60C415,343.357,411.642,340,407.5,340z" />
-              <path
-                d="M67.5,0h-60C3.358,0,0,3.357,0,7.5v60C0,71.643,3.358,75,7.5,75s7.5-3.357,7.5-7.5V15h52.5c4.142,0,7.5-3.357,7.5-7.5
-                S71.642,0,67.5,0z" />
-              <path
-                d="M407.5,0h-60c-4.142,0-7.5,3.357-7.5,7.5s3.358,7.5,7.5,7.5H400v52.5c0,4.143,3.358,7.5,7.5,7.5s7.5-3.357,7.5-7.5v-60
-                C415,3.357,411.642,0,407.5,0z" />
-              <path
-                d="M267.5,200H215v-52.5c0-4.143-3.358-7.5-7.5-7.5s-7.5,3.357-7.5,7.5V200h-52.5c-4.142,0-7.5,3.357-7.5,7.5
-                s3.358,7.5,7.5,7.5H200v52.5c0,4.143,3.358,7.5,7.5,7.5s7.5-3.357,7.5-7.5V215h52.5c4.142,0,7.5-3.357,7.5-7.5
-                S271.642,200,267.5,200z" />
-            </g>
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-          </svg>
+          class="w-6 h-6 fill-current sm:text-white sm:w-8 sm:h-8"
+          viewBox="0 0 20 20">
+          <path
+            d="M9.999,8.472c-1.314,0-2.385,1.069-2.385,2.384c0,1.317,1.07,2.385,2.385,2.385c1.316,0,2.386-1.068,2.386-2.385C12.385,9.541,11.314,8.472,9.999,8.472z
+            M9.999,12.238c-0.76,0-1.38-0.622-1.38-1.382c0-0.761,0.62-1.38,1.38-1.38c0.761,0,1.38,0.62,1.38,1.38C11.379,11.616,10.76,12.238,9.999,12.238z" />
+          <path
+            d="M15.232,5.375H9.398C9.159,4.366,8.247,3.61,7.174,3.61c-1.073,0-1.985,0.756-2.224,1.765H4.769c-1.246,0-2.259,1.012-2.259,2.257v6.499c0,1.247,1.014,2.259,2.259,2.259h10.464c1.244,0,2.258-1.012,2.258-2.259V7.632C17.49,6.387,16.477,5.375,15.232,5.375z
+            M16.486,14.131c0,0.69-0.564,1.256-1.254,1.256H4.769c-0.692,0-1.256-0.565-1.256-1.256V7.632c0-0.691,0.563-1.254,1.256-1.254H5.39c0.275,0,0.499-0.221,0.502-0.495c0.01-0.7,0.585-1.269,1.282-1.269s1.272,0.569,1.282,1.269c0.003,0.274,0.228,0.495,0.502,0.495h6.275c0.689,0,1.254,0.563,1.254,1.254V14.131z" />
         </svg>
       </div>
     </div>

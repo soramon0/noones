@@ -1,16 +1,19 @@
-import { writable } from 'svelte/store';
+import { writable } from "svelte/store";
 
 const { subscribe, set, update } = writable({
   fetching: false,
   success: false,
+  fileUploadPercentage: 0,
 });
 
 export default {
   subscribe,
   update,
   set,
-  setFetching: (fetching) => update(({ success }) => ({ fetching, success })),
-  setSuccess: (success) => update(({ fetching }) => ({ fetching, success })),
+  setFetching: (fetching) => update((store) => ({ ...store, fetching })),
+  setSuccess: (success) => update((store) => ({ ...store, success })),
   setFetchAndSuccess: (fetching, success) =>
-    update(() => ({ fetching, success })),
+    update((store) => ({ ...store, fetching, success })),
+  setfileUploadPercentage: (percentage) =>
+    update((store) => ({ ...store, fileUploadPercentage: percentage })),
 };

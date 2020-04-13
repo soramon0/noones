@@ -32,7 +32,7 @@
 
 <Breadcrumb activeText="General" />
 
-<SuccessNotifier response={uiData.success} />
+<SuccessNotifier />
 
 <Card>
   <form on:submit|preventDefault={handleSubmit}>

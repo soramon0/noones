@@ -31,7 +31,7 @@
 
 <Breadcrumb activeText="Measures" />
 
-<SuccessNotifier response={uiData.success} />
+<SuccessNotifier />
 
 <Card classes="mb-48">
   <form on:submit|preventDefault={handleSubmit}>

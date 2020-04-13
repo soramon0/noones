@@ -1,3 +1,5 @@
+import os
+
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -12,8 +14,8 @@ from .serializers import (
     ModelSerializer,
     UserSerializer,
     MeasuresSerializer,
-    ProfileImageSerializer,
-    CoverImageSerializer,
+    ProfilePictureSerializer,
+    CoverPictureSerializer,
     PhotoSerializer
 )
 
@@ -27,18 +29,18 @@ def me(request):
         user_serializer = UserSerializer(user)
         model_serializer = ModelSerializer(model)
         measures_serializer = MeasuresSerializer(model.measures)
-        profileImage_serializer = ProfileImageSerializer(model)
-        coverImage_serializer = CoverImageSerializer(model)
+        profileImage_serializer = ProfilePictureSerializer(model)
+        coverImage_serializer = CoverPictureSerializer(model)
 
-        # Get 8 user uploaded pictures that are in use 
+        # Get 8 user uploaded pictures that are in use
         photos = Photo.objects.filter(model=model, inUse=True)[:8]
         photo_serializer = PhotoSerializer(photos, many=True)
 
         res = {'model': model_serializer.data}
         res['model'].update({
-          'email': user_serializer.data['email'],
-          'profilePicture': profileImage_serializer.data['profilePicture'],
-          'coverPicture': coverImage_serializer.data['coverPicture'],
+            'email': user_serializer.data['email'],
+            'profilePicture': profileImage_serializer.data['profilePicture'],
+            'coverPicture': coverImage_serializer.data['coverPicture'],
         })
         res['measures'] = measures_serializer.data
         res['photos'] = photo_serializer.data
@@ -97,3 +99,35 @@ class MeasuresAPIView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ProfilePictureAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    def get_object(self, user):
+        try:
+            return Model.objects.filter(user=user).get()
+        except Model.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk=None):
+        model = self.get_object(user=request.user)
+        serializer = ProfilePictureSerializer(model)
+        return Response(serializer.data)
+
+    def put(self, request, pk=None):
+        model = self.get_object(user=request.user)
+        serializer = ProfilePictureSerializer(model, data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        # if we have an old image; delete it
+        old_image = model.profilePicture
+        if old_image and os.path.isfile(old_image.path):
+            # Get full path to old image
+            os.remove(old_image.path)
+
+        # Save the new image
+        serializer.save()
+        return Response(serializer.data)

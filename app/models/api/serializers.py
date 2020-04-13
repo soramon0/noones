@@ -16,15 +16,17 @@ class ModelSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'sexe', 'first_name', 'last_name', 'bio', 'birth_date',
                   'facebook', 'instagram', 'phone', 'addresse', 'city', 'country', 'zipcode', 'cin']
     
-class ProfileImageSerializer(serializers.ModelSerializer):
+class ProfilePictureSerializer(serializers.ModelSerializer):
+    profilePicture = serializers.ImageField()
     class Meta:
         model = Model
-        fields = ['user', 'profilePicture']
+        fields = ['id', 'profilePicture']
 
-class CoverImageSerializer(serializers.ModelSerializer):
+class CoverPictureSerializer(serializers.ModelSerializer):
+    coverPicture = serializers.ImageField()
     class Meta:
         model = Model
-        fields = ['user', 'coverPicture']
+        fields = ['id', 'coverPicture']
 
 
 class MeasuresSerializer(serializers.ModelSerializer):

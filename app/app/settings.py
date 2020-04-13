@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'tailwind',
     'pages',
     'core',
-    'models',
+    'models.apps.ModelsConfig',
     'accounts',
     'theme',
 ]

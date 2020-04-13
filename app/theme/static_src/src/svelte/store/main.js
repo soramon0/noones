@@ -1,7 +1,7 @@
-import { writable } from 'svelte/store';
-import http from '../../main/http';
-import uiStore from './ui';
-import photosStore from './photo'
+import { writable } from "svelte/store";
+import http from "../../main/http";
+import UIStore from "./ui";
+import photosStore from "./photo";
 
 const { subscribe, set, update } = writable(null);
 
@@ -18,19 +18,23 @@ export default {
       data.email = data.model.email;
 
       // create the photos' store
-      const { coverPicture, profilePicture } = data.model
-      photosStore.populate({ photos: data.photos, cover: coverPicture, profile: profilePicture })
+      const { coverPicture, profilePicture } = data.model;
+      photosStore.populate({
+        photos: data.photos,
+        cover: coverPicture,
+        profile: profilePicture,
+      });
 
       set(data);
     } catch ({ response }) {
       if (response && response.status == 401) {
-        return window.location.replace('/');
+        return window.location.replace("/");
       }
     }
   },
   updateModel: async (payload) => {
     try {
-      uiStore.setFetchAndSuccess(true, false);
+      UIStore.setFetchAndSuccess(true, false);
 
       const { data } = await http.put(`models/${payload.id}/`, payload);
 
@@ -40,21 +44,24 @@ export default {
         errors: {},
       }));
 
-      uiStore.setFetchAndSuccess(false, true);
+      UIStore.setFetchAndSuccess(false, true);
     } catch ({ response }) {
       update((store) => ({
         ...store,
         errors: response.data,
       }));
 
-      uiStore.setFetchAndSuccess(false, false);
+      UIStore.setFetchAndSuccess(false, false);
     }
   },
   updateMeasures: async (payload) => {
     try {
-      uiStore.setFetchAndSuccess(true, false);
+      UIStore.setFetchAndSuccess(true, false);
 
-      const { data } = await http.put(`models/measures/${payload.id}/`, payload);
+      const { data } = await http.put(
+        `models/measures/${payload.id}/`,
+        payload
+      );
 
       update((store) => ({
         ...store,
@@ -62,14 +69,14 @@ export default {
         errors: {},
       }));
 
-      uiStore.setFetchAndSuccess(false, true);
+      UIStore.setFetchAndSuccess(false, true);
     } catch ({ response }) {
       update((store) => ({
         ...store,
         errors: response.data,
       }));
 
-      uiStore.setFetchAndSuccess(false, false);
+      UIStore.setFetchAndSuccess(false, false);
     }
   },
 };
