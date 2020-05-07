@@ -1,48 +1,36 @@
 <script>
-  import { scale, fade, fly } from "svelte/transition";
   import photoStore from "../store/photo";
   import UIStore from "../store/ui";
   import Breadcrumb from "./shared/Breadcrumb";
   import SaveButton from "./shared/SaveButton";
-  import CancelButton from "./shared/CancelButton";
   import SuccessNotifier from "./shared/SuccessNotifier";
+  import UploadModal from "./shared/UploadModal";
 
-  let showUploadModal = false;
-  let showConfirmPictureUpload = false;
   let selectedGalleryImage = 0;
-  let uploadType = "";
-  const UPLOADCOVER = "UPLOADCOVER";
-  const UPLOADPROFILE = "UPLOADPROFILE";
+  let showProfileModal = false;
+  let showGalleryModal = false;
+  let showCoverModal = false;
 
   // Subscribe to the store
   $: photoData = $photoStore;
   $: uiData = $UIStore;
 
-  // This will recieve a constant that sets the upload type
-  // for the upload function
-  const toggleUploadModal = (type = "") => {
-    uploadType = type;
-    showUploadModal = !showUploadModal;
-  };
-  const toggleConfirmPictureUpload = () => {
-    showConfirmPictureUpload = !showConfirmPictureUpload;
-  };
   const setSelectedGalleryImage = index => {
     selectedGalleryImage = index;
   };
 
-  const uploadPicture = ({ target }) => {
-    const file = target.files[0];
-
-    // Upload type is set in toggleUploadModal
-    if (file && uploadType === UPLOADPROFILE) {
-      photoStore.uploadProfilePicture(file);
-    }
-
-    if (file && uploadType === UPLOADCOVER) {
-      photoStore.uploadCoverPicture(file);
-    }
+  const onShowProfileModal = () => {
+    showProfileModal = !showProfileModal;
   };
+  const onShowGalleryModal = () => {
+    showGalleryModal = !showGalleryModal;
+  };
+
+  const onShowCoverModal = () => {
+    showCoverModal = !showCoverModal;
+  };
+
+  $: console.log(photoData);
 </script>
 
 <style>
@@ -61,102 +49,38 @@
 
 <SuccessNotifier />
 
-<!-- upload modal -->
-{#if showUploadModal}
-  <!-- Backdrop -->
-  <div
-    transition:fade
-    on:click={() => toggleUploadModal('')}
-    class="fixed inset-0 bg-black z-10 opacity-50" />
-
-  <!-- Upload Modal -->
-  <div
-    transition:scale={{ delay: 150 }}
-    class="max-w-2xl w-4/5 h-500 m-auto fixed inset-0 bg-white z-30 rounded-lg
-    sm:1/2 "
-    data-simplebar>
-
-    <!-- Progress indicator -->
-    <div
-      class="border-4 border-indigo-400 overflow-hidden transform
-      transition-transform duration-500 ease-out"
-      style="transform: translateX({uiData.fileUploadPercentage === 0 ? -100 : 0}%)" />
-
-    <div class="text-center py-4 border-b-2 border-gray-200">
-      <p class="font-semibold sm:text-2xl">Change your picture</p>
-    </div>
-
-    <!-- Error Handling -->
-    <div class="text-center px-4 text-sm sm:text-base">
-      {#if photoData.errors['profilePicture']}
-        <div transition:fade>
-          {#each photoData.errors['profilePicture'] as error}
-            <p class="text-sm my-1 text-red-400">{error}</p>
-          {/each}
-        </div>
-      {:else if photoData.errors['coverPicture']}
-        <div transition:fade>
-          {#each photoData.errors['coverPicture'] as error}
-            <p class="text-sm my-1 text-red-400">{error}</p>
-          {/each}
-        </div>
-      {/if}
-    </div>
-
-    <div
-      class="p-4 flex justify-center items-center bg-white border-b-2
-      border-gray-200 ">
-      <CancelButton on:click={() => toggleUploadModal('')} />
-
-      <input
-        type="file"
-        id="uploadFile"
-        accept="image/*"
-        class="ml-2 w-1 h-1 opacity-0 invisible"
-        on:change={uploadPicture} />
-      <SaveButton
-        text="Upload New Photo"
-        on:click={() => document.getElementById('uploadFile').click()} />
-    </div>
-
-    <div class="p-4">
-      <p class="text-lg font-semibold">From Gallery</p>
-      <div class="mt-4 flex flex-wrap justify-center sm:justify-start">
-        {#each photoData.photos as photo, i}
-          <div
-            class="h-32 w-32 bg-gray-300 cursor-pointer mb-2 mr-2 border
-            border-gray-300 hover:border-indigo-400 overflow-hidden"
-            on:click={toggleConfirmPictureUpload}>
-            <img
-              src={photo.image}
-              class="w-full h-full object-cover hover:scale-125 transform
-              transition-all duration-500 ease-out"
-              alt="user image {i}" />
-          </div>
-        {:else}
-          <p>Gallery Is Empty</p>
-        {/each}
-      </div>
-
-      {#if showConfirmPictureUpload}
-        <div
-          transition:scale
-          class="w-56 h-24 p-4 m-auto flex justify-evenly items-center fixed
-          inset-0 bg-white z-40 rounded-lg shadow-md">
-          <CancelButton on:click={toggleConfirmPictureUpload} />
-          <SaveButton />
-        </div>
-      {/if}
-
-    </div>
-  </div>
+{#if showCoverModal}
+  <UploadModal
+    title="Upload a cover picture"
+    errorKey="coverPicture"
+    on:show={onShowCoverModal}
+    on:file={({ detail }) => photoStore.uploadCoverPicture(detail)}
+    {photoData}
+    {uiData} />
+{:else if showProfileModal}
+  <UploadModal
+    title="Upload a Profile picture"
+    errorKey="profilePicture"
+    on:show={onShowProfileModal}
+    on:file={({ detail }) => photoStore.uploadProfilePicture(detail)}
+    {photoData}
+    {uiData} />
+{:else if showGalleryModal}
+  <UploadModal
+    title="Gallery Images"
+    errorKey="image"
+    multiple
+    on:show={onShowGalleryModal}
+    on:file={({ detail }) => photoStore.uploadGalleryPictures(detail)}
+    {photoData}
+    {uiData} />
 {/if}
 
 <div class="mt-4 pb-8 border-b border-gray-500">
   <div class="relative">
     <!-- Cover picture section -->
     <div
-      on:click={() => toggleUploadModal(UPLOADCOVER)}
+      on:click={onShowCoverModal}
       class="add-cover-container px-3 py-2 flex justify-evenly items-center
       absolute bottom-0 right-0 bg-gray-300 hover:bg-gray-300 cursor-pointer
       rounded-tl-md transition-colors duration-300 ease-out sm:bottom-auto
@@ -192,7 +116,7 @@
         <svg
           class="w-12 h-12 fill-current text-gray-500 cursor-pointer"
           viewBox="0 0 20 20"
-          on:click={() => toggleUploadModal(UPLOADCOVER)}>
+          on:click={onShowCoverModal}>
           <path
             d="M8.416,3.943l1.12-1.12v9.031c0,0.257,0.208,0.464,0.464,0.464c0.256,0,0.464-0.207,0.464-0.464V2.823l1.12,1.12c0.182,0.182,0.476,0.182,0.656,0c0.182-0.181,0.182-0.475,0-0.656l-1.744-1.745c-0.018-0.081-0.048-0.16-0.112-0.224C10.279,1.214,10.137,1.177,10,1.194c-0.137-0.017-0.279,0.02-0.384,0.125C9.551,1.384,9.518,1.465,9.499,1.548L7.76,3.288c-0.182,0.181-0.182,0.475,0,0.656C7.941,4.125,8.234,4.125,8.416,3.943z
             M15.569,6.286h-2.32v0.928h2.32c0.512,0,0.928,0.416,0.928,0.928v8.817c0,0.513-0.416,0.929-0.928,0.929H4.432c-0.513,0-0.928-0.416-0.928-0.929V8.142c0-0.513,0.416-0.928,0.928-0.928h2.32V6.286h-2.32c-1.025,0-1.856,0.831-1.856,1.856v8.817c0,1.025,0.832,1.856,1.856,1.856h11.138c1.024,0,1.855-0.831,1.855-1.856V8.142C17.425,7.117,16.594,6.286,15.569,6.286z" />
@@ -222,7 +146,7 @@
       </div>
 
       <div
-        on:click={() => toggleUploadModal(UPLOADPROFILE)}
+        on:click={onShowProfileModal}
         class="add-profile-container h-10 w-10 absolute top-0 right-0 mt-2 -mr-4
         flex justify-center items-center bg-white rounded-full cursor-pointer
         sm:w-full sm:h-20 sm:top-auto sm:bottom-0 sm:bg-black sm:opacity-75
@@ -244,38 +168,45 @@
 </div>
 
 <h1 class="text-2xl mt-4">Gallery</h1>
-<div class="mt-4 flex flex-col sm:flex-row">
-  <div
-    class="w-full h-80 bg-grey-300 flex justify-center items-center shadow-2xl
-    rounded-md overflow-hidden border-2 hover:border-indigo-400 sm:w-10/12">
-    {#if photoData.photos.length > 0}
+
+{#if photoData.photos.length > 0}
+  <div class="mt-4 flex flex-col sm:flex-row">
+    <div
+      class="w-full h-80 bg-grey-300 shadow-2xl relative rounded-md
+      overflow-hidden border-2 hover:border-indigo-400 sm:w-10/12">
       <img
         src={photoData.photos[selectedGalleryImage].image}
         alt="user image"
         class="w-full h-full object-cover hover:scale-125 transform
         transition-all duration-500 ease-out" />
-    {:else}
-      <SaveButton text="START UPLOADING" />
-    {/if}
+    </div>
+    <div
+      class="pt-3 h-40 whitespace-no-wrap sm:w-3/12 sm:h-80 sm:ml-4 sm:block
+      sm:pt-0 sm:pr-2"
+      data-simplebar>
+      {#each photoData.photos as photo, i}
+        <div
+          class="inline-block w-68 h-32 mr-2 bg-gray-200 cursor-pointer
+          rounded-md overflow-hidden border-2 hover:border-indigo-400
+          hover:opacity-100 sm:block sm:w-auto sm:mb-2 {selectedGalleryImage == i ? 'opacity-100' : 'opacity-50'}"
+          on:click={() => setSelectedGalleryImage(i)}>
+          <img
+            src={photo.image}
+            class="w-full h-full object-cover hover:scale-125 transform
+            transition-all duration-500 ease-out"
+            alt="user image {i}" />
+        </div>
+      {:else}
+        <p>No photos.</p>
+      {/each}
+    </div>
   </div>
-  <div
-    class="pt-3 h-40 whitespace-no-wrap sm:w-3/12 sm:h-80 sm:ml-4 sm:block
-    sm:pt-0 sm:pr-2"
-    data-simplebar>
-    {#each photoData.photos as photo, i}
-      <div
-        class="inline-block w-68 h-32 mr-2 bg-gray-200 cursor-pointer rounded-md
-        overflow-hidden border-2 hover:border-indigo-400 hover:opacity-100
-        sm:block sm:w-auto sm:mb-2 {selectedGalleryImage == i ? 'opacity-100' : 'opacity-50'}"
-        on:click={() => setSelectedGalleryImage(i)}>
-        <img
-          src={photo.image}
-          class="w-full h-full object-cover hover:scale-125 transform
-          transition-all duration-500 ease-out"
-          alt="user image {i}" />
-      </div>
-    {:else}
-      <p>No pictures.</p>
-    {/each}
+{:else}
+  <div class="mt-4">
+    <SaveButton text="START UPLOADING" on:click={onShowGalleryModal} />
   </div>
-</div>
+{/if}
+
+<!-- on:dragenter|preventDefault|stopPropagation
+    on:dragover|preventDefault|stopPropagation
+    on:drop|preventDefault|stopPropagation={uploadPhotos} -->

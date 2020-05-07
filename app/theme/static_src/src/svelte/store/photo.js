@@ -21,11 +21,6 @@ function onUploadProgress(progressEvent) {
     const percentage = Math.round((progressEvent.loaded * 100) / totalLength);
 
     UIStore.setfileUploadPercentage(percentage);
-
-    setTimeout(() => {
-      UIStore.setfileUploadPercentage(0);
-      UIStore.setFetchAndSuccess(false, false);
-    }, 1500);
   }
 }
 
@@ -34,7 +29,9 @@ function fileIsValid(file, key, sizeLimit) {
   if (!file.type.startsWith("image/")) {
     update((store) => ({
       ...store,
-      errors: { [key]: ["selected file is not an image"] },
+      errors: {
+        [key]: [`${file.name} is not an image`],
+      },
     }));
     return false;
   }
@@ -45,7 +42,7 @@ function fileIsValid(file, key, sizeLimit) {
     update((store) => ({
       ...store,
       errors: {
-        key: [`image should not be greater than ${sizeLimit}mb`],
+        [key]: [`${file.name} should not be greater than ${sizeLimit}mb`],
       },
     }));
 
@@ -84,8 +81,10 @@ export default {
       }));
 
       UIStore.setFetchAndSuccess(false, true);
+      UIStore.setfileUploadPercentage(0);
     } catch ({ response }) {
       UIStore.setFetchAndSuccess(false, false);
+      UIStore.setfileUploadPercentage(0);
 
       update((store) => ({ ...store, errors: response.data }));
     }
@@ -114,8 +113,49 @@ export default {
       }));
 
       UIStore.setFetchAndSuccess(false, true);
+      UIStore.setfileUploadPercentage(0);
     } catch ({ response }) {
       UIStore.setFetchAndSuccess(false, false);
+      UIStore.setfileUploadPercentage(0);
+
+      update((store) => ({ ...store, errors: response.data }));
+    }
+  },
+  uploadGalleryPictures: async (files) => {
+    let isValid = true;
+    const imageData = new FormData();
+
+    files.forEach((file) => {
+      if (!fileIsValid(file, "image", 1)) {
+        isValid = false;
+        return;
+      }
+      imageData.append("image", file);
+    });
+
+    if (!isValid) {
+      return;
+    }
+
+    try {
+      UIStore.setFetchAndSuccess(true, false);
+
+      const { data } = await http.post("/models/picture/photos/", imageData, {
+        onUploadProgress,
+      });
+
+      // Update store with new images
+      update((store) => ({
+        ...store,
+        errors: {},
+        photos: data,
+      }));
+
+      UIStore.setFetchAndSuccess(false, true);
+      UIStore.setfileUploadPercentage(0);
+    } catch ({ response }) {
+      UIStore.setFetchAndSuccess(false, false);
+      UIStore.setfileUploadPercentage(0);
 
       update((store) => ({ ...store, errors: response.data }));
     }

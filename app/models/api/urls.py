@@ -10,4 +10,5 @@ urlpatterns = [
     path('measures/<uuid:pk>/', views.MeasuresAPIView.as_view()),
     path('picture/profile/', views.ProfilePictureAPIView.as_view()),
     path('picture/cover/', views.CoverPictureAPIView.as_view()),
+    path('picture/photos/', views.photos),
 ]
