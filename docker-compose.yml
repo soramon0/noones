@@ -1,0 +1,61 @@
+version: "3"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: noones_web
+    volumes:
+      - ./app:/home/sora/app
+    networks:
+      - backend
+    ports:
+      - "8000:8000"
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_USER: sora
+      POSTGRES_PASSWORD: sora_password
+      POSTGRES_NAME: dev_db
+    command: >
+      sh -c "python manage.py wait_for_db &&
+            python manage.py migrate &&
+            python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - db
+  
+  dev_build:
+    image: node:14.3
+    container_name: noones_build_dev
+    working_dir: /opt/node_app/static_src
+    volumes:
+      - ./app/theme/static:/opt/node_app/static
+      - ./app/theme/static_src:/opt/node_app/static_src
+      # this is a workaround to prevent host node_modules from accidently getting mounted in container
+      # in case you want to use node/npm both outside container for test/lint etc. and also inside container
+      # this will overwrite the default node_modules dir in container so it won't conflict with our
+      # /opt/node_app/node_modules location. Thanks to PR from @brnluiz
+      - notused:/opt/node_app/static_src/node_modules
+    command: >
+      sh -c "npm install &&
+            npm run build-postcss &&
+            npm run watch:js"  
+
+  db:
+    image: postgres:12.3-alpine
+    container_name: noones_db
+    volumes:
+      - app_db:/var/lib/postgresql/data
+    networks:
+      - backend
+    environment:
+      POSTGRES_PASSWORD: sora_password
+      POSTGRES_USER: sora
+      POSTGRES_DB: dev_db    
+
+networks:
+  backend:
+
+volumes:
+  notused:
+  app_db:
