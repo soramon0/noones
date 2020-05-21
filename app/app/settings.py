@@ -33,7 +33,7 @@ SECRET_KEY = 'uh-4vnm$%b*$t6fe8829gm8&(!g=cx8#otb3v9#cej^j-%hj&^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.102', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -92,12 +92,11 @@ WSGI_APPLICATION = 'app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'noonesdev',
-        'USER': 'soramon',
-        'PASSWORD': 'soramon0',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('POSTGRES_NAME'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': os.environ.get('POSTGRES_HOST'),
     }
 }
 
@@ -155,7 +154,7 @@ MEDIA_URL = '/media/'
 
 # Tailwind
 TAILWIND_APP_NAME = 'theme'
-NPM_BIN_PATH = 'C:\\Program Files\\nodejs\\npm.cmd'
+NPM_BIN_PATH = '/usr/local/bin/npm'
 
 # EMAIL
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
