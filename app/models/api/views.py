@@ -162,3 +162,36 @@ class CoverPictureAPIView(APIView):
         # Save the new image
         serializer.save()
         return Response(serializer.data)
+
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def photos(request):
+    model_id = request.user.model.id
+
+    if request.method == 'GET':
+        # TODO(karim): set inUse back to True
+        photos = Photo.objects.filter(model=model_id, inUse=False)[:8]
+        serializer = PhotoSerializer(photos, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        try:
+            images = request.data.getlist('image')
+        except AttributeError:
+            return Response({'image': ['No file was submitted']}, status=status.HTTP_400_BAD_REQUEST)
+
+        # All the uploaded images will use the same model id
+        data = {'model': model_id}
+        # To keep track of all uploaded images
+        uploaded_images = []
+
+        for image in images:
+            data['image'] = image
+            serializer = PhotoSerializer(data=data)
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            serializer.save()
+            uploaded_images.append(serializer.data)
+
+        return Response(uploaded_images, status=status.HTTP_201_CREATED)

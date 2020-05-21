@@ -42,7 +42,7 @@
     </div>
   {/if}
 
-  <div class="relative flex" transition:fade={{ duration: 600 }}>
+  <div class="relative flex min-h-full" transition:fade={{ duration: 600 }}>
     <Navbar on:changeTab={changeTab}>
       <Avatar id={userData.model.id} />
     </Navbar>

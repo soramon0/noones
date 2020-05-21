@@ -15,15 +15,20 @@ class ModelSerializer(serializers.ModelSerializer):
         model = Model
         fields = ['id', 'user', 'sexe', 'first_name', 'last_name', 'bio', 'birth_date',
                   'facebook', 'instagram', 'phone', 'addresse', 'city', 'country', 'zipcode', 'cin']
-    
+        read_only_fields = ['user']
+
+
 class ProfilePictureSerializer(serializers.ModelSerializer):
     profilePicture = serializers.ImageField()
+
     class Meta:
         model = Model
         fields = ['id', 'profilePicture']
 
+
 class CoverPictureSerializer(serializers.ModelSerializer):
     coverPicture = serializers.ImageField()
+
     class Meta:
         model = Model
         fields = ['id', 'coverPicture']
@@ -34,6 +39,7 @@ class MeasuresSerializer(serializers.ModelSerializer):
         model = Mensuration
         fields = ['id', 'user', 'taille', 'taillenombrill', 'buste', 'epaules',
                   'hanches', 'poids', 'pointure', 'cheveux', 'yeux']
+        read_only_fields = ['user']
 
 
 class PhotoSerializer(serializers.ModelSerializer):
