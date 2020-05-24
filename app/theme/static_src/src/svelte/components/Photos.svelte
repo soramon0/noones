@@ -5,6 +5,7 @@
   import SaveButton from "./shared/SaveButton";
   import SuccessNotifier from "./shared/SuccessNotifier";
   import UploadModal from "./shared/UploadModal";
+  import ChangeGalleryPicture from "./shared/ChangeGalleryPicture"
 
   let selectedGalleryImage = 0;
   let showProfileModal = false;
@@ -29,8 +30,6 @@
   const onShowCoverModal = () => {
     showCoverModal = !showCoverModal;
   };
-
-  $: console.log(photoData);
 </script>
 
 <style>
@@ -109,8 +108,8 @@
       overflow-hidden">
       {#if photoData.cover}
         <img
-          src={photoData.cover}
           alt="cover picture"
+          src={photoData.cover}
           class="w-full h-full object-cover" />
       {:else}
         <svg
@@ -179,6 +178,12 @@
         alt="user image"
         class="w-full h-full object-cover hover:scale-125 transform
         transition-all duration-500 ease-out" />
+      
+      <ChangeGalleryPicture
+        modelId={photoData.photos[selectedGalleryImage].model}
+        pictureId={photoData.photos[selectedGalleryImage].id}
+        size="w-8 h-8"
+       />
     </div>
     <div
       class="pt-3 h-40 whitespace-no-wrap sm:w-3/12 sm:h-80 sm:ml-4 sm:block
@@ -187,7 +192,7 @@
       {#each photoData.photos as photo, i}
         <div
           class="inline-block w-68 h-32 mr-2 bg-gray-200 cursor-pointer
-          rounded-md overflow-hidden border-2 hover:border-indigo-400
+          rounded-md overflow-hidden border-2 hover:border-indigo-400 relative
           hover:opacity-100 sm:block sm:w-auto sm:mb-2 {selectedGalleryImage == i ? 'opacity-100' : 'opacity-50'}"
           on:click={() => setSelectedGalleryImage(i)}>
           <img
@@ -195,6 +200,7 @@
             class="w-full h-full object-cover hover:scale-125 transform
             transition-all duration-500 ease-out"
             alt="user image {i}" />
+          <ChangeGalleryPicture modelId={photoData.photos[i].model} pictureId={photoData.photos[i].id} />
         </div>
       {:else}
         <p>No photos.</p>

@@ -48,6 +48,8 @@ services:
       - app_db:/var/lib/postgresql/data
     networks:
       - backend
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_PASSWORD: sora_password
       POSTGRES_USER: sora

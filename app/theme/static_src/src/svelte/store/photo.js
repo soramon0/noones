@@ -69,7 +69,7 @@ export default {
       const imageData = new FormData();
       imageData.append("profilePicture", file);
 
-      const { data } = await http.put("/models/picture/profile/", imageData, {
+      const { data } = await http.put("/models/photos/profile/", imageData, {
         onUploadProgress,
       });
 
@@ -101,7 +101,7 @@ export default {
       const imageData = new FormData();
       imageData.append("coverPicture", file);
 
-      const { data } = await http.put("/models/picture/cover/", imageData, {
+      const { data } = await http.put("/models/photos/cover/", imageData, {
         onUploadProgress,
       });
 
@@ -140,7 +140,7 @@ export default {
     try {
       UIStore.setFetchAndSuccess(true, false);
 
-      const { data } = await http.post("/models/picture/photos/", imageData, {
+      const { data } = await http.post("/models/photos/gallery/", imageData, {
         onUploadProgress,
       });
 
@@ -160,4 +160,41 @@ export default {
       update((store) => ({ ...store, errors: response.data }));
     }
   },
+  updateGalleryPicture: async (file, id, modelId) => {
+    if (!fileIsValid(file, "image", 1)) {
+      return;
+    }
+
+    try {
+      // UIStore.setFetchAndSuccess(true, false);
+
+      // Create image data and send it
+      const imageData = new FormData();
+      imageData.append("image", file);
+      imageData.append('model', modelId)
+
+      const { data } = await http.put(`/models/photos/gallery/${id}`, imageData);
+
+      // Update store with new image
+      update((store) => {
+        const { photos } = store
+        const index = photos.findIndex(photo => photo.id === id)
+        photos[index] = data
+
+        return {
+          ...store,
+          errors: {},
+          photos: photos,
+        }
+      });
+
+      // UIStore.setFetchAndSuccess(false, true);
+      // UIStore.setfileUploadPercentage(0);
+    } catch ({ response }) {
+      // UIStore.setFetchAndSuccess(false, false);
+      // UIStore.setfileUploadPercentage(0);
+
+      update((store) => ({ ...store, errors: response.data }));
+    }
+  }
 };
