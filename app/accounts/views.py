@@ -59,6 +59,7 @@ def register(request):
         instagram = form.cleaned_data['instagram']
         phone = form.cleaned_data['phone']
         addresse = form.cleaned_data['addresse']
+        # TODO(karim): convert to lower case
         city = form.cleaned_data['city']
         country = form.cleaned_data['country']
         zipcode = form.cleaned_data['zipcode']

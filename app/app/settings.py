@@ -33,7 +33,7 @@ SECRET_KEY = 'uh-4vnm$%b*$t6fe8829gm8&(!g=cx8#otb3v9#cej^j-%hj&^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition

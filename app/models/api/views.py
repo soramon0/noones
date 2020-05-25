@@ -1,4 +1,5 @@
 import os
+import logging
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -33,7 +34,8 @@ def me(request):
         coverImage_serializer = CoverPictureSerializer(model)
 
         # Get 8 user uploaded pictures that are in use
-        photos = Photo.objects.filter(model=model, inUse=True)[:8]
+        # change to inUse later
+        photos = Photo.objects.filter(model=model, inUse=False)[:8]
         photo_serializer = PhotoSerializer(photos, many=True)
 
         res = {'model': model_serializer.data}
@@ -101,13 +103,6 @@ class MeasuresAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-def delete_old_image(image):
-    # if we have an old image; delete it
-    if image and os.path.isfile(image.path):
-        # Get full path to old image
-        os.remove(image.path)
-
-
 class ProfilePictureAPIView(APIView):
     permission_classes = [IsAuthenticated, IsOwner]
 
@@ -123,13 +118,14 @@ class ProfilePictureAPIView(APIView):
         return Response(serializer.data)
 
     def put(self, request, pk=None):
-        model = self.get_object(user=request.user)
+        model = self.get_object(user=request.user) 
         serializer = ProfilePictureSerializer(model, data=request.data)
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        delete_old_image(model.profilePicture)
+        PhotoSerializer.delete_old_image(model.profilePicture)
+        # delete_old_image(model.profilePicture)
 
         # Save the new image
         serializer.save()
@@ -157,7 +153,7 @@ class CoverPictureAPIView(APIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        delete_old_image(model.coverPicture)
+        PhotoSerializer.delete_old_image(model.coverPicture)
 
         # Save the new image
         serializer.save()
@@ -166,7 +162,7 @@ class CoverPictureAPIView(APIView):
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
-def photos(request):
+def gallery(request):
     model_id = request.user.model.id
 
     if request.method == 'GET':
@@ -186,12 +182,46 @@ def photos(request):
         # To keep track of all uploaded images
         uploaded_images = []
 
+        # the user shouldn't be able to upload more than 8 images
+        # get the count of images upoloaded and check that the user
+        # hasn't upload more than 8
+        gallery_count = Photo.objects.filter(model=model_id).count()
+        max_upload_count = 8
+
         for image in images:
-            data['image'] = image
-            serializer = PhotoSerializer(data=data)
-            if not serializer.is_valid():
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            serializer.save()
-            uploaded_images.append(serializer.data)
+            if gallery_count < max_upload_count:
+                data['image'] = image
+                serializer = PhotoSerializer(data=data)
+                if not serializer.is_valid():
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                serializer.save()
+                uploaded_images.append(serializer.data)
+                gallery_count += 1
+            else:
+                # TODO(karim): maybe handle this on the client
+                # and return here just the uploaded pictures
+                res = {'image': [f"You can only upload {max_upload_count} photos; you've uploaded {gallery_count}"]}
+                return Response(res, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(uploaded_images, status=status.HTTP_201_CREATED)
+
+
+class GalleryAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    def put(self, request, pk):
+        try:
+            photo = Photo.objects.get(pk=pk)
+        except Photo.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = PhotoSerializer(photo, data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        PhotoSerializer.delete_old_image(photo.image)
+
+        # Save the new image
+        serializer.save()
+        return Response(serializer.data)

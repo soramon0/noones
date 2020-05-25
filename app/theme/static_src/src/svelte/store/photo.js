@@ -63,13 +63,13 @@ export default {
     }
 
     try {
-      UIStore.setFetchAndSuccess(true, false);
+      UIStore.setFetchAndFeedbackModal(true, false);
 
       // Create image data and send it
       const imageData = new FormData();
       imageData.append("profilePicture", file);
 
-      const { data } = await http.put("/models/picture/profile/", imageData, {
+      const { data } = await http.put("/models/photos/profile/", imageData, {
         onUploadProgress,
       });
 
@@ -80,10 +80,10 @@ export default {
         profile: data.profilePicture,
       }));
 
-      UIStore.setFetchAndSuccess(false, true);
+      UIStore.setFetchAndFeedbackModal(false, true);
       UIStore.setfileUploadPercentage(0);
     } catch ({ response }) {
-      UIStore.setFetchAndSuccess(false, false);
+      UIStore.setFetchAndFeedbackModal(false, false);
       UIStore.setfileUploadPercentage(0);
 
       update((store) => ({ ...store, errors: response.data }));
@@ -95,13 +95,13 @@ export default {
     }
 
     try {
-      UIStore.setFetchAndSuccess(true, false);
+      UIStore.setFetchAndFeedbackModal(true, false);
 
       // Create image data and send it
       const imageData = new FormData();
       imageData.append("coverPicture", file);
 
-      const { data } = await http.put("/models/picture/cover/", imageData, {
+      const { data } = await http.put("/models/photos/cover/", imageData, {
         onUploadProgress,
       });
 
@@ -112,10 +112,10 @@ export default {
         cover: data.coverPicture,
       }));
 
-      UIStore.setFetchAndSuccess(false, true);
+      UIStore.setFetchAndFeedbackModal(false, true);
       UIStore.setfileUploadPercentage(0);
     } catch ({ response }) {
-      UIStore.setFetchAndSuccess(false, false);
+      UIStore.setFetchAndFeedbackModal(false, false);
       UIStore.setfileUploadPercentage(0);
 
       update((store) => ({ ...store, errors: response.data }));
@@ -126,7 +126,7 @@ export default {
     const imageData = new FormData();
 
     files.forEach((file) => {
-      if (!fileIsValid(file, "image", 1)) {
+      if (!fileIsValid(file, "image", 5)) {
         isValid = false;
         return;
       }
@@ -138,9 +138,9 @@ export default {
     }
 
     try {
-      UIStore.setFetchAndSuccess(true, false);
+      UIStore.setFetchAndFeedbackModal(true, false);
 
-      const { data } = await http.post("/models/picture/photos/", imageData, {
+      const { data } = await http.post("/models/photos/gallery/", imageData, {
         onUploadProgress,
       });
 
@@ -148,16 +148,51 @@ export default {
       update((store) => ({
         ...store,
         errors: {},
-        photos: data,
+        photos: [...store.photos, ...data],
       }));
 
-      UIStore.setFetchAndSuccess(false, true);
+      UIStore.setFetchAndFeedbackModal(false, true);
       UIStore.setfileUploadPercentage(0);
     } catch ({ response }) {
-      UIStore.setFetchAndSuccess(false, false);
+      UIStore.setFetchAndFeedbackModal(false, false);
       UIStore.setfileUploadPercentage(0);
 
       update((store) => ({ ...store, errors: response.data }));
     }
   },
+  updateGalleryPicture: async (file, id, modelId) => {
+    if (!fileIsValid(file, "image", 5)) {
+      return;
+    }
+
+    try {
+      UIStore.setFetchAndFeedbackModal(true, false);
+
+      // Create image data and send it
+      const imageData = new FormData();
+      imageData.append("image", file);
+      imageData.append('model', modelId)
+
+      const { data } = await http.put(`/models/photos/gallery/${id}`, imageData);
+
+      // Update store with new image
+      update((store) => {
+        const { photos } = store
+        const index = photos.findIndex(photo => photo.id === id)
+        photos[index] = data
+
+        return {
+          ...store,
+          errors: {},
+          photos: photos,
+        }
+      });
+
+      UIStore.setFetchAndFeedbackModal(false, true);
+    } catch ({ response }) {
+      UIStore.setFetchAndFeedbackModal(false, false);
+
+      update((store) => ({ ...store, errors: response.data }));
+    }
+  }
 };
