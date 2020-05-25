@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 
 const { subscribe, set, update } = writable({
   fetching: false,
-  success: false,
+  showFeedbackModal: false,
   fileUploadPercentage: 0,
 });
 
@@ -11,9 +11,9 @@ export default {
   update,
   set,
   setFetching: (fetching) => update((store) => ({ ...store, fetching })),
-  setSuccess: (success) => update((store) => ({ ...store, success })),
-  setFetchAndSuccess: (fetching, success) =>
-    update((store) => ({ ...store, fetching, success })),
+  setFeedbackModal: (showFeedbackModal) => update((store) => ({ ...store, showFeedbackModal })),
+  setFetchAndFeedbackModal: (fetching, showFeedbackModal) =>
+    update((store) => ({ ...store, fetching, showFeedbackModal })),
   setfileUploadPercentage: (percentage) =>
     update((store) => ({ ...store, fileUploadPercentage: percentage })),
 };

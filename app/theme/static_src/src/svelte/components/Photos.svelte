@@ -5,7 +5,8 @@
   import SaveButton from "./shared/SaveButton";
   import SuccessNotifier from "./shared/SuccessNotifier";
   import UploadModal from "./shared/UploadModal";
-  import ChangeGalleryPicture from "./shared/ChangeGalleryPicture"
+  import ChangeGalleryPicture from "./shared/ChangeGalleryPicture";
+  import ErrorNotifier from "./shared/ErrorNotifier";
 
   let selectedGalleryImage = 0;
   let showProfileModal = false;
@@ -30,6 +31,8 @@
   const onShowCoverModal = () => {
     showCoverModal = !showCoverModal;
   };
+
+  $: console.log(photoData)
 </script>
 
 <style>
@@ -75,7 +78,7 @@
     {uiData} />
 {/if}
 
-<div class="mt-4 pb-8 border-b border-gray-500">
+<div class="mt-4 pb-8 border-b">
   <div class="relative">
     <!-- Cover picture section -->
     <div
@@ -168,6 +171,9 @@
 
 <h1 class="text-2xl mt-4">Gallery</h1>
 
+<!-- Error Handling -->
+<ErrorNotifier errors={photoData.errors} errorKey="image" />
+
 {#if photoData.photos.length > 0}
   <div class="mt-4 flex flex-col sm:flex-row">
     <div
@@ -189,25 +195,33 @@
       class="pt-3 h-40 whitespace-no-wrap sm:w-3/12 sm:h-80 sm:ml-4 sm:block
       sm:pt-0 sm:pr-2"
       data-simplebar>
-      {#each photoData.photos as photo, i}
-        <div
-          class="inline-block w-68 h-32 mr-2 bg-gray-200 cursor-pointer
-          rounded-md overflow-hidden border-2 hover:border-indigo-400 relative
-          hover:opacity-100 sm:block sm:w-auto sm:mb-2 {selectedGalleryImage == i ? 'opacity-100' : 'opacity-50'}"
-          on:click={() => setSelectedGalleryImage(i)}>
-          <img
-            src={photo.image}
-            class="w-full h-full object-cover hover:scale-125 transform
-            transition-all duration-500 ease-out"
-            alt="user image {i}" />
-          <ChangeGalleryPicture modelId={photoData.photos[i].model} pictureId={photoData.photos[i].id} />
-        </div>
-      {:else}
-        <p>No photos.</p>
-      {/each}
+      <!-- necessary div for the scrolling wheel to work -->
+      <div>
+        {#each photoData.photos as photo, i}
+          <div
+            class="inline-block w-68 h-32 mr-2 bg-gray-200 cursor-pointer
+            rounded-md overflow-hidden border-2 hover:border-indigo-400 relative
+            hover:opacity-100 sm:block sm:w-auto sm:mb-2 {selectedGalleryImage == i ? 'opacity-100' : 'opacity-50'}"
+            on:click={() => setSelectedGalleryImage(i)}>
+            <img
+              src={photo.image}
+              class="w-full h-full object-cover hover:scale-125 transform
+              transition-all duration-500 ease-out"
+              alt="user image {i}" />
+            <ChangeGalleryPicture modelId={photoData.photos[i].model} pictureId={photoData.photos[i].id} />
+          </div>
+        {:else}
+          <p>No photos.</p>
+        {/each}      
+      </div>
     </div>
   </div>
-{:else}
+{/if}
+
+{#if photoData.photos.length < 8}
+  <p class="mt-6 text-lg">
+    You need to upload 8 photos. You have upload {photoData.photos.length} so far.
+  </p>
   <div class="mt-4">
     <SaveButton text="START UPLOADING" on:click={onShowGalleryModal} />
   </div>

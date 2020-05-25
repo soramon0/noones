@@ -23,7 +23,7 @@
     if (uiData.success) {
       // Hide the success message after 2 seconds
       setTimeout(() => {
-        uiStore.setSuccess(false);
+        uiStore.setFeedbackModal(false);
       }, 2000);
     }
   };

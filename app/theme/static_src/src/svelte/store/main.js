@@ -34,7 +34,7 @@ export default {
   },
   updateModel: async (payload) => {
     try {
-      UIStore.setFetchAndSuccess(true, false);
+      UIStore.setFetchAndFeedbackModal(true, false);
 
       const { data } = await http.put(`models/${payload.id}/`, payload);
 
@@ -44,19 +44,19 @@ export default {
         errors: {},
       }));
 
-      UIStore.setFetchAndSuccess(false, true);
+      UIStore.setFetchAndFeedbackModal(false, true);
     } catch ({ response }) {
       update((store) => ({
         ...store,
         errors: response.data,
       }));
 
-      UIStore.setFetchAndSuccess(false, false);
+      UIStore.setFetchAndFeedbackModal(false, false);
     }
   },
   updateMeasures: async (payload) => {
     try {
-      UIStore.setFetchAndSuccess(true, false);
+      UIStore.setFetchAndFeedbackModal(true, false);
 
       const { data } = await http.put(
         `models/measures/${payload.id}/`,
@@ -69,14 +69,14 @@ export default {
         errors: {},
       }));
 
-      UIStore.setFetchAndSuccess(false, true);
+      UIStore.setFetchAndFeedbackModal(false, true);
     } catch ({ response }) {
       update((store) => ({
         ...store,
         errors: response.data,
       }));
 
-      UIStore.setFetchAndSuccess(false, false);
+      UIStore.setFetchAndFeedbackModal(false, false);
     }
   },
 };

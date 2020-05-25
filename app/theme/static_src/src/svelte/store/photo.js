@@ -63,7 +63,7 @@ export default {
     }
 
     try {
-      UIStore.setFetchAndSuccess(true, false);
+      UIStore.setFetchAndFeedbackModal(true, false);
 
       // Create image data and send it
       const imageData = new FormData();
@@ -80,10 +80,10 @@ export default {
         profile: data.profilePicture,
       }));
 
-      UIStore.setFetchAndSuccess(false, true);
+      UIStore.setFetchAndFeedbackModal(false, true);
       UIStore.setfileUploadPercentage(0);
     } catch ({ response }) {
-      UIStore.setFetchAndSuccess(false, false);
+      UIStore.setFetchAndFeedbackModal(false, false);
       UIStore.setfileUploadPercentage(0);
 
       update((store) => ({ ...store, errors: response.data }));
@@ -95,7 +95,7 @@ export default {
     }
 
     try {
-      UIStore.setFetchAndSuccess(true, false);
+      UIStore.setFetchAndFeedbackModal(true, false);
 
       // Create image data and send it
       const imageData = new FormData();
@@ -112,10 +112,10 @@ export default {
         cover: data.coverPicture,
       }));
 
-      UIStore.setFetchAndSuccess(false, true);
+      UIStore.setFetchAndFeedbackModal(false, true);
       UIStore.setfileUploadPercentage(0);
     } catch ({ response }) {
-      UIStore.setFetchAndSuccess(false, false);
+      UIStore.setFetchAndFeedbackModal(false, false);
       UIStore.setfileUploadPercentage(0);
 
       update((store) => ({ ...store, errors: response.data }));
@@ -126,7 +126,7 @@ export default {
     const imageData = new FormData();
 
     files.forEach((file) => {
-      if (!fileIsValid(file, "image", 1)) {
+      if (!fileIsValid(file, "image", 5)) {
         isValid = false;
         return;
       }
@@ -138,7 +138,7 @@ export default {
     }
 
     try {
-      UIStore.setFetchAndSuccess(true, false);
+      UIStore.setFetchAndFeedbackModal(true, false);
 
       const { data } = await http.post("/models/photos/gallery/", imageData, {
         onUploadProgress,
@@ -148,25 +148,25 @@ export default {
       update((store) => ({
         ...store,
         errors: {},
-        photos: data,
+        photos: [...store.photos, ...data],
       }));
 
-      UIStore.setFetchAndSuccess(false, true);
+      UIStore.setFetchAndFeedbackModal(false, true);
       UIStore.setfileUploadPercentage(0);
     } catch ({ response }) {
-      UIStore.setFetchAndSuccess(false, false);
+      UIStore.setFetchAndFeedbackModal(false, false);
       UIStore.setfileUploadPercentage(0);
 
       update((store) => ({ ...store, errors: response.data }));
     }
   },
   updateGalleryPicture: async (file, id, modelId) => {
-    if (!fileIsValid(file, "image", 1)) {
+    if (!fileIsValid(file, "image", 5)) {
       return;
     }
 
     try {
-      // UIStore.setFetchAndSuccess(true, false);
+      UIStore.setFetchAndFeedbackModal(true, false);
 
       // Create image data and send it
       const imageData = new FormData();
@@ -188,11 +188,9 @@ export default {
         }
       });
 
-      // UIStore.setFetchAndSuccess(false, true);
-      // UIStore.setfileUploadPercentage(0);
+      UIStore.setFetchAndFeedbackModal(false, true);
     } catch ({ response }) {
-      // UIStore.setFetchAndSuccess(false, false);
-      // UIStore.setfileUploadPercentage(0);
+      UIStore.setFetchAndFeedbackModal(false, false);
 
       update((store) => ({ ...store, errors: response.data }));
     }

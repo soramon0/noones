@@ -7,6 +7,8 @@
   import SaveButton from "./SaveButton";
   import CancelButton from "./CancelButton";
   import SuccessNotifier from "./SuccessNotifier";
+  import ErrorNotifier from "./ErrorNotifier";
+
 
   export let title;
   export let photoData;
@@ -60,15 +62,7 @@
   </div>
 
   <!-- Error Handling -->
-  <div class="text-center px-4 text-sm sm:text-base">
-    {#if photoData.errors[errorKey]}
-      <div transition:fade>
-        {#each photoData.errors[errorKey] as error}
-          <p class="text-sm my-1 text-red-400">{error}</p>
-        {/each}
-      </div>
-    {/if}
-  </div>
+  <ErrorNotifier errors={photoData.errors} {errorKey} />
 
   <div
     class="p-4 flex justify-center items-center bg-white border-b-2
