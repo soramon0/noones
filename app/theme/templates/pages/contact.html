@@ -13,10 +13,9 @@
   <span class="block h-px w-8 mt-1 bg-red-500"></span>
 </div>
 
-{% include "partials/_alerts.html" %}
-
 <div class="md:flex">
   <form class="bg-black p-4 mx-4 rounded-lg md:p-6 md:flex-1" action="{% url 'contact' %}" method="post">
+    {% include "partials/_alerts.html" %}
     {% csrf_token %}
     {{ form.non_field_errors }}
     <div class="mb-4">
