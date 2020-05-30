@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'models.apps.ModelsConfig',
     'accounts',
     'theme',
+    'clones',
 ]
 
 MIDDLEWARE = [

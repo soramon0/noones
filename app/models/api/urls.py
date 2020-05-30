@@ -11,5 +11,5 @@ urlpatterns = [
     path('photos/profile/', views.ProfilePictureAPIView.as_view()),
     path('photos/cover/', views.CoverPictureAPIView.as_view()),
     path('photos/gallery/', views.gallery),
-    path('photos/gallery/<int:pk>', views.GalleryAPIView.as_view()),
+    path('photos/gallery/<int:pk>/', views.GalleryAPIView.as_view()),
 ]
