@@ -46,8 +46,9 @@
         name="email"
         label="E-mail Address"
         on:valueChanged={onValueChanged} />
-
-      <UpdateButton />
+      <div class="text-right mt-2">
+        <UpdateButton />
+      </div>
     </form>
   </Card>
 
@@ -71,7 +72,9 @@
         name="confirm_password"
         label="Confirm New Password"
         on:valueChanged={onValueChanged} />
-      <UpdateButton text="Update password" />
+      <div class="text-right mt-2">
+        <UpdateButton text="Update password" />
+      </div>
     </form>
   </Card>
 </div>

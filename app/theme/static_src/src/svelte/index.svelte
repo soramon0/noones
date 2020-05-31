@@ -54,7 +54,7 @@
         </div>
       {:else if tab === 1}
         <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
-          <Measures measures={userData.measures} errors={userData.errors} />
+          <Measures measures={userData.measures} />
         </div>
       {:else if tab === 2}
         <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>

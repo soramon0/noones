@@ -157,6 +157,13 @@ MEDIA_URL = '/media/'
 TAILWIND_APP_NAME = 'theme'
 NPM_BIN_PATH = '/usr/local/bin/npm'
 
+# Reading docker-compose secret files for dev
+if DEBUG:
+    with open('/run/secrets/email_user', 'r') as f:
+        os.environ['EMAIL_USER'] = f.read()
+    with open('/run/secrets/email_pass', 'r') as f:
+        os.environ['EMAIL_PASS'] = f.read()
+
 # EMAIL
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

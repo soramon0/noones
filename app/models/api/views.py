@@ -33,7 +33,7 @@ def me(request):
         coverImage_serializer = CoverPictureSerializer(model)
 
         # Get 8 user uploaded pictures that are in use
-        # change to inUse later
+        # TODO(karim): change to inUse later
         photos = Photo.objects.filter(model=model, inUse=False)[:8]
         photo_serializer = PhotoSerializer(photos, many=True)
 

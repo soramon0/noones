@@ -6,5 +6,5 @@ app_name = 'clones'
 
 urlpatterns = [
     path('measures/', views.create_measures_clone),
-    path('measures/<uuid:measures_id>/<uuid:clone_id>', views.MeasuresCloneAPIView.as_view()),
+    path('measures/<uuid:pk>/', views.MeasuresCloneAPIView.as_view()),
 ]

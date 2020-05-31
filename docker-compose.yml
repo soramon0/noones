@@ -1,4 +1,4 @@
-version: "3"
+version: "3.1"
 
 services:
   web:
@@ -17,13 +17,18 @@ services:
       POSTGRES_USER: sora
       POSTGRES_PASSWORD: sora_password
       POSTGRES_NAME: dev_db
+      # EMAIL_USER: /run/secrets/email_user
+      # EMAIL_PASS: /run/secrets/email_pass
+    secrets:
+      - source: email_user
+      - source: email_pass
     command: >
       sh -c "python manage.py wait_for_db &&
             python manage.py migrate &&
             python manage.py runserver 0.0.0.0:8000"
     depends_on:
       - db
-  
+
   dev_build:
     image: node:14.3
     container_name: noones_build_dev
@@ -39,7 +44,7 @@ services:
     command: >
       sh -c "npm install &&
             npm run build-postcss &&
-            npm run watch:js"  
+            npm run watch:js"
 
   db:
     image: postgres:12.3-alpine
@@ -53,7 +58,7 @@ services:
     environment:
       POSTGRES_PASSWORD: sora_password
       POSTGRES_USER: sora
-      POSTGRES_DB: dev_db    
+      POSTGRES_DB: dev_db
 
 networks:
   backend:
@@ -61,3 +66,9 @@ networks:
 volumes:
   notused:
   app_db:
+
+secrets:
+  email_user:
+    file: ./email_user.txt
+  email_pass:
+    file: ./email_pass.txt

@@ -13,7 +13,7 @@ urlpatterns = [
     # API endpoints
     path('api/v1/models/', include('models.api.urls')),
     path('api/v1/accounts/', include('accounts.api.urls')),
-    path('api/v1/clones/', include('clones.api.urls'))
+    path('api/v1/update/', include('clones.api.urls'))
 ]
 
 if settings.DEBUG:

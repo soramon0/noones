@@ -1,13 +1,15 @@
 <script>
   export let text = "Update";
   export let fetching;
+  export let type = "submit";
 </script>
 
-<div class="text-right mt-6">
-  <button
-    on:click
-    disabled={fetching}
-    class="btn-black sm:w-auto {fetching ? 'bg-gray-700 cursor-not-allowed' : ''}">
-    {text}
-  </button>
-</div>
+<button
+  {type}
+  on:click
+  disabled={fetching}
+  class="w-full px-8 py-3 text-sm rounded-md tracking-wider bg-black text-white
+  hover:bg-gray-900 transition-transform duration-200 ease-in-out transform
+  hover:scale-110 sm:w-auto sm:text-base {fetching ? 'bg-gray-700 cursor-not-allowed' : ''}">
+  {text}
+</button>

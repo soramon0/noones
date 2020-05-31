@@ -122,6 +122,8 @@
           on:valueChanged={onValueChanged} />
       </div>
     </div>
-    <UpdateButton fetching={uiData.fetching} />
+    <div class="text-right mt-2 sm:mt-4">
+      <UpdateButton fetching={uiData.fetching} />
+    </div>
   </form>
 </Card>
