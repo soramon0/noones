@@ -1,4 +1,4 @@
-Django==3.0.3
+Django==3.0.7
 django-seed==0.2.2
 django-tailwind==0.6.1
 djangorestframework==3.11.0

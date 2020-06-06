@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import MeasuresClone
+from .models import MeasuresClone, PhotoClone
 
 
 class MeasuresClonedmin(admin.ModelAdmin):
@@ -9,3 +9,4 @@ class MeasuresClonedmin(admin.ModelAdmin):
     list_per_page = 24
 
 admin.site.register(MeasuresClone, MeasuresClonedmin)
+admin.site.register(PhotoClone)

@@ -9,8 +9,9 @@ from django.conf import settings
 
 from clones.models import MeasuresClone
 from models.models import Mensuration
-from .serializers import (
-    MeasuresCloneSerializer
+from clones.api.serializers import (
+    MeasuresCloneSerializer,
+    PhotosCloneSerializer,
 )
 
 
@@ -21,7 +22,8 @@ def create_measures_clone(request):
     if not serializer.is_valid():
         if 'measure' in serializer.errors:
             # The user should be able to create only one update
-            res = {'measure': ['do not create a new upadte request! Update the one you have.']}
+            res = {'measure': [
+                'do not create a new upadte request! Update the one you have.']}
             return Response(res, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     serializer.save()
@@ -35,8 +37,9 @@ def create_measures_clone(request):
         [settings.EMAIL_HOST_USER],
         fail_silently=False,
     )
-    
+
     return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 class MeasuresCloneAPIView(APIView):
     permission_classes = [IsAuthenticated]
@@ -59,10 +62,10 @@ class MeasuresCloneAPIView(APIView):
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
         serializer.save()
         return Response(serializer.data)
-    
+
     def delete(self, request, pk):
         measures_clone = self.get_object(pk=pk)
         measures_clone.delete()
@@ -78,4 +81,14 @@ class MeasuresCloneAPIView(APIView):
         )
 
         return Response(status=status.HTTP_204_NO_CONTENT)
-        
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_photo_clone(request):
+    serializer = PhotosCloneSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    serializer.save()
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
