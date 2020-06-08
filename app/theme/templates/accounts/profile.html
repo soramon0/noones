@@ -9,7 +9,6 @@
 	<title>No One's Company {% block title %} {% endblock %}</title>
 </head>
 <body>
-	{% include 'partials/_navbar.html' %}
 	<div id="checkConnection" class="flex justify-between items-center px-4 w-2/3 h-16 rounded-b fixed top-0 z-50 text-white bg-gray-700 transition duration-300 ease-out transform -translate-x-1/2 -translate-y-full sm:w-64" style="left: 50%; right: 50%;">
 		<div class="flex justify-between items-center">
 			<div id="checkConnection-indicator" class="inline-block mr-2 w-4 h-4 rounded-full"></div>
@@ -21,12 +20,8 @@
 		</div>
 	</div>
 
-	<!-- Header -->
-	{% include "partials/_header.html" with title="Welcome to your profile" %}
-
 	<div id="svelte-app"></div>
 
 	<script src="{% static 'js/svelte.bundle.js' %}"></script>
-	<script src="{% static 'js/main.bundle.js' %}"></script>
 </body>
 </html>

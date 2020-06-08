@@ -27,10 +27,10 @@
       </svg>
     {/if}
   </div>
-  <a
+  <!-- <a
     href={`/models/${id}`}
     class="ml-2 text-base text-gray-700 tracking-wide font-semibold sm:hidden
     md:block md:text-lg">
     My Page
-  </a>
+  </a> -->
 </div>

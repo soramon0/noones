@@ -117,7 +117,7 @@ class ProfilePictureAPIView(APIView):
         return Response(serializer.data)
 
     def put(self, request, pk=None):
-        model = self.get_object(user=request.user) 
+        model = self.get_object(user=request.user)
         serializer = ProfilePictureSerializer(model, data=request.data)
 
         if not serializer.is_valid():
@@ -199,7 +199,8 @@ def gallery(request):
             else:
                 # TODO(karim): maybe handle this on the client
                 # and return here just the uploaded pictures
-                res = {'image': [f"You can only upload {max_upload_count} photos; you've uploaded {gallery_count}"]}
+                res = {'image': [
+                    f"You can only upload {max_upload_count} photos; you've uploaded {gallery_count}"]}
                 return Response(res, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(uploaded_images, status=status.HTTP_201_CREATED)

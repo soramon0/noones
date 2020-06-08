@@ -36,9 +36,8 @@
   <h2 class="text-lg">Email/Password</h2>
 </div>
 
-<!-- NOTE(karim): Adding bottom margin for now to expand the side menu -->
-<div class="mt-4 mb-48 flex flex-wrap justify-center">
-  <Card classes="mb-4 h-40 sm:w-5/12 sm:mr-4">
+<div class="mt-4 flex flex-wrap">
+  <Card classes="mb-4 h-40 w-full">
     <form on:submit|preventDefault={emailUpdate}>
       <FormInput
         value={userData.email}
@@ -52,7 +51,7 @@
     </form>
   </Card>
 
-  <Card classes="sm:w-5/12">
+  <Card classes="w-full">
     <form on:submit|preventDefault={passwordUpdate}>
       <FormInput
         value={userData.password}

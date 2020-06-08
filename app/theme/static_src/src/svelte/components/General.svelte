@@ -37,7 +37,7 @@
 <Card>
   <form on:submit|preventDefault={handleSubmit}>
     <div class="sm:flex sm:justify-center">
-      <div class="sm:w-64 md:w-5/12">
+      <div class="w-full">
         <FormInput
           value={model.first_name}
           name="first_name"
@@ -82,7 +82,7 @@
           errors={errors['addresse']}
           on:valueChanged={onValueChanged} />
       </div>
-      <div class="mt-4 sm:mt-0 sm:ml-4 sm:w-64 md:w-5/12">
+      <div class="w-full mt-4 sm:mt-0 sm:ml-4">
         <FormInput
           value={model.facebook}
           name="facebook"

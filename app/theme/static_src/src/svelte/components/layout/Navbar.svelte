@@ -48,6 +48,7 @@
 </script>
 
 <style>
+  /* TODO(karim): If I don't add more styles then add this to the main stylesheet */
   @media (max-width: 640px) {
     .profile-sidedrawer {
       transform: translateX(-100%);
@@ -60,8 +61,7 @@
   }
 </style>
 
-<!-- TODO(karim): If I don't add more styles then add this to the main stylesheet -->
-<button class="absolute my-6 ml-2 sm:hidden" on:click={toggle}>
+<button class="absolute mt-4 ml-2 sm:hidden" on:click={toggle}>
   <svg class="fill-current text-gray-600 h-6 w-6" viewBox="0 0 20 20">
     <path
       d="M1.683,3.39h16.676C18.713,3.39,19,3.103,19,2.749s-0.287-0.642-0.642-0.642H1.683
@@ -78,26 +78,29 @@
 <!-- Backdrop -->
 <div
   on:click={toggle}
-  class="absolute inset-0 bg-black z-10 opacity-50 {isOpen ? 'block' : 'hidden'}" />
+  class="absolute inset-0 bg-black z-10 opacity-25 {isOpen ? 'block' : 'hidden'}" />
 
 <!-- Profile Navigation -->
 <nav
-  class="profile-sidedrawer min-h-full w-56 absolute z-20 shadow-md border-r-2
-  border-gray-400 bg-white sm:relative sm:w-20 md:w-64 {isOpen ? 'open' : ''}">
-  <!-- AVATAR -->
-  <slot />
+  class="profile-sidedrawer w-56 fixed inset-0 z-20 bg-white shadow-sm border-r
+  sm:relative sm:w-20 md:w-64 {isOpen ? 'open' : ''}">
 
-  {#each navItems as item, i}
-    <div
-      class="text-gray-700 hover:bg-gray-400 {i === activeLink ? 'border-l-4 border-indigo-400 bg-gray-200' : ''}">
-      <button
-        class="p-4 w-full flex focus:bg-gray-300 focus:outline-none"
-        on:click={chooseTab.bind(this, i)}>
-        {@html item.svg}
-        <span class="ml-2 font-medium md:block {isOpen ? 'block' : 'hidden'}">
-          {item.text}
-        </span>
-      </button>
-    </div>
-  {/each}
+  <div class="mt-8">
+    {#each navItems as item, i}
+      <div
+        class="text-gray-700 hover:bg-gray-200 {i === activeLink ? 'border-l-4 border-indigo-400 bg-gray-100' : ''}">
+        <button
+          class="p-4 w-full flex focus:bg-gray-300 focus:outline-none"
+          on:click={chooseTab.bind(this, i)}>
+          {@html item.svg}
+          <span
+            class="ml-2 md:block {i === activeLink ? 'font-medium text-gray-600' : 'text-gray-500'}
+            {isOpen ? 'block' : 'hidden'}">
+            {item.text}
+          </span>
+        </button>
+      </div>
+    {/each}
+
+  </div>
 </nav>

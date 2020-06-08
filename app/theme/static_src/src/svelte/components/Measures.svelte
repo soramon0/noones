@@ -11,6 +11,7 @@
   import SuccessNotifier from "./shared/SuccessNotifier";
   import ErrorNotifier from "./shared/ErrorNotifier";
   import TabView from "./shared/TabView";
+  import Breadcrumb from "./shared/Breadcrumb";
 
   export let measures;
 
@@ -18,10 +19,7 @@
   $: updatesData = $UpdatesStore;
 
   let currentTab = 0;
-  let tabs = [
-    { name: "Measure", show: true },
-    { name: "Updates", show: false }
-  ];
+  let tabs = [{ name: "Base", show: true }, { name: "Updates", show: false }];
 
   const onValueChanged = ({ detail }) => {
     measures[detail.name] = detail.value;
@@ -104,7 +102,11 @@
       tabs = [tabs[0], { ...tabs[1], show: true }];
     }
   });
+
+  $: console.log(updatesData);
 </script>
+
+<Breadcrumb activeText="Measurements" />
 
 <TabView
   {tabs}
@@ -116,10 +118,10 @@
 
 {#if currentTab === 0}
   <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
-    <Card classes="mb-48">
+    <Card classes="mb-4">
       <form on:submit|preventDefault={sendUpdateRequest}>
         <div class="sm:flex sm:justify-center">
-          <div class="sm:w-64 md:w-5/12">
+          <div class="w-full">
             <FormInput
               value={measures.buste}
               type="number"
@@ -156,7 +158,7 @@
               errors={updatesData.errors['epaules']}
               on:valueChanged={onValueChanged} />
           </div>
-          <div class="mt-4 sm:mt-0 sm:ml-4 sm:w-64 md:w-5/12">
+          <div class="w-full mt-4 sm:mt-0 sm:ml-4">
             <FormInput
               value={measures.hanches}
               type="number"
@@ -191,12 +193,19 @@
       </form>
     </Card>
   </div>
-{:else if currentTab === 1}
+{:else if currentTab === 1 && Object.keys(updatesData.measures).length}
   <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
-    <Card classes="mb-48">
+    {#if updatesData.measures.message.length}
+      <Card
+        classes={updatesData.measures.accept ? 'border-green-300' : 'border-red-300'}>
+        <h1 class="text-lg font-semibold">Response</h1>
+        <p class="mt-2 text-sm text-gray-800">{updatesData.measures.message}</p>
+      </Card>
+    {/if}
+    <Card classes="mb-4">
       <form on:submit|preventDefault={sendUpdateRequest}>
         <div class="sm:flex sm:justify-center">
-          <div class="sm:w-64 md:w-5/12">
+          <div class="w-full">
             <FormInput
               value={updatesData.measures.buste}
               type="number"
@@ -233,7 +242,7 @@
               errors={updatesData.errors['epaules']}
               on:valueChanged={onUpdateValueChanged} />
           </div>
-          <div class="mt-4 sm:mt-0 sm:ml-4 sm:w-64 md:w-5/12">
+          <div class="w-full mt-4 sm:mt-0 sm:ml-4">
             <FormInput
               value={updatesData.measures.hanches}
               type="number"

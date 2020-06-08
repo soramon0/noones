@@ -4,7 +4,9 @@
 </script>
 
 <div class="ml-4 py-3 sm:ml-0">
-  <div class="px-3 ml-3 border-l border-gray-600 flex items-center">
+  <div
+    class="px-3 ml-3 border-l border-gray-600 flex items-center sm:ml-0
+    sm:border-0">
     <span class="text-xs text-gray-600 sm:text-base">{activeText}</span>
     <div class="mx-1 flex items-center">
       <svg class="h-3 w-3 fill-current text-400" viewBox="0 0 20 20">

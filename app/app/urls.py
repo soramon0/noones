@@ -4,7 +4,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-    # Website URLS 
+    # Website URLS
     path('admin/', admin.site.urls),
     path('', include('pages.urls')),
     path('models/', include('models.urls')),
@@ -13,7 +13,7 @@ urlpatterns = [
     # API endpoints
     path('api/v1/models/', include('models.api.urls')),
     path('api/v1/accounts/', include('accounts.api.urls')),
-    path('api/v1/update/', include('clones.api.urls'))
+    path('api/v1/update/', include('updates.api.urls'))
 ]
 
 if settings.DEBUG:
