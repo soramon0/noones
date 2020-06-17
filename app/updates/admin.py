@@ -13,9 +13,10 @@ class MeasuresUpdateAdmin(admin.ModelAdmin):
 
 
 class PhotosUpdateAdmin(admin.ModelAdmin):
+    readonly_fields = ['related_photo']
     list_display = ['id', 'model', 'timestamp']
     list_display_links = ['id']
-    list_filter = ['timestamp']
+    list_filter = ['timestamp', 'accept', 'decline']
     date_hierarchy = 'timestamp'
     list_per_page = 24
 

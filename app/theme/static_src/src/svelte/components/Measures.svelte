@@ -29,7 +29,7 @@
     updatesData.measures[detail.name] = detail.value;
   };
 
-  const sendUpdateRequest = async () => {
+  const createUpdateRequest = async () => {
     await UpdatesStore.createMeasuresUpdate({
       ...measures,
       measure: measures.id
@@ -50,8 +50,8 @@
     }
   };
 
-  const updateUpdateRequest = async () => {
-    await UpdatesStore.updateMeasures(measures.id, {
+  const modifyUpdateRequest = async () => {
+    await UpdatesStore.modifyMeasuresUpdate(measures.id, {
       ...updatesData.measures,
       measure: measures.id
     });
@@ -94,12 +94,13 @@
   onMount(async () => {
     // Get user updates
     if (Object.keys(updatesData.measures).length === 0) {
-      await UpdatesStore.getMeasures(measures.id);
+      await UpdatesStore.getMeasuresUpdate(measures.id);
     }
 
     // Only show the updates tab when we have updates
     if (Object.keys(updatesData.measures).length !== 0) {
-      tabs = [tabs[0], { ...tabs[1], show: true }];
+      tabs[1] = { ...tabs[1], show: true };
+      tabs = tabs;
     }
   });
 
@@ -114,12 +115,15 @@
   on:change={({ detail }) => (currentTab = detail)} />
 
 <SuccessNotifier />
-<ErrorNotifier errors={updatesData.errors} errorKey="measure" />
 
 {#if currentTab === 0}
   <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
+    <ErrorNotifier
+      errors={updatesData.measuresErrors}
+      errorKey="measure"
+      on:clearErrors={UpdatesStore.clearMeasuresErrors} />
     <Card classes="mb-4">
-      <form on:submit|preventDefault={sendUpdateRequest}>
+      <form on:submit|preventDefault={createUpdateRequest}>
         <div class="sm:flex sm:justify-center">
           <div class="w-full">
             <FormInput
@@ -127,35 +131,35 @@
               type="number"
               name="buste"
               label="Buste"
-              errors={updatesData.errors['buste']}
+              errors={updatesData.measuresErrors['buste']}
               on:valueChanged={onValueChanged} />
             <FormInput
               value={measures.taillenombrill}
               type="number"
               name="taillenombrill"
               label="Taille nombrill"
-              errors={updatesData.errors['taillenombrill']}
+              errors={updatesData.measuresErrors['taillenombrill']}
               on:valueChanged={onValueChanged} />
             <FormInput
               value={measures.taille}
               type="number"
               name="taille"
               label="Taille"
-              errors={updatesData.errors['taille']}
+              errors={updatesData.measuresErrors['taille']}
               on:valueChanged={onValueChanged} />
             <FormInput
               value={measures.pointure}
               type="number"
               name="pointure"
               label="Pointure"
-              errors={updatesData.errors['pointure']}
+              errors={updatesData.measuresErrors['pointure']}
               on:valueChanged={onValueChanged} />
             <FormInput
               value={measures.epaules}
               type="number"
               name="epaules"
               label="Epaules"
-              errors={updatesData.errors['epaules']}
+              errors={updatesData.measuresErrors['epaules']}
               on:valueChanged={onValueChanged} />
           </div>
           <div class="w-full mt-4 sm:mt-0 sm:ml-4">
@@ -164,37 +168,41 @@
               type="number"
               name="hanches"
               label="Hanches"
-              errors={updatesData.errors['hanches']}
+              errors={updatesData.measuresErrors['hanches']}
               on:valueChanged={onValueChanged} />
             <FormInput
               value={measures.poids}
               type="number"
               name="poids"
               label="Poids"
-              errors={updatesData.errors['poids']}
+              errors={updatesData.measuresErrors['poids']}
               on:valueChanged={onValueChanged} />
             <FormInput
               value={measures.yeux}
               name="yeux"
               label="Yeux"
-              errors={updatesData.errors['yeux']}
+              errors={updatesData.measuresErrors['yeux']}
               on:valueChanged={onValueChanged} />
             <FormInput
               value={measures.cheveux}
               name="cheveux"
               label="Cheveux"
-              errors={updatesData.errors['cheveux']}
+              errors={updatesData.measuresErrors['cheveux']}
               on:valueChanged={onValueChanged} />
           </div>
         </div>
         <div class="text-right mt-2">
-          <UpdateButton text="Send Update Request" fetching={uiData.fetching} />
+          <UpdateButton text="Create Update" fetching={uiData.fetching} />
         </div>
       </form>
     </Card>
   </div>
 {:else if currentTab === 1 && Object.keys(updatesData.measures).length}
   <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
+    <ErrorNotifier
+      errors={updatesData.measures.errors}
+      errorKey="measure"
+      on:clearErrors={UpdatesStore.clearMeasuresUpdateErrors} />
     {#if updatesData.measures.message.length}
       <Card
         classes={updatesData.measures.accept ? 'border-green-300' : 'border-red-300'}>
@@ -203,7 +211,7 @@
       </Card>
     {/if}
     <Card classes="mb-4">
-      <form on:submit|preventDefault={sendUpdateRequest}>
+      <form on:submit|preventDefault={modifyUpdateRequest}>
         <div class="sm:flex sm:justify-center">
           <div class="w-full">
             <FormInput
@@ -211,35 +219,35 @@
               type="number"
               name="buste"
               label="Buste"
-              errors={updatesData.errors['buste']}
+              errors={updatesData.measures.errors['buste']}
               on:valueChanged={onUpdateValueChanged} />
             <FormInput
               value={updatesData.measures.taillenombrill}
               type="number"
               name="taillenombrill"
               label="Taille nombrill"
-              errors={updatesData.errors['taillenombrill']}
+              errors={updatesData.measures.errors['taillenombrill']}
               on:valueChanged={onUpdateValueChanged} />
             <FormInput
               value={updatesData.measures.taille}
               type="number"
               name="taille"
               label="Taille"
-              errors={updatesData.errors['taille']}
+              errors={updatesData.measures.errors['taille']}
               on:valueChanged={onUpdateValueChanged} />
             <FormInput
               value={updatesData.measures.pointure}
               type="number"
               name="pointure"
               label="Pointure"
-              errors={updatesData.errors['pointure']}
+              errors={updatesData.measures.errors['pointure']}
               on:valueChanged={onUpdateValueChanged} />
             <FormInput
               value={updatesData.measures.epaules}
               type="number"
               name="epaules"
               label="Epaules"
-              errors={updatesData.errors['epaules']}
+              errors={updatesData.measures.errors['epaules']}
               on:valueChanged={onUpdateValueChanged} />
           </div>
           <div class="w-full mt-4 sm:mt-0 sm:ml-4">
@@ -248,26 +256,26 @@
               type="number"
               name="hanches"
               label="Hanches"
-              errors={updatesData.errors['hanches']}
+              errors={updatesData.measures.errors['hanches']}
               on:valueChanged={onUpdateValueChanged} />
             <FormInput
               value={updatesData.measures.poids}
               type="number"
               name="poids"
               label="Poids"
-              errors={updatesData.errors['poids']}
+              errors={updatesData.measures.errors['poids']}
               on:valueChanged={onUpdateValueChanged} />
             <FormInput
-              value={updatesData.measures.yeux || ''}
+              value={updatesData.measures.yeux}
               name="yeux"
               label="Yeux"
-              errors={updatesData.errors['yeux']}
+              errors={updatesData.measures.errors['yeux']}
               on:valueChanged={onUpdateValueChanged} />
             <FormInput
-              value={updatesData.measures.cheveux || ''}
+              value={updatesData.measures.cheveux}
               name="cheveux"
               label="Cheveux"
-              errors={updatesData.errors['cheveux']}
+              errors={updatesData.measures.errors['cheveux']}
               on:valueChanged={onUpdateValueChanged} />
           </div>
         </div>
@@ -276,10 +284,7 @@
             text="Remove"
             fetching={uiData.fetching}
             on:click={removeUpdateRequest} />
-          <UpdateButton
-            type="button"
-            fetching={uiData.fetching}
-            on:click={updateUpdateRequest} />
+          <UpdateButton type="submit" fetching={uiData.fetching} />
         </div>
       </form>
     </Card>

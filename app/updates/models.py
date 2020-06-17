@@ -25,9 +25,14 @@ class MeasuresUpdate(AbstractMensuration):
 
 
 class PhotosUpdate(models.Model):
-    image = models.ImageField(upload_to='photos/updates')
+    image = models.ImageField(upload_to='photos/%Y/%m/%d')
     model = models.ForeignKey(Model, on_delete=models.CASCADE)
+    related_photo = models.ForeignKey(
+        Photo, null=True, blank=True, on_delete=models.DO_NOTHING)
     timestamp = models.DateTimeField(auto_now_add=True)
+    accept = models.BooleanField(null=True, blank=True)
+    decline = models.BooleanField(null=True, blank=True)
+    message = models.TextField(max_length=500, blank=True, default="")
 
     def __str__(self):
         return str(self.image)

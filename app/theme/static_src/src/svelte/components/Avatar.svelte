@@ -1,7 +1,8 @@
 <script>
   import photoStore from "../store/photo";
 
-  export let id;
+  // TODO(karim): change this if i reuse this component
+  export const id = "";
 
   // Subscribe to the store
   $: photoData = $photoStore;

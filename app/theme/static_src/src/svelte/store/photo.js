@@ -9,7 +9,7 @@ const { subscribe, set, update } = writable({
   errors: {},
 });
 
-function onUploadProgress(progressEvent) {
+export function onUploadProgress(progressEvent) {
   // look if lengthComputable, if not try and get the length from the header,
   // if not try and get the decompressed content length
   const totalLength = progressEvent.lengthComputable
@@ -36,7 +36,7 @@ function fileIsValid(file, key, sizeLimit) {
     return false;
   }
 
-  // if sizeLimit = 1 => 1mb || 2 => 2mb. etc
+  // if sizeLimit == 1 => 1mb || 2 => 2mb. etc
   const size = 1024 * 1024 * sizeLimit;
   if (file.size > size) {
     update((store) => ({
@@ -171,21 +171,24 @@ export default {
       // Create image data and send it
       const imageData = new FormData();
       imageData.append("image", file);
-      imageData.append('model', modelId)
+      imageData.append("model", modelId);
 
-      const { data } = await http.put(`/models/photos/gallery/${id}`, imageData);
+      const { data } = await http.put(
+        `/models/photos/gallery/${id}`,
+        imageData
+      );
 
       // Update store with new image
       update((store) => {
-        const { photos } = store
-        const index = photos.findIndex(photo => photo.id === id)
-        photos[index] = data
+        const { photos } = store;
+        const index = photos.findIndex((photo) => photo.id === id);
+        photos[index] = data;
 
         return {
           ...store,
           errors: {},
           photos: photos,
-        }
+        };
       });
 
       UIStore.setFetchAndFeedbackModal(false, true);
@@ -194,5 +197,5 @@ export default {
 
       update((store) => ({ ...store, errors: response.data }));
     }
-  }
+  },
 };

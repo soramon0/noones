@@ -30,6 +30,8 @@ export default {
       if (response && response.status == 401) {
         return window.location.replace("/");
       }
+
+      throw response;
     }
   },
   updateModel: async (payload) => {

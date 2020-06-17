@@ -1,9 +1,16 @@
 <script>
+  import { createEventDispatcher } from "svelte";
   import { fade, fly } from "svelte/transition";
+
   export let errors = [];
   export let errorKey = null;
 
-  const hideErrorNotifier = () => (errors = []);
+  const dispatch = createEventDispatcher();
+
+  const hideErrorNotifier = () => {
+    errors = [];
+    dispatch("clearErrors");
+  };
 </script>
 
 {#if errors[errorKey]}

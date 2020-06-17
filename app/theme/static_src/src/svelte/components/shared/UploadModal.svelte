@@ -2,6 +2,7 @@
   import { scale, fade, fly } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
   import photoStore from "../../store/photo";
+  import updatesStore from "../../store/updates";
   import UIStore from "../../store/ui";
   import Breadcrumb from "./Breadcrumb";
   import SaveButton from "./SaveButton";
@@ -9,12 +10,13 @@
   import SuccessNotifier from "./SuccessNotifier";
   import ErrorNotifier from "./ErrorNotifier";
 
-
   export let title;
   export let photoData;
   export let uiData;
   export let multiple = false;
   export let errorKey;
+
+  $: updatesData = $updatesStore;
 
   const dispatch = createEventDispatcher();
 
@@ -47,8 +49,8 @@
 <!-- Upload Modal -->
 <div
   transition:scale={{ delay: 150 }}
-  class="max-w-2xl w-4/5 h-500 m-auto fixed inset-0 bg-white z-30 rounded-lg
-  sm:1/2 "
+  class="max-w-2xl w-4/5 h-500 m-auto shadow-md fixed inset-0 bg-white z-30
+  rounded-lg sm:1/2 "
   data-simplebar>
 
   <!-- Progress indicator -->
@@ -63,6 +65,9 @@
 
   <!-- Error Handling -->
   <ErrorNotifier errors={photoData.errors} {errorKey} />
+
+  <!-- TODO(karim): refactor this -->
+  <ErrorNotifier errors={updatesData.galleryErrors} {errorKey} />
 
   <div
     class="p-4 flex justify-center items-center bg-white border-b-2
@@ -93,7 +98,7 @@
             src={photo.image}
             class="w-full h-full object-cover hover:scale-125 transform
             transition-all duration-500 ease-out"
-            alt="user image {i}" />
+            alt="model gallery {i}" />
         </div>
       {:else}
         <p>Gallery Is Empty</p>

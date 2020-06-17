@@ -15,12 +15,10 @@
 
 <div class="flex px-4 my-2 ml-4 space-x-6 border-b sm:ml-0">
   {#each tabs as tab, i}
-    {#if tab.show}
-      <button
-        class="px-2 {i === currentTab ? currentTabStyles : 'text-gray-500'}"
-        on:click={() => setTab(i)}>
-        {tab.name}
-      </button>
-    {/if}
+    <button
+      class="px-2 {i === currentTab ? currentTabStyles : 'text-gray-500'}"
+      on:click={() => setTab(i)}>
+      {tab.name}
+    </button>
   {/each}
 </div>

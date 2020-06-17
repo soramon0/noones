@@ -26,15 +26,14 @@ def me(request):
     try:
         user = request.user
         model = user.model
+        measures = user.mensuration
         user_serializer = UserSerializer(user)
         model_serializer = ModelSerializer(model)
-        measures_serializer = MeasuresSerializer(model.measures)
+        measures_serializer = MeasuresSerializer(measures)
         profileImage_serializer = ProfilePictureSerializer(model)
         coverImage_serializer = CoverPictureSerializer(model)
 
-        # Get 8 user uploaded pictures that are in use
-        # TODO(karim): change to inUse later
-        photos = Photo.objects.filter(model=model, inUse=False)[:8]
+        photos = Photo.objects.filter(model=model, inUse=True)[:8]
         photo_serializer = PhotoSerializer(photos, many=True)
 
         res = {'model': model_serializer.data}

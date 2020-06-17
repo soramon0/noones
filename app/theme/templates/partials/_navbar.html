@@ -1,6 +1,6 @@
 {% load static %}
 
-<header class="p-4 h-24 flex justify-between items-center shadow-md">
+<header class="p-4 h-16 fixed inset-0 z-30 bg-white flex justify-between items-center shadow-md">
   <div class="h-12">
     <a href="{% url 'index' %}">
       <img class="h-full" alt="logo" src="{% static 'icons/logo-noc.png' %}" />
@@ -19,37 +19,37 @@
     </svg>
   </button>
   {% comment %} Desktop navigation {% endcomment %}
-  <nav class="lg:flex hidden uppercase">
+  <nav class="lg:flex hidden uppercase space-x-1">
     {% if user.is_authenticated %}
-      <a href="{% url 'models' %}" class="mr-1 text-sm text-gray-800 font-semibold px-2 border-r border-gray-600">
+      <a href="{% url 'models' %}" class="text-sm text-gray-800 font-semibold px-2 ">
         Nos models
       </a>
-      <a href="{% url 'contact' %}" class="mr-1 text-sm text-gray-800 font-semibold px-2 border-r border-gray-600">
+      <a href="{% url 'contact' %}" class="text-sm text-gray-800 font-semibold px-2">
         Contact
       </a>
-      <a href="{% url 'profile' %}" class="mr-1 text-sm text-gray-800 font-semibold px-2 border-r border-gray-600">
-        Profile
+      <a href="{% url 'profile' %}" class=" text-sm text-gray-800 font-semibold px-2">
+        Dashboard
       </a>
-      <a href="{% url 'signout' %}" class="mr-1 text-sm text-gray-800 font-semibold px-2">
+      <a href="{% url 'signout' %}" class="text-sm text-gray-800 font-semibold px-2">
         Sign out
       </a>
     {% else %}
-      <a href="{% url 'a-propos' %}" class="mr-1 text-sm text-gray-800 font-semibold px-2 border-r border-gray-600">
+      <a href="{% url 'a-propos' %}" class="text-sm text-gray-800 font-semibold px-2">
         A propos
       </a>
-      <a href="{% url 'vision' %}" class="mr-1 text-sm text-gray-800 font-semibold px-2 border-r border-gray-600">
+      <a href="{% url 'vision' %}" class=" text-sm text-gray-800 font-semibold px-2">
         Vision &amp; mission
       </a>
-      <a href="{% url 'models' %}" class="mr-1 text-sm text-gray-800 font-semibold px-2 border-r border-gray-600">
+      <a href="{% url 'models' %}" class=" text-sm text-gray-800 font-semibold px-2 ">
         Nos models
       </a>
-      <a href="{% url 'register' %}" class="mr-1 text-sm text-gray-800 font-semibold px-2 border-r border-gray-600">
+      <a href="{% url 'register' %}" class=" text-sm text-gray-800 font-semibold px-2 ">
         Devenir notre model
       </a>
-      <a href="{% url 'signin' %}" class="mr-1 text-sm text-gray-800 font-semibold px-2 border-r border-gray-600">
+      <a href="{% url 'signin' %}" class="text-sm text-gray-800 font-semibold px-2">
         Sign In
       </a>
-      <a href="{% url 'contact' %}" class="mr-1 text-sm text-gray-800 font-semibold px-2">
+      <a href="{% url 'contact' %}" class="text-sm text-gray-800 font-semibold px-2">
         Contact
       </a>
     {% endif %}

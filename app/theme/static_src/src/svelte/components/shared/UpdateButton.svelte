@@ -8,8 +8,8 @@
   {type}
   on:click
   disabled={fetching}
-  class="w-full px-8 py-3 text-sm rounded-md tracking-wider bg-black text-white
+  class="w-full px-8 py-3 text-xs rounded-md tracking-wider bg-black text-white
   hover:bg-gray-900 transition-transform duration-200 ease-in-out transform
-  hover:scale-110 sm:w-auto sm:text-base {fetching ? 'bg-gray-700 cursor-not-allowed' : ''}">
+  hover:scale-110 sm:w-auto sm:text-sm md:text-base {fetching ? 'bg-gray-700 cursor-not-allowed' : ''}">
   {text}
 </button>
