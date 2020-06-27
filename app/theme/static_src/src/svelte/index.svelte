@@ -37,6 +37,7 @@
   <div class="relative h-screen" transition:fade={{ duration: 600 }}>
     <!-- Top Menu -->
     <Navbar
+      profilePicture={userData.profilePicture}
       modelId={userData.model.id}
       fullname={`${userData.model.first_name} ${userData.model.last_name}`} />
 
@@ -63,7 +64,9 @@
           </div>
         {:else if tab === 2}
           <div in:fly={{ x: 200, duration: 200 }} out:fade={{ duration: 100 }}>
-            <Photos />
+            <Photos
+              profilePicture={userData.profilePicture}
+              coverPicture={userData.coverPicture} />
           </div>
         {:else if tab === 3}
           <div in:fly={{ x: 200, duration: 200 }} out:fade={{ duration: 100 }}>

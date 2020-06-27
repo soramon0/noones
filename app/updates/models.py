@@ -20,6 +20,9 @@ class MeasuresUpdate(AbstractMensuration):
     decline = models.BooleanField(null=True, blank=True)
     message = models.TextField(max_length=500, blank=True, default="")
 
+    class Meta:
+        verbose_name_plural = "Measure Updates"
+
     def __str__(self):
         return str(self.id)
 
@@ -33,6 +36,24 @@ class PhotosUpdate(models.Model):
     accept = models.BooleanField(null=True, blank=True)
     decline = models.BooleanField(null=True, blank=True)
     message = models.TextField(max_length=500, blank=True, default="")
+
+    class Meta:
+        verbose_name_plural = "Gallery Updates"
+
+    def __str__(self):
+        return str(self.image)
+
+
+class ProfilePictureUpdate(models.Model):
+    image = models.ImageField(upload_to='photos/%Y/%m/%d')
+    model = models.ForeignKey(Model, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    accept = models.BooleanField(null=True, blank=True)
+    decline = models.BooleanField(null=True, blank=True)
+    message = models.TextField(max_length=500, blank=True, default="")
+
+    class Meta:
+        verbose_name_plural = "Profile Picture Updates"
 
     def __str__(self):
         return str(self.image)

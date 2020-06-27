@@ -1,8 +1,17 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
-from updates.models import MeasuresUpdate, PhotosUpdate
-from models.models import Mensuration, Photo
 from models.api.serializers import PhotoSerializer
+from models.models import (
+    Mensuration,
+    Photo,
+    ProfilePicture,
+    CoverPicture
+)
+from updates.models import (
+    MeasuresUpdate,
+    PhotosUpdate,
+    ProfilePictureUpdate,
+)
 
 
 @receiver(post_save, sender=MeasuresUpdate)
@@ -32,7 +41,7 @@ def apply_gallery_update(sender, instance, created, raw, using, update_fields, *
 
 
 @receiver(post_delete, sender=PhotosUpdate)
-def delete_old_photo(sender, instance, using, **kwargs):
+def delete_old_gallery_photo_update(sender, instance, using, **kwargs):
     photo = instance.related_photo
     if not photo:
         # if no related_photo then just delete the photo
@@ -41,4 +50,27 @@ def delete_old_photo(sender, instance, using, **kwargs):
     elif instance.image.path != photo.image.path:
         # if we have a related photo and the photo_update
         # does not point to the same image as the original
+        PhotoSerializer.delete_old_image(instance.image)
+
+
+@receiver(post_save, sender=ProfilePictureUpdate)
+def apply_profile_picture_update(sender, instance, created, raw, using, update_fields, **kwargs):
+    if not created:
+        if instance.accept and not instance.decline:
+            model = instance.model
+            try:
+                ProfilePicture.objects.filter(
+                    model=model.id, inUse=True).update(inUse=False)
+            except ProfilePicture.DoesNotExit:
+                pass
+
+            ProfilePicture.objects.create(
+                model=model, inUse=True, image=instance.image)
+
+
+@receiver(post_delete, sender=ProfilePictureUpdate)
+def delete_old_profile_picture_update(sender, instance, using, **kwargs):
+    query = ProfilePicture.objects.filter(
+        model=instance.model, image=instance.image)
+    if not query.exists():
         PhotoSerializer.delete_old_image(instance.image)

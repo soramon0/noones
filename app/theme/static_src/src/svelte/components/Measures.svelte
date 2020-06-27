@@ -18,8 +18,8 @@
   $: uiData = $uiStore;
   $: updatesData = $UpdatesStore;
 
-  let currentTab = 0;
   let tabs = [{ name: "Base", show: true }, { name: "Updates", show: false }];
+  let tabName = tabs[0].name;
 
   const onValueChanged = ({ detail }) => {
     measures[detail.name] = detail.value;
@@ -109,14 +109,11 @@
 
 <Breadcrumb activeText="Measurements" />
 
-<TabView
-  {tabs}
-  {currentTab}
-  on:change={({ detail }) => (currentTab = detail)} />
+<TabView {tabs} {tabName} on:change={({ detail }) => (tabName = detail)} />
 
 <SuccessNotifier />
 
-{#if currentTab === 0}
+{#if tabName === tabs[0].name}
   <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
     <ErrorNotifier
       errors={updatesData.measuresErrors}
@@ -197,7 +194,7 @@
       </form>
     </Card>
   </div>
-{:else if currentTab === 1 && Object.keys(updatesData.measures).length}
+{:else if tabName === tabs[1].name && Object.keys(updatesData.measures).length}
   <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
     <ErrorNotifier
       errors={updatesData.measures.errors}

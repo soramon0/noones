@@ -2,7 +2,13 @@ import os
 
 from rest_framework import serializers
 
-from models.models import Model, Mensuration, Photo
+from models.models import (
+    Model,
+    Mensuration,
+    Photo,
+    ProfilePicture,
+    CoverPicture,
+)
 from core.models import User
 
 
@@ -10,6 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['email']
+
 
 class ModelSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,20 +27,18 @@ class ModelSerializer(serializers.ModelSerializer):
 
 
 class ProfilePictureSerializer(serializers.ModelSerializer):
-    profilePicture = serializers.ImageField()
-
     class Meta:
-        model = Model
-        fields = ['id', 'profilePicture']
-        read_only_fields = ['id']
+        model = ProfilePicture
+        fields = ['id', 'image', 'inUse']
+        read_only_fields = ['id', 'inUse']
+
 
 class CoverPictureSerializer(serializers.ModelSerializer):
-    coverPicture = serializers.ImageField()
-
     class Meta:
-        model = Model
-        fields = ['id', 'coverPicture']
-        read_only_fields = ['id']
+        model = CoverPicture
+        fields = ['id', 'image', 'inUse']
+        read_only_fields = ['id', 'inUse']
+
 
 class MeasuresSerializer(serializers.ModelSerializer):
     class Meta:
@@ -49,11 +54,9 @@ class PhotoSerializer(serializers.ModelSerializer):
         fields = ['id', 'image', 'model']
         read_only_fields = ['id']
 
+    @staticmethod
     def delete_old_image(image):
         # if we have an old image; delete it
         if image and os.path.isfile(image.path):
             # Get full path to old image
             os.remove(image.path)
-    
-
-    

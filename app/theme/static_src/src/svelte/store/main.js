@@ -3,7 +3,14 @@ import http from "../../main/http";
 import UIStore from "./ui";
 import photosStore from "./photo";
 
-const { subscribe, set, update } = writable(null);
+const { subscribe, set, update } = writable({
+  model: {},
+  measures: {},
+  profilePicture: {},
+  coverPicture: {},
+  email: null,
+  errors: {},
+});
 
 export default {
   subscribe,
@@ -13,19 +20,20 @@ export default {
     try {
       const { data } = await http.get(`models/me/`);
 
-      // Shaping the store data
-      data.errors = {};
-      data.email = data.model.email;
-
       // create the photos' store
-      const { coverPicture, profilePicture } = data.model;
-      photosStore.populate({
-        photos: data.photos,
-        cover: coverPicture,
-        profile: profilePicture,
-      });
+      photosStore.populate({ photos: data.photos });
 
-      set(data);
+      // Shaping the store data
+      const { model, measures, profilePicture, coverPicture } = data;
+
+      update((store) => ({
+        ...store,
+        model,
+        measures,
+        profilePicture,
+        coverPicture,
+        email: model.email,
+      }));
     } catch ({ response }) {
       if (response && response.status == 401) {
         return window.location.replace("/");
@@ -34,6 +42,8 @@ export default {
       throw response;
     }
   },
+  markAsProfilePicture: (data) =>
+    update((store) => ({ ...store, profilePicture: data })),
   updateModel: async (payload) => {
     try {
       UIStore.setFetchAndFeedbackModal(true, false);

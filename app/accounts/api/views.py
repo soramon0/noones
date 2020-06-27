@@ -1,13 +1,11 @@
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 
-from .permissions import IsOwner
 from core.models import User
-from models.models import Model, Mensuration, Photo
+
 
 @api_view(['POST'])
 def signin(request):

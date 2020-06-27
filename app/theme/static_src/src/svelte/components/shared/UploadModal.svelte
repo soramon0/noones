@@ -2,7 +2,7 @@
   import { scale, fade, fly } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
   import photoStore from "../../store/photo";
-  import updatesStore from "../../store/updates";
+  import UpdatesStore from "../../store/updates";
   import UIStore from "../../store/ui";
   import Breadcrumb from "./Breadcrumb";
   import SaveButton from "./SaveButton";
@@ -16,7 +16,7 @@
   export let multiple = false;
   export let errorKey;
 
-  $: updatesData = $updatesStore;
+  $: updatesData = $UpdatesStore;
 
   const dispatch = createEventDispatcher();
 
@@ -64,10 +64,10 @@
   </div>
 
   <!-- Error Handling -->
-  <ErrorNotifier errors={photoData.errors} {errorKey} />
-
-  <!-- TODO(karim): refactor this -->
-  <ErrorNotifier errors={updatesData.galleryErrors} {errorKey} />
+  <ErrorNotifier
+    errors={updatesData.errors}
+    {errorKey}
+    on:clearErrors={UpdatesStore.clearErrors.bind(this, errorKey)} />
 
   <div
     class="p-4 flex justify-center items-center bg-white border-b-2

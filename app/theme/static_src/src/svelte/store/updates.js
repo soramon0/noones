@@ -4,6 +4,7 @@ import UIStore from "./ui";
 import { onUploadProgress } from "./photo";
 
 const GALLERYSIZELIMIT = 1024 * 1024 * 5; // 5MB
+const PROFILEPICSIZELIMIT = 1024 * 1024 * 3; // 3MB
 
 function validFileType(type = "") {
   return !type.startsWith("image/") ? false : true;
@@ -17,8 +18,9 @@ const { subscribe, set, update } = writable({
   measures: {},
   measuresErrors: {},
   model: {},
+  profilePictures: [],
   gallery: [],
-  galleryErrors: {},
+  errors: {},
 });
 
 export default {
@@ -123,6 +125,196 @@ export default {
       }
     }
   },
+  createProfilePictureUpdate: async (file) => {
+    try {
+      if (!validFileType(file.type)) {
+        update((store) => ({
+          ...store,
+          errors: {
+            profilePicture: [`"${file.name}" is not an image`],
+          },
+        }));
+        return;
+      }
+      if (!validFileSize(file.size, PROFILEPICSIZELIMIT)) {
+        update((store) => ({
+          ...store,
+          errors: {
+            profilePicture: [`"${file.name}" should not be greater than 3mb`],
+          },
+        }));
+        return;
+      }
+      const imageData = new FormData();
+      imageData.append("image", file);
+
+      UIStore.setFetchAndFeedbackModal(true, false);
+
+      const { data } = await http.post(`update/photos/profile/`, imageData);
+      data.errors = {};
+
+      update((store) => {
+        const { profilePictures } = store;
+
+        profilePictures.unshift(data);
+
+        return { ...store, profilePictures, errors: {} };
+      });
+
+      UIStore.setFetchAndFeedbackModal(false, true);
+      UIStore.setfileUploadPercentage(0);
+    } catch (error) {
+      UIStore.setFetchAndFeedbackModal(false, false);
+      UIStore.setfileUploadPercentage(0);
+
+      update((store) => ({
+        ...store,
+        errors: { profilePicture: response.data },
+      }));
+    }
+  },
+  getProfilePicturesUpdate: async () => {
+    try {
+      const { data } = await http.get("update/photos/profile/");
+      // add errors object which will store errors
+      // related to each photo entry
+      const pictures = data.map((pic) => ({ ...pic, errors: {} })).reverse();
+      update((store) => ({ ...store, profilePictures: pictures }));
+    } catch (_) {
+      return;
+    }
+  },
+  modifyProfilePictureUpdate: async (file, photoId) => {
+    try {
+      if (!validFileType(file.type)) {
+        update((store) => {
+          const { profilePictures } = store;
+          const index = profilePictures.findIndex(
+            (photo) => photo.id === photoId
+          );
+          if (index != -1) {
+            profilePictures[index].errors = {
+              image: [`"${file.name}" is not an image`],
+            };
+          }
+          return {
+            ...store,
+            profilePictures,
+          };
+        });
+        return;
+      }
+      if (!validFileSize(file.size, PROFILEPICSIZELIMIT)) {
+        update((store) => {
+          const { profilePictures } = store;
+          const index = profilePictures.findIndex(
+            (photo) => photo.id === photoId
+          );
+          if (index != -1) {
+            profilePictures[index].errors = {
+              image: [`"${file.name}" should not be greater than 3mb`],
+            };
+          }
+          return {
+            ...store,
+            profilePictures,
+          };
+        });
+        return;
+      }
+
+      UIStore.setFetchAndFeedbackModal(true, false);
+
+      const imageData = new FormData();
+      imageData.append("image", file);
+
+      const { data } = await http.put(
+        `update/photos/profile/${photoId}/`,
+        imageData
+      );
+      data.errors = {};
+
+      update((store) => {
+        const { profilePictures } = store;
+        const index = profilePictures.findIndex(
+          (photo) => photo.id === photoId
+        );
+
+        if (index != -1) {
+          profilePictures[index] = data;
+        }
+
+        return {
+          ...store,
+          profilePictures,
+        };
+      });
+
+      UIStore.setFetchAndFeedbackModal(false, true);
+    } catch ({ response }) {
+      UIStore.setFetchAndFeedbackModal(false, false);
+
+      update((store) => {
+        const { profilePictures } = store;
+        const index = profilePictures.findIndex(
+          (photo) => photo.id === photoId
+        );
+
+        if (index != -1) {
+          profilePictures[index]["errors"] = response.data;
+        }
+
+        return {
+          ...store,
+          profilePictures,
+        };
+      });
+    }
+  },
+  deleteProfilePictureUpdate: async (photoId) => {
+    try {
+      UIStore.setFetchAndFeedbackModal(true, false);
+
+      await http.delete(`update/photos/profile/${photoId}/`);
+
+      update((store) => {
+        let { profilePictures } = store;
+
+        profilePictures = profilePictures.filter(
+          (photo) => photo.id != photoId
+        );
+
+        return { ...store, profilePictures };
+      });
+
+      UIStore.setFetchAndFeedbackModal(false, true);
+    } catch ({ response }) {
+      UIStore.setFetchAndFeedbackModal(false, false);
+
+      // if we couldn't find an update with the given id
+      // then it probably was removed by admin
+      if (response && response.status === 404) {
+        update((store) => {
+          const { profilePictures } = store;
+          const errors = {
+            image: ["Update has been removed. Check your email for details."],
+          };
+          const index = profilePictures.findIndex(
+            (photo) => photo.id === photoId
+          );
+
+          if (index != -1) {
+            profilePictures[index]["errors"] = errors;
+          }
+
+          return {
+            ...store,
+            profilePictures,
+          };
+        });
+      }
+    }
+  },
   createGallaryPhotoUpdate: async (files) => {
     try {
       const imageData = new FormData();
@@ -132,8 +324,8 @@ export default {
         if (!validFileType(file.type)) {
           update((store) => ({
             ...store,
-            galleryErrors: {
-              image: [`"${file.name}" is not an image`],
+            errors: {
+              gallery: [`"${file.name}" is not an image`],
             },
           }));
           isValid = false;
@@ -142,8 +334,8 @@ export default {
         if (!validFileSize(file.size, GALLERYSIZELIMIT)) {
           update((store) => ({
             ...store,
-            galleryErrors: {
-              image: [`"${file.name}" should not be greater than 5mb`],
+            errors: {
+              gallery: [`"${file.name}" should not be greater than 5mb`],
             },
           }));
           isValid = false;
@@ -155,9 +347,12 @@ export default {
       if (!isValid) return;
 
       UIStore.setFetchAndFeedbackModal(true, false);
-      const { data } = await http.post("update/gallery/", imageData, {
+
+      let { data } = await http.post(`update/photos/gallery/`, imageData, {
         onUploadProgress,
       });
+
+      data = data.map((el) => ({ ...el, errors: {} })).reverse();
 
       update((store) => {
         const { gallery } = store;
@@ -173,7 +368,7 @@ export default {
       UIStore.setFetchAndFeedbackModal(false, false);
       UIStore.setfileUploadPercentage(0);
 
-      update((store) => ({ ...store, galleryErrors: response.data }));
+      update((store) => ({ ...store, errors: { gallery: response.data } }));
     }
   },
   createOrModifyGalleryUpdate: async (file, photoId) => {
@@ -181,8 +376,8 @@ export default {
       if (!validFileType(file.type)) {
         update((store) => ({
           ...store,
-          galleryErrors: {
-            image: [`"${file.name}" is not an image`],
+          errors: {
+            galleryUpdate: [`"${file.name}" is not an image`],
           },
         }));
         return;
@@ -190,8 +385,8 @@ export default {
       if (!validFileSize(file.size, GALLERYSIZELIMIT)) {
         update((store) => ({
           ...store,
-          galleryErrors: {
-            image: [`"${file.name}" should not be greater than 5mb`],
+          errors: {
+            galleryUpdate: [`"${file.name}" should not be greater than 5mb`],
           },
         }));
         return;
@@ -201,7 +396,7 @@ export default {
 
       UIStore.setFetchAndFeedbackModal(true, false);
       const { status, data } = await http.put(
-        `update/gallery/related_photo/${photoId}/`,
+        `update/photos/gallery/related_photo/${photoId}/`,
         imageData
       );
 
@@ -209,6 +404,7 @@ export default {
         const { gallery } = store;
         data.errors = {};
 
+        // Ok response means we modified an existing update
         if (status === 200) {
           const index = gallery.findIndex((photo) => photo.id === data.id);
           if (index != -1) {
@@ -216,6 +412,7 @@ export default {
           }
         }
 
+        // Newly CREATED
         if (status === 201) {
           gallery.unshift(data);
         }
@@ -227,12 +424,15 @@ export default {
     } catch ({ response }) {
       UIStore.setFetchAndFeedbackModal(false, false);
 
-      update((store) => ({ ...store, galleryErrors: response.data }));
+      update((store) => ({
+        ...store,
+        errors: { galleryUpdate: response.data },
+      }));
     }
   },
   getGalleryUpdate: async () => {
     try {
-      const { data } = await http.get("update/gallery/");
+      const { data } = await http.get("update/photos/gallery/");
       // add errors object which will store errors
       // related to each photo entry
       const gallery = data.map((el) => ({ ...el, errors: {} })).reverse();
@@ -281,7 +481,10 @@ export default {
       const imageData = new FormData();
       imageData.append("image", file);
 
-      const { data } = await http.put(`update/gallery/${photoId}/`, imageData);
+      const { data } = await http.put(
+        `update/photos/gallery/${photoId}/`,
+        imageData
+      );
       data.errors = {};
 
       update((store) => {
@@ -321,7 +524,7 @@ export default {
     try {
       UIStore.setFetchAndFeedbackModal(true, false);
 
-      await http.delete(`update/gallery/${photoId}/`);
+      await http.delete(`update/photos/gallery/${photoId}/`);
 
       update((store) => {
         let { gallery } = store;
@@ -341,7 +544,7 @@ export default {
         update((store) => {
           const { gallery } = store;
           const errors = {
-            measure: ["Update has been removed. Check your email for details."],
+            image: ["Update has been removed. Check your email for details."],
           };
           const index = gallery.findIndex((photo) => photo.id === photoId);
 
@@ -365,7 +568,7 @@ export default {
       measures: { ...store.measures, errors: {} },
     }));
   },
-  clearGalleryPhotoError: (index) => {
+  clearGalleryPhotoErrors: (index) => {
     update((store) => {
       const { gallery } = store;
       const errors = gallery[index].errors;
@@ -380,5 +583,30 @@ export default {
       };
     });
   },
-  clearGalleryError: () => update((store) => ({ ...store, galleryErrors: {} })),
+  clearProfilePictureErrors: (index) => {
+    update((store) => {
+      const { profilePictures } = store;
+      const errors = profilePictures[index].errors;
+
+      if (errors && Object.keys(errors).length > 0) {
+        profilePictures[index].errors = {};
+      }
+
+      return {
+        ...store,
+        profilePictures,
+      };
+    });
+  },
+  clearErrors: (key) => {
+    update((store) => {
+      const { errors } = store;
+
+      if (Array.isArray(errors[key]) && errors[key].length > 0) {
+        errors[key] = [];
+      }
+
+      return { ...store, errors };
+    });
+  },
 };

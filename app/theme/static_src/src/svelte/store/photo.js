@@ -1,11 +1,15 @@
 import { writable } from "svelte/store";
 import http from "../../main/http";
 import UIStore from "./ui";
+import UserStore from "./main";
 
 const { subscribe, set, update } = writable({
   photos: [],
-  cover: null,
-  profile: null,
+  cover: [],
+  profile: {
+    data: [],
+    next: null,
+  },
   errors: {},
 });
 
@@ -57,137 +61,59 @@ export default {
   update,
   set,
   populate: (data) => update((store) => ({ ...store, ...data })),
-  uploadProfilePicture: async (file) => {
-    if (!fileIsValid(file, "profilePicture", 1)) {
-      return;
-    }
-
+  getProfilePictures: async (cursor = "") => {
     try {
-      UIStore.setFetchAndFeedbackModal(true, false);
+      const { data } = await http.get(`/models/photos/profile/?${cursor}`);
+      let nextCursor = null;
 
-      // Create image data and send it
-      const imageData = new FormData();
-      imageData.append("profilePicture", file);
-
-      const { data } = await http.put("/models/photos/profile/", imageData, {
-        onUploadProgress,
-      });
-
-      // Update store with new image
-      update((store) => ({
-        ...store,
-        errors: {},
-        profile: data.profilePicture,
-      }));
-
-      UIStore.setFetchAndFeedbackModal(false, true);
-      UIStore.setfileUploadPercentage(0);
-    } catch ({ response }) {
-      UIStore.setFetchAndFeedbackModal(false, false);
-      UIStore.setfileUploadPercentage(0);
-
-      update((store) => ({ ...store, errors: response.data }));
-    }
-  },
-  uploadCoverPicture: async (file) => {
-    if (!fileIsValid(file, "coverPicture", 2)) {
-      return;
-    }
-
-    try {
-      UIStore.setFetchAndFeedbackModal(true, false);
-
-      // Create image data and send it
-      const imageData = new FormData();
-      imageData.append("coverPicture", file);
-
-      const { data } = await http.put("/models/photos/cover/", imageData, {
-        onUploadProgress,
-      });
-
-      // Update store with new image
-      update((store) => ({
-        ...store,
-        errors: {},
-        cover: data.coverPicture,
-      }));
-
-      UIStore.setFetchAndFeedbackModal(false, true);
-      UIStore.setfileUploadPercentage(0);
-    } catch ({ response }) {
-      UIStore.setFetchAndFeedbackModal(false, false);
-      UIStore.setfileUploadPercentage(0);
-
-      update((store) => ({ ...store, errors: response.data }));
-    }
-  },
-  uploadGalleryPictures: async (files) => {
-    let isValid = true;
-    const imageData = new FormData();
-
-    files.forEach((file) => {
-      if (!fileIsValid(file, "image", 5)) {
-        isValid = false;
-        return;
+      if (data.next) {
+        nextCursor = data.next.split("?")[1];
       }
-      imageData.append("image", file);
-    });
 
-    if (!isValid) {
-      return;
-    }
+      // add errors object which will store errors
+      // related to each photo entry
+      const pictures = data.results.map((pic) => ({ ...pic, errors: {} }));
 
-    try {
-      UIStore.setFetchAndFeedbackModal(true, false);
-
-      const { data } = await http.post("/models/photos/gallery/", imageData, {
-        onUploadProgress,
+      update((store) => {
+        return {
+          ...store,
+          profile: {
+            data: [...store.profile.data, ...pictures],
+            next: nextCursor,
+          },
+        };
       });
-
-      // Update store with new images
-      update((store) => ({
-        ...store,
-        errors: {},
-        photos: [...store.photos, ...data],
-      }));
-
-      UIStore.setFetchAndFeedbackModal(false, true);
-      UIStore.setfileUploadPercentage(0);
-    } catch ({ response }) {
-      UIStore.setFetchAndFeedbackModal(false, false);
-      UIStore.setfileUploadPercentage(0);
-
-      update((store) => ({ ...store, errors: response.data }));
+    } catch (e) {
+      console.log(e);
+      return;
     }
   },
-  updateGalleryPicture: async (file, id, modelId) => {
-    if (!fileIsValid(file, "image", 5)) {
-      return;
-    }
-
+  markProfilePicture: async (pictureId, pictureIndex) => {
     try {
       UIStore.setFetchAndFeedbackModal(true, false);
 
-      // Create image data and send it
-      const imageData = new FormData();
-      imageData.append("image", file);
-      imageData.append("model", modelId);
+      await http.put(`models/photos/profile/${pictureId}/mark/`);
 
-      const { data } = await http.put(
-        `/models/photos/gallery/${id}`,
-        imageData
-      );
-
-      // Update store with new image
       update((store) => {
-        const { photos } = store;
-        const index = photos.findIndex((photo) => photo.id === id);
-        photos[index] = data;
+        let { data, next } = store.profile;
+
+        const oldPictureIndex = data.findIndex((photo) => photo.inUse);
+
+        if (oldPictureIndex != -1) {
+          data[oldPictureIndex].inUse = false;
+        }
+
+        if (data[pictureIndex] != undefined) {
+          data[pictureIndex].inUse = true;
+          UserStore.markAsProfilePicture(data[pictureIndex]);
+        }
 
         return {
           ...store,
-          errors: {},
-          photos: photos,
+          profile: {
+            next,
+            data,
+          },
         };
       });
 
@@ -195,7 +121,51 @@ export default {
     } catch ({ response }) {
       UIStore.setFetchAndFeedbackModal(false, false);
 
-      update((store) => ({ ...store, errors: response.data }));
+      update((store) => {
+        store.errors["profilePicture"] = response.data["profilePicture"] || [
+          response.data["detail"],
+        ];
+
+        return {
+          ...store,
+        };
+      });
     }
   },
+  deleteProfilePicture: async (id) => {
+    try {
+      UIStore.setFetchAndFeedbackModal(true, false);
+
+      await http.delete(`models/photos/profile/${id}/`);
+
+      update((store) => {
+        let { data, next } = store.profile;
+
+        data = data.filter((photo) => photo.id != id);
+
+        return {
+          ...store,
+          profile: {
+            next,
+            data,
+          },
+        };
+      });
+
+      UIStore.setFetchAndFeedbackModal(false, true);
+    } catch ({ response }) {
+      UIStore.setFetchAndFeedbackModal(false, false);
+
+      update((store) => {
+        store.errors["profilePicture"] = response.data["profilePicture"] || [
+          response.data["detail"],
+        ];
+
+        return {
+          ...store,
+        };
+      });
+    }
+  },
+  clearErrors: () => update((store) => ({ ...store, errors: {} })),
 };

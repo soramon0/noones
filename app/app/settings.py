@@ -160,9 +160,9 @@ NPM_BIN_PATH = '/usr/local/bin/npm'
 # Reading docker-compose secret files for dev
 if DEBUG:
     with open('/run/secrets/email_user', 'r') as f:
-        os.environ['EMAIL_USER'] = f.read()
+        os.environ['EMAIL_USER'] = f.readline()
     with open('/run/secrets/email_pass', 'r') as f:
-        os.environ['EMAIL_PASS'] = f.read()
+        os.environ['EMAIL_PASS'] = f.readline()
 
 # EMAIL
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -173,8 +173,6 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',

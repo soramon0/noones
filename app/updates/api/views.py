@@ -11,10 +11,15 @@ from django.conf import settings
 
 from models.api.serializers import PhotoSerializer
 from models.models import Photo
-from updates.models import MeasuresUpdate, PhotosUpdate
+from updates.models import (
+    MeasuresUpdate,
+    PhotosUpdate,
+    ProfilePictureUpdate
+)
 from updates.api.serializers import (
     MeasuresUpdateSerializer,
     PhotosUpdateSerializer,
+    ProfilePictureUpdateSerializer
 )
 
 MAX_GALLERY_UPLOAD_COUNT = 8
@@ -23,14 +28,17 @@ MAX_GALLERY_UPLOAD_COUNT = 8
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_measures_update(request):
-    serializer = MeasuresUpdateSerializer(data=request.data)
+    data = request.data
+    data['measure'] = request.user.mensuration.id
+
+    if MeasuresUpdate.objects.filter(measure=data['measure']).exists():
+        res = {
+            'measure': ['do not create a new upadte request! Update the one you have.']
+        }
+        return Response(res, status=status.HTTP_400_BAD_REQUEST)
+
+    serializer = MeasuresUpdateSerializer(data=data)
     if not serializer.is_valid():
-        if 'measure' in serializer.errors:
-            # The user should be able to create only one update
-            res = {'measure': [
-                'do not create a new upadte request! Update the one you have.'
-            ]}
-            return Response(res, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     serializer.save()
 
@@ -164,7 +172,7 @@ class GalleryUpdateAPIView(APIView):
 
     def get_object(self, pk):
         try:
-            return PhotosUpdate.objects.get(pk=pk)
+            return PhotosUpdate.objects.get(pk=pk, model=self.request.user.model.id)
         except PhotosUpdate.DoesNotExist:
             raise Http404
 
@@ -233,30 +241,122 @@ class GalleryUpdateAPIView(APIView):
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def updateGallery(request, id):
-    try:
-        photo_update = PhotosUpdate.objects.filter(related_photo=id).get()
-        data = {'image': request.data.get('image', None)}
+    model_id = request.user.model.id
 
-        serializer = PhotosUpdateSerializer(
-            photo_update, data=data, partial=True)
+    # TODO(karim): improve this api call to modify an update if it exists
+    # or create a new one
+    data = {
+        'model': model_id,
+        'image': request.data.get('image', None),
+        'related_photo': id
+    }
+    try:
+        photo_update = PhotosUpdate.objects.filter(
+            related_photo=id, model=model_id).get()
+
+        serializer = PhotosUpdateSerializer(data=data)
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        PhotoSerializer.delete_old_image(photo_update.image)
+        photo_update.delete()
 
         serializer.save()
 
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     except PhotosUpdate.DoesNotExist:
-        if not Photo.objects.filter(pk=id).exists():
+        if not Photo.objects.filter(pk=id, model=model_id).exists():
             return Response(status=status.HTTP_404_NOT_FOUND)
-        data = {'model': request.user.model.id,
-                'image': request.data.get('image', None), 'related_photo': id}
 
         serializer = PhotosUpdateSerializer(data=data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def get_or_create_profile_photo_update(request):
+    model_id = request.user.model.id
+
+    if request.method == 'GET':
+        profile_update = ProfilePictureUpdate.objects.filter(model=model_id)
+        serializer = ProfilePictureUpdateSerializer(profile_update, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        data = {'image': request.data.get('image', None), 'model': model_id}
+        serializer = ProfilePictureUpdateSerializer(data=data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+        return Response(serializer.data)
+
+
+class ProfilePictureUpdateAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, pk):
+        try:
+            return ProfilePictureUpdate.objects.get(pk=pk, model=self.request.user.model.id)
+        except ProfilePictureUpdate.DoesNotExist:
+            raise Http404
+
+    def put(self, request, update_id):
+        photo_update = self.get_object(update_id)
+
+        if photo_update.accept:
+            # this update has already been accepted and will be deleted
+            # in the next 24h so the user should not be able to change it
+            res = {
+                "image": ["this update has already been accepted and will be deleted in the next 24h."]
+            }
+            return Response(res, status=status.HTTP_400_BAD_REQUEST)
+
+        if not photo_update.decline:
+            # Update permission is only allowed if it hasn't been 24 hours
+            # but if the request was delined the user can update the request again
+            now = dt.datetime.now(dt.timezone.utc)
+            upload_date = photo_update.timestamp
+            days = (now - upload_date).days
+
+            if days != 0:
+                res = {
+                    "image": ["You can only update within the first 24 hours."]
+                }
+                return Response(res, status=status.HTTP_400_BAD_REQUEST)
+
+        # Only update the image field
+        data = {
+            'image': request.data.get('image'),
+        }
+
+        serializer = ProfilePictureUpdateSerializer(
+            photo_update, data=data, partial=True)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        PhotoSerializer.delete_old_image(photo_update.image)
+
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request, update_id):
+        photo_update = self.get_object(pk=update_id)
+
+        photo_update.delete()
+
+        # Send Email to admin
+        # TODO(karim): Update this email
+        send_mail(
+            f'User {request.user.email} deleted his update',
+            'Delete request for profile photo update',
+            request.user.email,
+            [settings.EMAIL_HOST_USER],
+            fail_silently=False,
+        )
+
+        return Response(status=status.HTTP_204_NO_CONTENT)

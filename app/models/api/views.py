@@ -1,15 +1,20 @@
 import os
 
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from django.http import Http404
 
-from accounts.api.permissions import IsOwner
 from core.models import User
-from models.models import Model, Mensuration, Photo
+from models.models import (
+    Model,
+    Mensuration,
+    Photo,
+    ProfilePicture,
+    CoverPicture
+)
 from .serializers import (
     ModelSerializer,
     UserSerializer,
@@ -19,6 +24,8 @@ from .serializers import (
     PhotoSerializer
 )
 
+from .pagination import CreatedAtPaginator
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -27,26 +34,6 @@ def me(request):
         user = request.user
         model = user.model
         measures = user.mensuration
-        user_serializer = UserSerializer(user)
-        model_serializer = ModelSerializer(model)
-        measures_serializer = MeasuresSerializer(measures)
-        profileImage_serializer = ProfilePictureSerializer(model)
-        coverImage_serializer = CoverPictureSerializer(model)
-
-        photos = Photo.objects.filter(model=model, inUse=True)[:8]
-        photo_serializer = PhotoSerializer(photos, many=True)
-
-        res = {'model': model_serializer.data}
-        res['model'].update({
-            'email': user_serializer.data['email'],
-            'profilePicture': profileImage_serializer.data['profilePicture'],
-            'coverPicture': coverImage_serializer.data['coverPicture'],
-        })
-        res['measures'] = measures_serializer.data
-        res['photos'] = photo_serializer.data
-
-        return Response(res)
-
     except User.model.RelatedObjectDoesNotExist:
         # Handling when admin user logs in
         # admin does't have the requried fields for this page
@@ -54,173 +41,124 @@ def me(request):
         # TODO(karim): handle the navigation to not include a link to this page
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
+    user_serializer = UserSerializer(user)
+    model_serializer = ModelSerializer(model)
+    measures_serializer = MeasuresSerializer(measures)
 
-class ModelAPIView(APIView):
-    permission_classes = [IsAuthenticated, IsOwner]
+    # Gallery
+    photos = Photo.objects.filter(model=model, inUse=True)[:8]
+    photo_serializer = PhotoSerializer(photos, many=True)
 
-    def get_object(self, pk):
-        try:
-            return Model.objects.get(pk=pk)
-        except Model.DoesNotExist:
-            raise Http404
+    res = {
+        'model': model_serializer.data,
+        'measures': measures_serializer.data,
+        'photos': photo_serializer.data
+    }
+    res['model'].update({'email': user_serializer.data['email']})
 
-    def get(self, request, pk):
-        model = self.get_object(pk=pk)
-        serializer = ModelSerializer(model)
+    try:
+        profile_picture = ProfilePicture.objects.get(
+            model=model.id, inUse=True)
+        profile_picture_serializer = ProfilePictureSerializer(profile_picture)
+        res['profilePicture'] = profile_picture_serializer.data
+    except ProfilePicture.DoesNotExist:
+        res['profilePicture'] = {}
+
+    try:
+        cover_picture = CoverPicture.objects.get(model=model.id, inUse=True)
+        cover_picture_serializer = CoverPictureSerializer(cover_picture)
+        res['coverPicture'] = cover_picture_serializer.data
+    except CoverPicture.DoesNotExist:
+        res['coverPicture'] = {}
+
+    return Response(res)
+
+
+class ListPorfilePictures(generics.ListAPIView):
+    serializer_class = ProfilePictureSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = CreatedAtPaginator
+
+    def get_queryset(self):
+        return ProfilePicture.objects.filter(model=self.request.user.model.id)
+
+    def list(self, request):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-    def put(self, request, pk):
-        model = self.get_object(pk=pk)
-        serializer = ModelSerializer(model, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def mark_as_profile_picture(request, picture_id):
+    model_id = request.user.model.id
 
-class MeasuresAPIView(APIView):
-    permission_classes = [IsAuthenticated, IsOwner]
+    try:
+        objs = [
+            ProfilePicture.objects.get(pk=picture_id, model=model_id),
+            ProfilePicture.objects.get(model=model_id, inUse=True)
+        ]
 
-    def get_object(self, pk):
-        try:
-            return Mensuration.objects.get(pk=pk)
-        except Mensuration.DoesNotExist:
-            raise Http404
+        if objs[0].id == objs[1].id:
+            res = {
+                "profilePicture": ["Picture is already marked."]
+            }
+            return Response(res, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self, request, pk):
-        measures = self.get_object(pk=pk)
-        serializer = MeasuresSerializer(measures)
-        return Response(serializer.data)
+        objs[0].inUse = True
+        objs[1].inUse = False
 
-    def put(self, request, pk):
-        measures = self.get_object(pk=pk)
-        serializer = MeasuresSerializer(measures, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        ProfilePicture.objects.bulk_update(objs, ['inUse'])
+
+        return Response()
+    except ProfilePicture.DoesNotExist:
+        raise Http404
 
 
 class ProfilePictureAPIView(APIView):
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated]
 
-    def get_object(self, user):
+    def get_object(self, pk):
         try:
-            return Model.objects.filter(user=user).get()
-        except Model.DoesNotExist:
+            return ProfilePicture.objects.get(pk=pk, model=self.request.user.model.id)
+        except ProfilePicture.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk=None):
-        model = self.get_object(user=request.user)
-        serializer = ProfilePictureSerializer(model)
-        return Response(serializer.data)
+    def delete(self, request, picture_id):
+        picture = self.get_object(picture_id)
 
-    def put(self, request, pk=None):
-        model = self.get_object(user=request.user)
-        serializer = ProfilePictureSerializer(model, data=request.data)
+        if picture.inUse:
+            res = {
+                "profilePicture": ["Can not delete current used profile picture."]
+            }
+            return Response(res, status=status.HTTP_400_BAD_REQUEST)
 
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        picture.delete()
 
-        PhotoSerializer.delete_old_image(model.profilePicture)
-        # delete_old_image(model.profilePicture)
-
-        # Save the new image
-        serializer.save()
-        return Response(serializer.data)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class CoverPictureAPIView(APIView):
-    permission_classes = [IsAuthenticated, IsOwner]
+class ListCoverPictures(generics.ListAPIView):
+    serializer_class = CoverPictureSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = CreatedAtPaginator
 
-    def get_object(self, user):
-        try:
-            return Model.objects.filter(user=user).get()
-        except Model.DoesNotExist:
-            raise Http404
+    def get_queryset(self):
+        return CoverPicture.objects.filter(model=self.request.user.model.id)
 
-    def get(self, request, pk=None):
-        model = self.get_object(user=request.user)
-        serializer = CoverPictureSerializer(model)
-        return Response(serializer.data)
+    def list(self, request):
+        queryset = self.filter_queryset(self.get_queryset())
 
-    def put(self, request, pk=None):
-        model = self.get_object(user=request.user)
-        serializer = CoverPictureSerializer(model, data=request.data)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
 
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        PhotoSerializer.delete_old_image(model.coverPicture)
-
-        # Save the new image
-        serializer.save()
-        return Response(serializer.data)
-
-
-@api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
-def gallery(request):
-    model_id = request.user.model.id
-
-    if request.method == 'GET':
-        # TODO(karim): set inUse back to True
-        photos = Photo.objects.filter(model=model_id, inUse=False)[:8]
-        serializer = PhotoSerializer(photos, many=True)
-        return Response(serializer.data)
-
-    elif request.method == 'POST':
-        try:
-            images = request.data.getlist('image')
-        except AttributeError:
-            return Response({'image': ['No file was submitted']}, status=status.HTTP_400_BAD_REQUEST)
-
-        # All the uploaded images will use the same model id
-        data = {'model': model_id}
-        # To keep track of all uploaded images
-        uploaded_images = []
-
-        # the user shouldn't be able to upload more than 8 images
-        # get the count of images upoloaded and check that the user
-        # hasn't upload more than 8
-        gallery_count = Photo.objects.filter(model=model_id).count()
-        max_upload_count = 8
-
-        for image in images:
-            if gallery_count < max_upload_count:
-                data['image'] = image
-                serializer = PhotoSerializer(data=data)
-                if not serializer.is_valid():
-                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-                serializer.save()
-                uploaded_images.append(serializer.data)
-                gallery_count += 1
-            else:
-                # TODO(karim): maybe handle this on the client
-                # and return here just the uploaded pictures
-                res = {'image': [
-                    f"You can only upload {max_upload_count} photos; you've uploaded {gallery_count}"]}
-                return Response(res, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response(uploaded_images, status=status.HTTP_201_CREATED)
-
-
-class GalleryAPIView(APIView):
-    permission_classes = [IsAuthenticated, IsOwner]
-
-    def put(self, request, pk):
-        try:
-            photo = Photo.objects.get(pk=pk)
-        except Photo.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        serializer = PhotoSerializer(photo, data=request.data)
-
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        PhotoSerializer.delete_old_image(photo.image)
-
-        # Save the new image
-        serializer.save()
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)

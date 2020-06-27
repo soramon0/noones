@@ -1,13 +1,23 @@
 <script>
+  import { onMount } from "svelte";
   import photoStore from "../../store/photo";
 
   export let modelId;
   export let fullname = "";
+  export let profilePicture;
 
   // Subscribe to the store
   $: photoData = $photoStore;
 
   let showPopup = false;
+
+  onMount(() => {
+    document.addEventListener("keyup", e => {
+      if (e.key == "Escape") {
+        showPopup = false;
+      }
+    });
+  });
 
   const togglePopup = () => (showPopup = !showPopup);
 </script>
@@ -44,21 +54,20 @@
           M17.521,10c0-4.148-3.373-7.521-7.521-7.521c-4.148,0-7.521,3.374-7.521,7.521c0,4.147,3.374,7.521,7.521,7.521C14.148,17.521,17.521,14.147,17.521,10" />
       </svg>
       {#if showPopup}
+        <div class="bg-transparent fixed inset-0 z-30" on:click={togglePopup} />
         <div
-          class="absolute z-20 ml-3 mt-1 py-2 w-32 border shadow-sm bg-white
-          transform -translate-x-full">
+          class="absolute z-30 ml-3 mt-1 py-2 w-32 border divide-y shadow-sm
+          rounded-md bg-white transform -translate-x-full">
           <a
-            class="block px-4 py-1 border-b text-gray-600 hover:bg-gray-200"
+            class="block px-4 py-1 text-gray-600 hover:bg-gray-200"
             href="/models/{modelId}">
             Profile
           </a>
-
           <a
             class="block px-4 py-1 text-gray-600 hover:bg-gray-200"
             href="/accounts/signout">
             Sign out
           </a>
-
         </div>
       {/if}
     </div>
@@ -66,9 +75,9 @@
     <div
       class="w-10 h-10 flex items-center justify-center shadow-md border-2
       border-indigo-500 rounded-full overflow-hidden">
-      {#if photoData.profile}
+      {#if profilePicture.image}
         <img
-          src={photoData.profile}
+          src={profilePicture.image}
           alt="model profile"
           class="h-full w-full object-cover" />
       {:else}
