@@ -31,7 +31,7 @@ class PhotosUpdate(models.Model):
     image = models.ImageField(upload_to='photos/%Y/%m/%d')
     model = models.ForeignKey(Model, on_delete=models.CASCADE)
     related_photo = models.ForeignKey(
-        Photo, null=True, blank=True, on_delete=models.DO_NOTHING)
+        Photo, null=True, blank=True, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
     accept = models.BooleanField(null=True, blank=True)
     decline = models.BooleanField(null=True, blank=True)
@@ -54,6 +54,21 @@ class ProfilePictureUpdate(models.Model):
 
     class Meta:
         verbose_name_plural = "Profile Picture Updates"
+
+    def __str__(self):
+        return str(self.image)
+
+
+class CoverPictureUpdate(models.Model):
+    image = models.ImageField(upload_to='photos/%Y/%m/%d')
+    model = models.ForeignKey(Model, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    accept = models.BooleanField(null=True, blank=True)
+    decline = models.BooleanField(null=True, blank=True)
+    message = models.TextField(max_length=500, blank=True, default="")
+
+    class Meta:
+        verbose_name_plural = "Cover Picture Updates"
 
     def __str__(self):
         return str(self.image)

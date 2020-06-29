@@ -17,8 +17,8 @@ function validFileSize(fileSize, sizeLimit) {
 const { subscribe, set, update } = writable({
   measures: {},
   measuresErrors: {},
-  model: {},
   profilePictures: [],
+  coverPictures: [],
   gallery: [],
   errors: {},
 });
@@ -315,6 +315,189 @@ export default {
       }
     }
   },
+  createCoverPictureUpdate: async (file) => {
+    try {
+      if (!validFileType(file.type)) {
+        return update((store) => ({
+          ...store,
+          errors: {
+            coverPicture: [`"${file.name}" is not an image`],
+          },
+        }));
+      }
+      if (!validFileSize(file.size, PROFILEPICSIZELIMIT)) {
+        return update((store) => ({
+          ...store,
+          errors: {
+            coverPicture: [`"${file.name}" should not be greater than 3mb`],
+          },
+        }));
+      }
+      const imageData = new FormData();
+      imageData.append("image", file);
+
+      UIStore.setFetchAndFeedbackModal(true, false);
+
+      const { data } = await http.post(`update/photos/cover/`, imageData);
+      data.errors = {};
+
+      update((store) => {
+        const { coverPictures } = store;
+        console.log(coverPictures);
+
+        coverPictures.unshift(data);
+
+        return { ...store, coverPictures, errors: {} };
+      });
+
+      UIStore.setFetchAndFeedbackModal(false, true);
+      UIStore.setfileUploadPercentage(0);
+    } catch (error) {
+      UIStore.setFetchAndFeedbackModal(false, false);
+      UIStore.setfileUploadPercentage(0);
+
+      update((store) => ({
+        ...store,
+        errors: { coverPictures: response.data },
+      }));
+    }
+  },
+  getCoverPictureUpdate: async () => {
+    try {
+      const { data } = await http.get("update/photos/cover/");
+      // add errors object which will store errors
+      // related to each photo entry
+      const pictures = data.map((pic) => ({ ...pic, errors: {} })).reverse();
+      update((store) => ({ ...store, coverPictures: pictures }));
+    } catch (_) {
+      return;
+    }
+  },
+  modifyCoverPictureUpdate: async (file, photoId) => {
+    try {
+      if (!validFileType(file.type)) {
+        update((store) => {
+          const { coverPictures } = store;
+          const index = coverPictures.findIndex(
+            (photo) => photo.id === photoId
+          );
+          if (index != -1) {
+            coverPictures[index].errors = {
+              image: [`"${file.name}" is not an image`],
+            };
+          }
+          return {
+            ...store,
+            coverPictures,
+          };
+        });
+        return;
+      }
+      if (!validFileSize(file.size, PROFILEPICSIZELIMIT)) {
+        update((store) => {
+          const { coverPictures } = store;
+          const index = coverPictures.findIndex(
+            (photo) => photo.id === photoId
+          );
+          if (index != -1) {
+            coverPictures[index].errors = {
+              image: [`"${file.name}" should not be greater than 3mb`],
+            };
+          }
+          return {
+            ...store,
+            coverPictures,
+          };
+        });
+        return;
+      }
+
+      UIStore.setFetchAndFeedbackModal(true, false);
+
+      const imageData = new FormData();
+      imageData.append("image", file);
+
+      const { data } = await http.put(
+        `update/photos/cover/${photoId}/`,
+        imageData
+      );
+      data.errors = {};
+
+      update((store) => {
+        const { coverPictures } = store;
+        const index = coverPictures.findIndex((photo) => photo.id === photoId);
+
+        if (index != -1) {
+          coverPictures[index] = data;
+        }
+
+        return {
+          ...store,
+          coverPictures,
+        };
+      });
+
+      UIStore.setFetchAndFeedbackModal(false, true);
+    } catch ({ response }) {
+      UIStore.setFetchAndFeedbackModal(false, false);
+
+      update((store) => {
+        const { coverPictures } = store;
+        const index = coverPictures.findIndex((photo) => photo.id === photoId);
+
+        if (index != -1) {
+          coverPictures[index]["errors"] = response.data;
+        }
+
+        return {
+          ...store,
+          coverPictures,
+        };
+      });
+    }
+  },
+  deleteCoverPictureUpdate: async (photoId) => {
+    try {
+      UIStore.setFetchAndFeedbackModal(true, false);
+
+      await http.delete(`update/photos/cover/${photoId}/`);
+
+      update((store) => {
+        let { coverPictures } = store;
+
+        coverPictures = coverPictures.filter((photo) => photo.id != photoId);
+
+        return { ...store, coverPictures };
+      });
+
+      UIStore.setFetchAndFeedbackModal(false, true);
+    } catch ({ response }) {
+      UIStore.setFetchAndFeedbackModal(false, false);
+
+      // if we couldn't find an update with the given id
+      // then it probably was removed by admin
+      if (response && response.status === 404) {
+        update((store) => {
+          const { coverPictures } = store;
+          const errors = {
+            image: ["Update has been removed. Check your email for details."],
+          };
+          const index = coverPictures.findIndex(
+            (photo) => photo.id === photoId
+          );
+
+          if (index != -1) {
+            coverPictures[index]["errors"] = errors;
+          }
+
+          return {
+            ...store,
+            coverPictures,
+          };
+        });
+      }
+    }
+  },
   createGallaryPhotoUpdate: async (files) => {
     try {
       const imageData = new FormData();
@@ -595,6 +778,21 @@ export default {
       return {
         ...store,
         profilePictures,
+      };
+    });
+  },
+  clearCoverPictureErrors: (index) => {
+    update((store) => {
+      const { coverPictures } = store;
+      const errors = coverPictures[index].errors;
+
+      if (errors && Object.keys(errors).length > 0) {
+        coverPictures[index].errors = {};
+      }
+
+      return {
+        ...store,
+        coverPictures,
       };
     });
   },

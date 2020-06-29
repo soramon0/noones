@@ -49,30 +49,31 @@
 
 <PopupErrorNotifier
   errors={photoData.errors}
-  errorKey="profilePicture"
+  errorKey="coverPicture"
   on:clearErrors={PhotoStore.clearErrors} />
 
 {#if !showUpdates}
   <div transition:fade class="mt-2 flex flex-wrap">
-    {#each photoData.profile.data as photo, i}
+    {#each photoData.cover.data as photo, i}
       <PhotoCard
+        markText="Mark as Cover Picture"
         {photo}
-        on:mark={({ detail }) => PhotoStore.markProfilePicture(detail, i)}
-        on:delete={({ detail }) => PhotoStore.deleteProfilePicture(detail)} />
+        on:mark={({ detail }) => PhotoStore.markCoverPicture(detail, i)}
+        on:delete={({ detail }) => PhotoStore.deleteCoverPicture(detail)} />
     {:else}
       <p transition:fade class="mt-4 text-gray-600">No profile pictures.</p>
     {/each}
   </div>
   <div class="fetch h-10" />
 {:else}
-  {#each updatesData.profilePictures as photo, index}
+  {#each updatesData.coverPictures as photo, index}
     <PhotoUpdateCard
       {photo}
       {index}
       fetching={uiData.fetching}
-      on:update={({ detail: { file, photoId } }) => UpdatesStore.modifyProfilePictureUpdate(file, photoId)}
-      on:delete={({ detail }) => UpdatesStore.deleteProfilePictureUpdate(detail)}
-      on:clearErrors={UpdatesStore.clearProfilePictureErrors.bind(this, index)} />
+      on:update={({ detail: { file, photoId } }) => UpdatesStore.modifyCoverPictureUpdate(file, photoId)}
+      on:delete={({ detail }) => UpdatesStore.deleteCoverPictureUpdate(detail)}
+      on:clearErrors={UpdatesStore.clearCoverPictureErrors.bind(this, index)} />
   {:else}
     <p class="mt-4 text-gray-600">No Updates.</p>
   {/each}

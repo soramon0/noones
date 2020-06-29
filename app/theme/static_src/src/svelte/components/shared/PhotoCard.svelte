@@ -5,6 +5,7 @@
   import CancelButton from "./CancelButton";
 
   export let photo;
+  export let markText = "Mark as Profile Picture";
   let showConfirm = false;
   let showDropdown = false;
   const dispatch = createEventDispatcher();
@@ -68,9 +69,7 @@
                 <path
                   d="M10,12.503c-4.418,0-7.878,2.058-7.878,4.685c0,0.288,0.231,0.52,0.52,0.52c0.287,0,0.519-0.231,0.519-0.52c0-1.976,3.132-3.646,6.84-3.646c3.707,0,6.838,1.671,6.838,3.646c0,0.288,0.234,0.52,0.521,0.52s0.52-0.231,0.52-0.52C17.879,14.561,14.418,12.503,10,12.503z" />
               </svg>
-              <span class="whitespace-no-wrap text-gray-600">
-                Mark as profile picture
-              </span>
+              <span class="whitespace-no-wrap text-gray-600">{markText}</span>
             </div>
           {/if}
         </div>

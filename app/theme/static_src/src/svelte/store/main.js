@@ -44,6 +44,8 @@ export default {
   },
   markAsProfilePicture: (data) =>
     update((store) => ({ ...store, profilePicture: data })),
+  markAsCoverPicture: (data) =>
+    update((store) => ({ ...store, coverPicture: data })),
   updateModel: async (payload) => {
     try {
       UIStore.setFetchAndFeedbackModal(true, false);

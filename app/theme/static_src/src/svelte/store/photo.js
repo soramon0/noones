@@ -5,7 +5,10 @@ import UserStore from "./main";
 
 const { subscribe, set, update } = writable({
   photos: [],
-  cover: [],
+  cover: {
+    data: [],
+    next: null,
+  },
   profile: {
     data: [],
     next: null,
@@ -83,8 +86,7 @@ export default {
           },
         };
       });
-    } catch (e) {
-      console.log(e);
+    } catch (_) {
       return;
     }
   },
@@ -158,6 +160,111 @@ export default {
 
       update((store) => {
         store.errors["profilePicture"] = response.data["profilePicture"] || [
+          response.data["detail"],
+        ];
+
+        return {
+          ...store,
+        };
+      });
+    }
+  },
+  getCoverPictures: async (cursor = "") => {
+    try {
+      const { data } = await http.get(`/models/photos/cover/?${cursor}`);
+      let nextCursor = null;
+
+      if (data.next) {
+        nextCursor = data.next.split("?")[1];
+      }
+
+      // add errors object which will store errors
+      // related to each photo entry
+      const pictures = data.results.map((pic) => ({ ...pic, errors: {} }));
+
+      update((store) => {
+        return {
+          ...store,
+          cover: {
+            data: [...store.cover.data, ...pictures],
+            next: nextCursor,
+          },
+        };
+      });
+    } catch (_) {
+      return;
+    }
+  },
+  markCoverPicture: async (pictureId, pictureIndex) => {
+    try {
+      UIStore.setFetchAndFeedbackModal(true, false);
+
+      await http.put(`models/photos/cover/${pictureId}/mark/`);
+
+      update((store) => {
+        let { data, next } = store.cover;
+
+        const oldPictureIndex = data.findIndex((photo) => photo.inUse);
+
+        if (oldPictureIndex != -1) {
+          data[oldPictureIndex].inUse = false;
+        }
+
+        if (data[pictureIndex] != undefined) {
+          data[pictureIndex].inUse = true;
+          UserStore.markAsCoverPicture(data[pictureIndex]);
+        }
+
+        return {
+          ...store,
+          cover: {
+            next,
+            data,
+          },
+        };
+      });
+
+      UIStore.setFetchAndFeedbackModal(false, true);
+    } catch ({ response }) {
+      UIStore.setFetchAndFeedbackModal(false, false);
+
+      update((store) => {
+        store.errors["coverPicture"] = response.data["coverPicture"] || [
+          response.data["detail"],
+        ];
+
+        return {
+          ...store,
+        };
+      });
+    }
+  },
+  deleteCoverPicture: async (id) => {
+    try {
+      UIStore.setFetchAndFeedbackModal(true, false);
+
+      await http.delete(`models/photos/cover/${id}/`);
+
+      update((store) => {
+        let { data, next } = store.cover;
+
+        data = data.filter((photo) => photo.id != id);
+
+        return {
+          ...store,
+          cover: {
+            next,
+            data,
+          },
+        };
+      });
+
+      UIStore.setFetchAndFeedbackModal(false, true);
+    } catch ({ response }) {
+      UIStore.setFetchAndFeedbackModal(false, false);
+
+      update((store) => {
+        store.errors["coverPicture"] = response.data["coverPicture"] || [
           response.data["detail"],
         ];
 

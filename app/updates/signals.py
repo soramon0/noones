@@ -5,12 +5,13 @@ from models.models import (
     Mensuration,
     Photo,
     ProfilePicture,
-    CoverPicture
+    CoverPicture,
 )
 from updates.models import (
     MeasuresUpdate,
     PhotosUpdate,
     ProfilePictureUpdate,
+    CoverPictureUpdate,
 )
 
 
@@ -71,6 +72,29 @@ def apply_profile_picture_update(sender, instance, created, raw, using, update_f
 @receiver(post_delete, sender=ProfilePictureUpdate)
 def delete_old_profile_picture_update(sender, instance, using, **kwargs):
     query = ProfilePicture.objects.filter(
+        model=instance.model, image=instance.image)
+    if not query.exists():
+        PhotoSerializer.delete_old_image(instance.image)
+
+
+@receiver(post_save, sender=CoverPictureUpdate)
+def apply_cover_picture_update(sender, instance, created, raw, using, update_fields, **kwargs):
+    if not created:
+        if instance.accept and not instance.decline:
+            model = instance.model
+            try:
+                CoverPicture.objects.filter(
+                    model=model.id, inUse=True).update(inUse=False)
+            except ProfilePicture.DoesNotExit:
+                pass
+
+            CoverPicture.objects.create(
+                model=model, inUse=True, image=instance.image)
+
+
+@receiver(post_delete, sender=CoverPictureUpdate)
+def delete_old_cover_picture_update(sender, instance, using, **kwargs):
+    query = CoverPicture.objects.filter(
         model=instance.model, image=instance.image)
     if not query.exists():
         PhotoSerializer.delete_old_image(instance.image)

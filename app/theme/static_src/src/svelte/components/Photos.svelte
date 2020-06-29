@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
-  import photoStore from "../store/photo";
+  import PhotoStore from "../store/photo";
   import UIStore from "../store/ui";
   import UpdatesStore from "../store/updates";
   import SaveButton from "./shared/SaveButton";
@@ -12,6 +12,7 @@
   import TabView from "./shared/TabView";
   import PhotoUpdateCard from "./shared/PhotoUpdateCard";
   import ProfilePicturesTab from "./shared/ProfilePicturesTab";
+  import CoverPicturesTab from "./shared/CoverPicturesTab";
 
   export let profilePicture;
   export let coverPicture;
@@ -29,7 +30,7 @@
   let tabName = tabs[0].name;
 
   // Subscribe to the store
-  $: photoData = $photoStore;
+  $: photoData = $PhotoStore;
   $: uiData = $UIStore;
   $: updatesData = $UpdatesStore;
 
@@ -48,13 +49,25 @@
   };
 
   onMount(() => {
-    // Get user updates
+    // Get user gallery updates
     if (!updatesData.gallery.length) {
       UpdatesStore.getGalleryUpdate();
     }
 
+    if (!updatesData.coverPictures.length) {
+      UpdatesStore.getCoverPictureUpdate();
+    }
+
     if (!updatesData.profilePictures.length) {
       UpdatesStore.getProfilePicturesUpdate();
+    }
+
+    if (!photoData.profile.data.length) {
+      PhotoStore.getProfilePictures();
+    }
+
+    if (!photoData.cover.data.length) {
+      PhotoStore.getCoverPictures();
     }
   });
 </script>
@@ -76,7 +89,7 @@
     title="Upload a cover picture"
     errorKey="coverPicture"
     on:show={onShowCoverModal}
-    on:file={({ detail }) => photoStore.uploadCoverPicture(detail)}
+    on:file={({ detail }) => UpdatesStore.createCoverPictureUpdate(detail)}
     {photoData}
     {uiData} />
 {:else if showProfileModal}
@@ -262,6 +275,8 @@
     </div>
   {:else if tabName === tabs[1].name}
     <ProfilePicturesTab />
+  {:else if tabName === tabs[2].name}
+    <CoverPicturesTab />
   {:else if tabName === tabs[3].name}
     {#each updatesData.gallery as photo, index}
       <PhotoUpdateCard

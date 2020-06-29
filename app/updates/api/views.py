@@ -14,12 +14,14 @@ from models.models import Photo
 from updates.models import (
     MeasuresUpdate,
     PhotosUpdate,
-    ProfilePictureUpdate
+    ProfilePictureUpdate,
+    CoverPictureUpdate
 )
 from updates.api.serializers import (
     MeasuresUpdateSerializer,
     PhotosUpdateSerializer,
-    ProfilePictureUpdateSerializer
+    ProfilePictureUpdateSerializer,
+    CoverPictureUpdateSerializer
 )
 
 MAX_GALLERY_UPLOAD_COUNT = 8
@@ -121,7 +123,7 @@ class MeasuresUpdateAPIView(APIView):
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
-def get_or_create_gallery(request):
+def get_or_create_gallery_update(request):
     model_id = request.user.model.id
 
     if request.method == 'GET':
@@ -278,7 +280,7 @@ def updateGallery(request, id):
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
-def get_or_create_profile_photo_update(request):
+def get_or_create_profile_picture_update(request):
     model_id = request.user.model.id
 
     if request.method == 'GET':
@@ -354,6 +356,92 @@ class ProfilePictureUpdateAPIView(APIView):
         send_mail(
             f'User {request.user.email} deleted his update',
             'Delete request for profile photo update',
+            request.user.email,
+            [settings.EMAIL_HOST_USER],
+            fail_silently=False,
+        )
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def get_or_create_cover_picture_update(request):
+    model_id = request.user.model.id
+
+    if request.method == 'GET':
+        profile_update = CoverPictureUpdate.objects.filter(model=model_id)
+        serializer = CoverPictureUpdateSerializer(profile_update, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        data = {'image': request.data.get('image', None), 'model': model_id}
+        serializer = CoverPictureUpdateSerializer(data=data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+        return Response(serializer.data)
+
+
+class CoverPictureUpdateAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, pk):
+        try:
+            return CoverPictureUpdate.objects.get(pk=pk, model=self.request.user.model.id)
+        except CoverPictureUpdate.DoesNotExist:
+            raise Http404
+
+    def put(self, request, update_id):
+        photo_update = self.get_object(update_id)
+
+        if photo_update.accept:
+            # this update has already been accepted and will be deleted
+            # in the next 24h so the user should not be able to change it
+            res = {
+                "image": ["this update has already been accepted and will be deleted in the next 24h."]
+            }
+            return Response(res, status=status.HTTP_400_BAD_REQUEST)
+
+        if not photo_update.decline:
+            # Update permission is only allowed if it hasn't been 24 hours
+            # but if the request was delined the user can update the request again
+            now = dt.datetime.now(dt.timezone.utc)
+            upload_date = photo_update.timestamp
+            days = (now - upload_date).days
+
+            if days != 0:
+                res = {
+                    "image": ["You can only update within the first 24 hours."]
+                }
+                return Response(res, status=status.HTTP_400_BAD_REQUEST)
+
+        # Only update the image field
+        data = {
+            'image': request.data.get('image'),
+        }
+
+        serializer = CoverPictureUpdateSerializer(
+            photo_update, data=data, partial=True)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        PhotoSerializer.delete_old_image(photo_update.image)
+
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request, update_id):
+        photo_update = self.get_object(pk=update_id)
+
+        photo_update.delete()
+
+        # Send Email to admin
+        # TODO(karim): Update this email
+        send_mail(
+            f'User {request.user.email} deleted his update',
+            'Delete request for cover photo update',
             request.user.email,
             [settings.EMAIL_HOST_USER],
             fail_silently=False,

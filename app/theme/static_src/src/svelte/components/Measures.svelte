@@ -18,7 +18,7 @@
   $: uiData = $uiStore;
   $: updatesData = $UpdatesStore;
 
-  let tabs = [{ name: "Base", show: true }, { name: "Updates", show: false }];
+  let tabs = [{ name: "Base" }, { name: "Updates" }];
   let tabName = tabs[0].name;
 
   const onValueChanged = ({ detail }) => {
@@ -75,12 +75,6 @@
   const removeUpdateRequest = async () => {
     await UpdatesStore.deleteMeasuresUpdate(measures.id);
 
-    // Only show the updates tab when we have updates
-    if (Object.keys(updatesData.measures).length === 0) {
-      tabs = [tabs[0], { ...tabs[1], show: false }];
-      currentTab = 0;
-    }
-
     // Show a success message
     window.scrollTo(0, 0);
     if (uiData.success) {
@@ -94,13 +88,7 @@
   onMount(async () => {
     // Get user updates
     if (Object.keys(updatesData.measures).length === 0) {
-      await UpdatesStore.getMeasuresUpdate(measures.id);
-    }
-
-    // Only show the updates tab when we have updates
-    if (Object.keys(updatesData.measures).length !== 0) {
-      tabs[1] = { ...tabs[1], show: true };
-      tabs = tabs;
+      UpdatesStore.getMeasuresUpdate(measures.id);
     }
   });
 

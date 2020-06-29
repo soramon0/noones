@@ -74,26 +74,6 @@ def me(request):
     return Response(res)
 
 
-class ListPorfilePictures(generics.ListAPIView):
-    serializer_class = ProfilePictureSerializer
-    permission_classes = [IsAuthenticated]
-    pagination_class = CreatedAtPaginator
-
-    def get_queryset(self):
-        return ProfilePicture.objects.filter(model=self.request.user.model.id)
-
-    def list(self, request):
-        queryset = self.filter_queryset(self.get_queryset())
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
-
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def mark_as_profile_picture(request, picture_id):
@@ -121,6 +101,26 @@ def mark_as_profile_picture(request, picture_id):
         raise Http404
 
 
+class ListPorfilePictures(generics.ListAPIView):
+    serializer_class = ProfilePictureSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = CreatedAtPaginator
+
+    def get_queryset(self):
+        return ProfilePicture.objects.filter(model=self.request.user.model.id)
+
+    def list(self, request):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
 class ProfilePictureAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -144,6 +144,33 @@ class ProfilePictureAPIView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def mark_as_cover_picture(request, picture_id):
+    model_id = request.user.model.id
+
+    try:
+        objs = [
+            CoverPicture.objects.get(pk=picture_id, model=model_id),
+            CoverPicture.objects.get(model=model_id, inUse=True)
+        ]
+
+        if objs[0].id == objs[1].id:
+            res = {
+                "coverPicture": ["Picture is already marked."]
+            }
+            return Response(res, status=status.HTTP_400_BAD_REQUEST)
+
+        objs[0].inUse = True
+        objs[1].inUse = False
+
+        CoverPicture.objects.bulk_update(objs, ['inUse'])
+
+        return Response()
+    except CoverPicture.DoesNotExist:
+        raise Http404
+
+
 class ListCoverPictures(generics.ListAPIView):
     serializer_class = CoverPictureSerializer
     permission_classes = [IsAuthenticated]
@@ -162,3 +189,26 @@ class ListCoverPictures(generics.ListAPIView):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+
+class CoverPictureAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, pk):
+        try:
+            return CoverPicture.objects.get(pk=pk, model=self.request.user.model.id)
+        except CoverPicture.DoesNotExist:
+            raise Http404
+
+    def delete(self, request, picture_id):
+        picture = self.get_object(picture_id)
+
+        if picture.inUse:
+            res = {
+                "coverPicture": ["Can not delete current used cover picture."]
+            }
+            return Response(res, status=status.HTTP_400_BAD_REQUEST)
+
+        picture.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)

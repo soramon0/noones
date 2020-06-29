@@ -1,9 +1,22 @@
 from django.contrib import admin
 
-from .models import MeasuresUpdate, PhotosUpdate, ProfilePictureUpdate
+from .models import (
+    MeasuresUpdate,
+    PhotosUpdate,
+    ProfilePictureUpdate,
+    CoverPictureUpdate
+)
 
 
 class ProfilePictureUpdateAdmin(admin.ModelAdmin):
+    list_display = ['id', 'model', 'timestamp']
+    list_display_links = ['id']
+    list_filter = ['timestamp', 'accept', 'decline']
+    date_hierarchy = 'timestamp'
+    list_per_page = 24
+
+
+class CoverPictureUpdateAdmin(admin.ModelAdmin):
     list_display = ['id', 'model', 'timestamp']
     list_display_links = ['id']
     list_filter = ['timestamp', 'accept', 'decline']
@@ -30,5 +43,6 @@ class PhotosUpdateAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ProfilePictureUpdate, ProfilePictureUpdateAdmin)
+admin.site.register(CoverPictureUpdate, CoverPictureUpdateAdmin)
 admin.site.register(MeasuresUpdate, MeasuresUpdateAdmin)
 admin.site.register(PhotosUpdate, PhotosUpdateAdmin)
