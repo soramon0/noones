@@ -16,7 +16,7 @@ from .models import Model, Mensuration, Photo, Contact
 import json
 
 
-def models(request):
+def list_models(request):
     # TODO(karim): check for is_public
     models = Model.objects.all()[:12]
 
@@ -28,7 +28,7 @@ def models(request):
     return render(request, 'models/index.html', context)
 
 
-def model(request, id):
+def detail_model(request, id):
     model = Model.objects.get(pk=id)
 
     context = {
@@ -49,8 +49,9 @@ def model(request, id):
 
     return render(request, 'models/model.html', context)
 
+
 @api_view(['POST'])
-def contact(request):
+def model_contact(request):
     form = ModelContactForm(request.data)
 
     if not form.is_valid():
@@ -59,7 +60,7 @@ def contact(request):
     model_id = form.cleaned_data.get('model_id')
     model_nom = form.cleaned_data.get('model_nom')
     email = form.cleaned_data.get('email')
-    phone = form.cleaned_data.get('phone') 
+    phone = form.cleaned_data.get('phone')
 
     try:
         model = Model.objects.get(pk=model_id)
@@ -84,7 +85,8 @@ def contact(request):
     return Response({'message': "Thanks! We'll get back to you soon."})
 
 
-def subset(request):
+def model_paginated(request):
+    # TODO(karim): Refactor this to use rest framework
     try:
         start = int(request.GET.get('start', 0))
         count = int(request.GET.get('count', 12))
@@ -98,7 +100,7 @@ def subset(request):
     return JsonResponse({'models': models})
 
 
-def search(request):
+def model_search(request):
     form = SearchForm(request.GET)
 
     if not form.is_valid():

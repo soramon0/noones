@@ -10,7 +10,7 @@ urlpatterns = [
     path('photos/gallery/', views.get_or_create_gallery_update),
     path('photos/gallery/<int:update_id>/',
          views.GalleryUpdateAPIView.as_view()),
-    path('photos/gallery/related_photo/<int:id>/', views.updateGallery),
+    path('photos/gallery/related_photo/<int:id>/', views.update_gallery),
     path('photos/profile/', views.get_or_create_profile_picture_update),
     path('photos/profile/<int:update_id>/',
          views.ProfilePictureUpdateAPIView.as_view()),

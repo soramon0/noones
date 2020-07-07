@@ -1,8 +1,0 @@
-Django==3.0.7
-django-seed==0.2.2
-django-tailwind==0.6.1
-djangorestframework==3.11.0
-Faker==4.0.0
-psycopg2==2.8.5
-Pillow==7.0.0
-sentry-sdk==0.14.1

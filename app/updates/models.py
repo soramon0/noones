@@ -41,7 +41,7 @@ class PhotosUpdate(models.Model):
         verbose_name_plural = "Gallery Updates"
 
     def __str__(self):
-        return str(self.image)
+        return self.image.url
 
 
 class ProfilePictureUpdate(models.Model):
@@ -56,7 +56,7 @@ class ProfilePictureUpdate(models.Model):
         verbose_name_plural = "Profile Picture Updates"
 
     def __str__(self):
-        return str(self.image)
+        return self.image.url
 
 
 class CoverPictureUpdate(models.Model):
@@ -71,4 +71,4 @@ class CoverPictureUpdate(models.Model):
         verbose_name_plural = "Cover Picture Updates"
 
     def __str__(self):
-        return str(self.image)
+        return self.image.url

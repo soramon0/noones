@@ -11,33 +11,43 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
-
-sentry_sdk.init(
-    dsn="https://969f1f4da12e4dc5b8bdf1418d5464ad@sentry.io/2134391",
-    integrations=[DjangoIntegration()],
-    send_default_pii=True
-)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+DEBUG = int(os.environ.get("DEBUG", default=0))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'uh-4vnm$%b*$t6fe8829gm8&(!g=cx8#otb3v9#cej^j-%hj&^'
+# 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
+# For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if not DEBUG:
+    # Setting up sentry in production
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
 
-ALLOWED_HOSTS = ["*"]
+    sentry_sdk.init(
+        dsn="https://969f1f4da12e4dc5b8bdf1418d5464ad@sentry.io/2134391",
+        integrations=[DjangoIntegration()],
+        send_default_pii=True
+    )
 
+    # Reading docker-compose secret files for production
+    with open('/run/secrets/SECRET_KEY', 'r') as f:
+        os.environ['SECRET_KEY'] = f.readline()
+
+    with open('/run/secrets/DJANGO_ALLOWED_HOSTS', 'r') as f:
+        os.environ['DJANGO_ALLOWED_HOSTS'] = f.readline()
+
+    with open('/run/secrets/POSTGRES_PASSWORD', 'r') as f:
+        os.environ['POSTGRES_PASSWORD'] = f.readline()
+
+    with open('/run/secrets/POSTGRES_USER', 'r') as f:
+        os.environ['POSTGRES_USER'] = f.readline()
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -45,17 +55,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_seed',
     'rest_framework',
     'rest_framework.authtoken',
-    'tailwind',
     'pages',
     'core',
-    'models.apps.ModelsConfig',
     'accounts',
     'theme',
+    'models.apps.ModelsConfig',
     'updates.apps.UpdatesConfig',
 ]
+
+if DEBUG:
+    INSTALLED_APPS.append('django_seed')
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -153,18 +165,12 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-# Tailwind
-TAILWIND_APP_NAME = 'theme'
-NPM_BIN_PATH = '/usr/local/bin/npm'
-
-# Reading docker-compose secret files for dev
-if DEBUG:
-    with open('/run/secrets/email_user', 'r') as f:
-        os.environ['EMAIL_USER'] = f.readline()
-    with open('/run/secrets/email_pass', 'r') as f:
-        os.environ['EMAIL_PASS'] = f.readline()
-
 # EMAIL
+with open('/run/secrets/email_user', 'r') as f:
+    os.environ['EMAIL_USER'] = f.readline()
+with open('/run/secrets/email_pass', 'r') as f:
+    os.environ['EMAIL_PASS'] = f.readline()
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587

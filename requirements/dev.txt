@@ -1,0 +1,3 @@
+-r common.txt
+django-seed==0.2.2
+Faker==4.0.0

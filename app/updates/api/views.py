@@ -1,5 +1,3 @@
-import datetime as dt
-
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -8,6 +6,7 @@ from rest_framework.views import APIView
 from django.http import Http404
 from django.core.mail import send_mail
 from django.conf import settings
+from django.utils import timezone
 
 from models.api.serializers import PhotoSerializer
 from models.models import Photo
@@ -20,6 +19,7 @@ from updates.models import (
 from updates.api.serializers import (
     MeasuresUpdateSerializer,
     PhotosUpdateSerializer,
+    PhotosUpdateResterSerializer,
     ProfilePictureUpdateSerializer,
     CoverPictureUpdateSerializer
 )
@@ -85,7 +85,7 @@ class MeasuresUpdateAPIView(APIView):
         if not measures_update.decline:
             # Update permission is only allowed if it hasn't been 24 hours
             # but if the request was delined the user can update the request again
-            now = dt.datetime.now(dt.timezone.utc)
+            now = timezone.now()
             upload_date = measures_update.timestamp
             days = (now - upload_date).days
 
@@ -197,7 +197,7 @@ class GalleryUpdateAPIView(APIView):
         if not photo_update.decline:
             # Update permission is only allowed if it hasn't been 24 hours
             # but if the request was delined the user can update the request again
-            now = dt.datetime.now(dt.timezone.utc)
+            now = timezone.now()
             upload_date = photo_update.timestamp
             days = (now - upload_date).days
 
@@ -242,39 +242,50 @@ class GalleryUpdateAPIView(APIView):
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-def updateGallery(request, id):
+def update_gallery(request, id):
     model_id = request.user.model.id
 
     # TODO(karim): improve this api call to modify an update if it exists
     # or create a new one
     data = {
-        'model': model_id,
         'image': request.data.get('image', None),
-        'related_photo': id
     }
     try:
         photo_update = PhotosUpdate.objects.filter(
             related_photo=id, model=model_id).get()
 
-        serializer = PhotosUpdateSerializer(data=data)
+        # get a refrence to the old image to compare against later
+        old_image = photo_update.image
+
+        serializer = PhotosUpdateResterSerializer(
+            photo_update, data=data, partial=True)
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        photo_update.delete()
-
         serializer.save()
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # check that the old image is not refrenced anymore
+        # by the update or the gallery
+        if old_image.path != photo_update.related_photo.image.path and old_image.path != photo_update.image.path:
+            PhotoSerializer.delete_old_image(old_image)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     except PhotosUpdate.DoesNotExist:
         if not Photo.objects.filter(pk=id, model=model_id).exists():
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+        data['model'] = model_id
+        data['related_photo'] = id
+
         serializer = PhotosUpdateSerializer(data=data)
+
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         serializer.save()
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -321,7 +332,7 @@ class ProfilePictureUpdateAPIView(APIView):
         if not photo_update.decline:
             # Update permission is only allowed if it hasn't been 24 hours
             # but if the request was delined the user can update the request again
-            now = dt.datetime.now(dt.timezone.utc)
+            now = timezone.now()
             upload_date = photo_update.timestamp
             days = (now - upload_date).days
 
@@ -407,7 +418,7 @@ class CoverPictureUpdateAPIView(APIView):
         if not photo_update.decline:
             # Update permission is only allowed if it hasn't been 24 hours
             # but if the request was delined the user can update the request again
-            now = dt.datetime.now(dt.timezone.utc)
+            now = timezone.now()
             upload_date = photo_update.timestamp
             days = (now - upload_date).days
 

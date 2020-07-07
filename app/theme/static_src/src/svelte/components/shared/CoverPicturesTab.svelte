@@ -61,7 +61,7 @@
         on:mark={({ detail }) => PhotoStore.markCoverPicture(detail, i)}
         on:delete={({ detail }) => PhotoStore.deleteCoverPicture(detail)} />
     {:else}
-      <p transition:fade class="mt-4 text-gray-600">No profile pictures.</p>
+      <p transition:fade class="mt-4 text-gray-600">No cover pictures.</p>
     {/each}
   </div>
   <div class="fetch h-10" />
