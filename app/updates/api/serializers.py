@@ -24,7 +24,7 @@ class MeasuresUpdateSerializer(serializers.ModelSerializer):
             # by setting decline to None and removing the previous
             # message the next time a user makes a new update request
             instance.decline = None
-            instance.timestamp = timezone.now()
+            instance.created_at = timezone.now()
             instance.message = ""
         return super().update(instance, validated_data)
 
@@ -44,7 +44,7 @@ class PhotosUpdateSerializer(serializers.ModelSerializer):
             # by setting decline to None and removing the previous
             # message the next time a user makes a new update request
             instance.decline = None
-            instance.timestamp = timezone.now()
+            instance.created_at = timezone.now()
             instance.message = ""
         return super().update(instance, validated_data)
 
@@ -53,14 +53,14 @@ class PhotosUpdateResterSerializer(serializers.ModelSerializer):
     class Meta:
         model = PhotosUpdate
         fields = ('id', 'image', 'model', 'accept',
-                  'decline', 'message', 'related_photo', 'timestamp')
+                  'decline', 'message', 'related_photo', 'created_at')
         read_only_fields = ('id',)
 
     def update(self, instance, validated_data):
         # This serializer is only used to update a gallery image
         # and when we update it we always want to reset these fields
         # NOTE(karim): never use this serializer to create updates
-        instance.timestamp = timezone.now()
+        instance.created_at = timezone.now()
         instance.accept = None
         instance.decline = None
         instance.message = ''
@@ -81,7 +81,7 @@ class ProfilePictureUpdateSerializer(serializers.ModelSerializer):
             # by setting decline to None and removing the previous
             # message the next time a user makes a new update request
             instance.decline = None
-            instance.timestamp = timezone.now()
+            instance.created_at = timezone.now()
             instance.message = ""
         return super().update(instance, validated_data)
 
@@ -100,6 +100,6 @@ class CoverPictureUpdateSerializer(serializers.ModelSerializer):
             # by setting decline to None and removing the previous
             # message the next time a user makes a new update request
             instance.decline = None
-            instance.timestamp = timezone.now()
+            instance.created_at = timezone.now()
             instance.message = ""
         return super().update(instance, validated_data)

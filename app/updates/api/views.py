@@ -86,7 +86,7 @@ class MeasuresUpdateAPIView(APIView):
             # Update permission is only allowed if it hasn't been 24 hours
             # but if the request was delined the user can update the request again
             now = timezone.now()
-            upload_date = measures_update.timestamp
+            upload_date = measures_update.created_at
             days = (now - upload_date).days
 
             if days != 0:
@@ -198,7 +198,7 @@ class GalleryUpdateAPIView(APIView):
             # Update permission is only allowed if it hasn't been 24 hours
             # but if the request was delined the user can update the request again
             now = timezone.now()
-            upload_date = photo_update.timestamp
+            upload_date = photo_update.created_at
             days = (now - upload_date).days
 
             if days != 0:
@@ -333,7 +333,7 @@ class ProfilePictureUpdateAPIView(APIView):
             # Update permission is only allowed if it hasn't been 24 hours
             # but if the request was delined the user can update the request again
             now = timezone.now()
-            upload_date = photo_update.timestamp
+            upload_date = photo_update.created_at
             days = (now - upload_date).days
 
             if days != 0:
@@ -419,7 +419,7 @@ class CoverPictureUpdateAPIView(APIView):
             # Update permission is only allowed if it hasn't been 24 hours
             # but if the request was delined the user can update the request again
             now = timezone.now()
-            upload_date = photo_update.timestamp
+            upload_date = photo_update.created_at
             days = (now - upload_date).days
 
             if days != 0:

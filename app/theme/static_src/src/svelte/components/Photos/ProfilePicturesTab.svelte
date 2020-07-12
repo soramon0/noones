@@ -4,11 +4,11 @@
   import PhotoStore from "../../store/photo";
   import UIStore from "../../store/ui";
   import UpdatesStore from "../../store/updates";
-  import ErrorNotifier from "./ErrorNotifier";
+  import ErrorNotifier from "../shared/ErrorNotifier";
+  import PopupErrorNotifier from "../shared/PopupErrorNotifier";
   import PhotoUpdateCard from "./PhotoUpdateCard";
   import PhotoCard from "./PhotoCard";
-  import ToggleButton from "./ToggleButton";
-  import PopupErrorNotifier from "./PopupErrorNotifier";
+  import ToggleButton from "../shared/ToggleButton";
 
   $: photoData = $PhotoStore;
   $: uiData = $UIStore;
@@ -49,31 +49,30 @@
 
 <PopupErrorNotifier
   errors={photoData.errors}
-  errorKey="coverPicture"
+  errorKey="profilePicture"
   on:clearErrors={PhotoStore.clearErrors} />
 
 {#if !showUpdates}
   <div transition:fade class="mt-2 flex flex-wrap">
-    {#each photoData.cover.data as photo, i}
+    {#each photoData.profile.data as photo, i}
       <PhotoCard
-        markText="Mark as Cover Picture"
         {photo}
-        on:mark={({ detail }) => PhotoStore.markCoverPicture(detail, i)}
-        on:delete={({ detail }) => PhotoStore.deleteCoverPicture(detail)} />
+        on:mark={({ detail }) => PhotoStore.markProfilePicture(detail, i)}
+        on:delete={({ detail }) => PhotoStore.deleteProfilePicture(detail)} />
     {:else}
-      <p transition:fade class="mt-4 text-gray-600">No cover pictures.</p>
+      <p transition:fade class="mt-4 text-gray-600">No profile pictures.</p>
     {/each}
   </div>
   <div class="fetch h-10" />
 {:else}
-  {#each updatesData.coverPictures as photo, index}
+  {#each updatesData.profilePictures as photo, index}
     <PhotoUpdateCard
       {photo}
       {index}
       fetching={uiData.fetching}
-      on:update={({ detail: { file, photoId } }) => UpdatesStore.modifyCoverPictureUpdate(file, photoId)}
-      on:delete={({ detail }) => UpdatesStore.deleteCoverPictureUpdate(detail)}
-      on:clearErrors={UpdatesStore.clearCoverPictureErrors.bind(this, index)} />
+      on:update={({ detail: { file, photoId } }) => UpdatesStore.modifyProfilePictureUpdate(file, photoId)}
+      on:delete={({ detail }) => UpdatesStore.deleteProfilePictureUpdate(detail)}
+      on:clearErrors={UpdatesStore.clearProfilePictureErrors.bind(this, index)} />
   {:else}
     <p class="mt-4 text-gray-600">No Updates.</p>
   {/each}

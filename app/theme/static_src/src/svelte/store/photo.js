@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 import http from "../../main/http";
 import UIStore from "./ui";
-import UserStore from "./main";
+import UserStore from "./user";
 
 const { subscribe, set, update } = writable({
   photos: [],

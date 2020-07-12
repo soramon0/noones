@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
 from django.http.request import RawPostDataException
@@ -12,7 +12,14 @@ from rest_framework import status
 
 from pages.forms import SearchForm
 from .forms import ModelContactForm
-from .models import Model, Mensuration, Photo, Contact
+from .models import (
+    Model,
+    Mensuration,
+    Photo,
+    Contact,
+    ProfilePicture,
+    CoverPicture
+)
 import json
 
 
@@ -29,23 +36,39 @@ def list_models(request):
 
 
 def detail_model(request, id):
-    model = Model.objects.get(pk=id)
+    fields = ['first_name', 'last_name', 'country', 'city', 'bio', 'measures']
+    queryset = Model.objects.only(*fields)
+    model = get_object_or_404(queryset, pk=id)
 
     context = {
         'model': model,
-        'mensures': model.measures,
-        'photos': [],
+        'measures': model.measures,
         'form': ModelContactForm(initial={
             'model_id': model.id,
-            'model_nom': f'{model.first_name} {model.last_name}',
+            'model_full_name': f'{model.first_name} {model.last_name}',
         })
     }
 
     try:
-        photos = Photo.objects.filter(model_id=model.id)
+        photos = Photo.objects.only('image').filter(model_id=model.id)
         context['photos'] = photos
     except Photo.DoesNotExist:
-        return render(request, 'models/model.html', context)
+        context['photos'] = []
+
+    try:
+        profile_picture = ProfilePicture.objects.only('image').get(
+            model=model.id, inUse=True)
+
+        context['profile'] = profile_picture.image.url
+    except ProfilePicture.DoesNotExist:
+        context['profile'] = None
+
+    try:
+        cover_picture = CoverPicture.objects.only('image').get(
+            model=model.id, inUse=True)
+        context['cover'] = cover_picture.image.url
+    except CoverPicture.DoesNotExist:
+        context['cover'] = None
 
     return render(request, 'models/model.html', context)
 
@@ -58,29 +81,28 @@ def model_contact(request):
         return Response({'errors': form.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     model_id = form.cleaned_data.get('model_id')
-    model_nom = form.cleaned_data.get('model_nom')
+    model_full_name = form.cleaned_data.get('model_full_name')
+    full_name = form.cleaned_data.get('full_name')
     email = form.cleaned_data.get('email')
     phone = form.cleaned_data.get('phone')
 
     try:
-        model = Model.objects.get(pk=model_id)
+        model = Model.objects.only('user').get(pk=model_id)
         model_email = model.user.email
     except Model.DoesNotExist:
-        error = {'errors': {'model_nom': ['model do not exist']}}
+        error = {'errors': {'model_full_name': ['model do not exist']}}
         return Response(error, status=status.HTTP_400_BAD_REQUEST)
+
+    Contact.objects.create(model=model, model_full_name=model_full_name, full_name=full_name,
+                           model_email=model_email, email=email, phone=phone)
 
     send_mail(
         f'Contact Request for {model_email}',
-        f'Client {email} {phone} wants to contact {model_email}',
+        f'Client {full_name} at {email} - {phone} wants to contact {model_email}',
         email,
         [settings.EMAIL_HOST_USER],
         fail_silently=False,
     )
-
-    # TODO(karim): Send email to admin
-    contact = Contact(model_id=model_id, model_nom=model_nom,
-                      model_email=model_email, email=email, phone=phone)
-    contact.save()
 
     return Response({'message': "Thanks! We'll get back to you soon."})
 

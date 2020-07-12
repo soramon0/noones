@@ -1,27 +1,27 @@
 <script>
-  import userStore from "../store/main";
-  import uiStore from "../store/ui";
-  import Breadcrumb from "./shared/Breadcrumb";
-  import Card from "./shared/Card";
-  import FormInput from "./shared/FormInput";
-  import SuccessNotifier from "./shared/SuccessNotifier";
-  import UpdateButton from "./shared/UpdateButton";
+  import UserStore from "../../store/user";
+  import UIStore from "../../store/ui";
+  import Breadcrumb from "../shared/Breadcrumb";
+  import Card from "../shared/Card";
+  import FormInput from "../shared/FormInput";
+  import SuccessNotifier from "../shared/SuccessNotifier";
+  import UpdateButton from "../shared/UpdateButton";
 
   export let model;
   export let errors;
 
-  $: uiData = $uiStore;
+  $: UIData = $UIStore;
 
   const onValueChanged = ({ detail }) => {
     model[detail.name] = detail.value;
   };
 
   const handleSubmit = async () => {
-    await userStore.updateModel(model);
+    await UserStore.updateModel(model);
 
     // Show a success message
     window.scrollTo(0, 0);
-    if (uiData.success) {
+    if (UIData.success) {
       // Hide the success message after 2 seconds
       setTimeout(() => {
         uiStore.setFeedbackModal(false);
@@ -123,7 +123,7 @@
       </div>
     </div>
     <div class="text-right mt-2 sm:mt-4">
-      <UpdateButton fetching={uiData.fetching} />
+      <UpdateButton fetching={UIData.fetching} />
     </div>
   </form>
 </Card>

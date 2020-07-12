@@ -12,8 +12,6 @@
     errors = {};
     dispatch("clearErrors");
   };
-
-  $: console.log(errors, errorKey, errors.hasOwnProperty(errorKey));
 </script>
 
 {#if errors.hasOwnProperty(errorKey)}

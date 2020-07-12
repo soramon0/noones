@@ -1,17 +1,17 @@
 <script>
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
-  import userStore from "../store/main";
-  import uiStore from "../store/ui";
-  import UpdatesStore from "../store/updates";
-  import Card from "./shared/Card";
-  import FormInput from "./shared/FormInput";
-  import UpdateButton from "./shared/UpdateButton";
-  import CancelButton from "./shared/CancelButton";
-  import SuccessNotifier from "./shared/SuccessNotifier";
-  import ErrorNotifier from "./shared/ErrorNotifier";
-  import TabView from "./shared/TabView";
-  import Breadcrumb from "./shared/Breadcrumb";
+  import userStore from "../../store/user";
+  import uiStore from "../../store/ui";
+  import UpdatesStore from "../../store/updates";
+  import Card from "../shared/Card";
+  import FormInput from "../shared/FormInput";
+  import UpdateButton from "../shared/UpdateButton";
+  import CancelButton from "../shared/CancelButton";
+  import SuccessNotifier from "../shared/SuccessNotifier";
+  import ErrorNotifier from "../shared/ErrorNotifier";
+  import TabView from "../shared/TabView";
+  import Breadcrumb from "../shared/Breadcrumb";
 
   export let measures;
 

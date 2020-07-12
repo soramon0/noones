@@ -68,6 +68,7 @@ class Model(models.Model):
     cin = models.CharField(max_length=100)
     is_public = models.BooleanField(default=False)
     highlight = models.BooleanField(default=False)
+    # created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL,
                                 on_delete=models.CASCADE)
     measures = models.OneToOneField(
@@ -86,7 +87,7 @@ class Model(models.Model):
 class ProfilePicture(models.Model):
     image = models.ImageField(upload_to='photos/%Y/%m/%d')
     inUse = models.BooleanField(default=False)
-    createdAt = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     model = models.ForeignKey(Model,
                               on_delete=models.CASCADE)
 
@@ -97,7 +98,7 @@ class ProfilePicture(models.Model):
 class CoverPicture(models.Model):
     image = models.ImageField(upload_to='photos/%Y/%m/%d')
     inUse = models.BooleanField(default=False)
-    createdAt = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     model = models.ForeignKey(Model,
                               on_delete=models.CASCADE)
 
@@ -116,11 +117,15 @@ class Photo(models.Model):
 
 
 class Contact(models.Model):
-    model_id = models.UUIDField()
-    model_nom = models.CharField(max_length=100)
+    model = models.ForeignKey(
+        Model,
+        on_delete=models.CASCADE,
+    )
+    model_full_name = models.CharField(max_length=100)
     model_email = models.EmailField(max_length=255)
+    full_name = models.CharField(max_length=100)
     email = models.EmailField(max_length=255)
     phone = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.model_nom
+        return self.model_full_name

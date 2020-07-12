@@ -1,8 +1,8 @@
 <script>
   import { scale } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
-  import SaveButton from "./SaveButton";
-  import CancelButton from "./CancelButton";
+  import SaveButton from "../shared/SaveButton";
+  import CancelButton from "../shared/CancelButton";
 
   export let photo;
   export let markText = "Mark as Profile Picture";

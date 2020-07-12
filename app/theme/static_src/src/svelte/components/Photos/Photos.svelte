@@ -1,18 +1,18 @@
 <script>
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
-  import PhotoStore from "../store/photo";
-  import UIStore from "../store/ui";
-  import UpdatesStore from "../store/updates";
-  import SaveButton from "./shared/SaveButton";
-  import SuccessNotifier from "./shared/SuccessNotifier";
-  import ErrorNotifier from "./shared/ErrorNotifier";
-  import UploadModal from "./shared/UploadModal";
-  import ChangeGalleryPicture from "./shared/ChangeGalleryPicture";
-  import TabView from "./shared/TabView";
-  import PhotoUpdateCard from "./shared/PhotoUpdateCard";
-  import ProfilePicturesTab from "./shared/ProfilePicturesTab";
-  import CoverPicturesTab from "./shared/CoverPicturesTab";
+  import PhotoStore from "../../store/photo";
+  import UIStore from "../../store/ui";
+  import UpdatesStore from "../../store/updates";
+  import SaveButton from "../shared/SaveButton";
+  import TabView from "../shared/TabView";
+  import SuccessNotifier from "../shared/SuccessNotifier";
+  import ErrorNotifier from "../shared/ErrorNotifier";
+  import UploadModal from "../shared/UploadModal";
+  import ChangeGalleryPicture from "./ChangeGalleryPicture";
+  import PhotoUpdateCard from "./PhotoUpdateCard";
+  import ProfilePicturesTab from "./ProfilePicturesTab";
+  import CoverPicturesTab from "./CoverPicturesTab";
 
   export let profilePicture;
   export let coverPicture;

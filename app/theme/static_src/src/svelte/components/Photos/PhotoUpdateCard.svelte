@@ -1,11 +1,11 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import { fly, fade } from "svelte/transition";
-  import SaveButton from "./SaveButton";
-  import UpdateButton from "./UpdateButton";
-  import CancelButton from "./CancelButton";
-  import SuccessNotifier from "./SuccessNotifier";
-  import ErrorNotifier from "./ErrorNotifier";
+  import SaveButton from "../shared/SaveButton";
+  import UpdateButton from "../shared/UpdateButton";
+  import CancelButton from "../shared/CancelButton";
+  import SuccessNotifier from "../shared/SuccessNotifier";
+  import ErrorNotifier from "../shared/ErrorNotifier";
   import ChangeGalleryPicture from "./ChangeGalleryPicture";
 
   export let photo;

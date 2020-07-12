@@ -16,7 +16,7 @@ function toggleModal() {
     modal.classList.remove('scale-0');
     modal.classList.remove('opacity-0');
   } else {
-    modal.classList.add('opacity-0')
+    modal.classList.add('opacity-0');
     modal.classList.add('scale-0');
     backdrop.classList.add('hidden');
   }
@@ -25,34 +25,34 @@ function toggleModal() {
 function updateUIWithErrors(errors) {
   // Loop through all modal error containers
   // and append error message
-  errorContainers.forEach(errorContainer => {
+  errorContainers.forEach((errorContainer) => {
     // unhide the error container
-    errorContainer.classList.remove('hidden')
+    errorContainer.classList.remove('hidden');
 
     // // get error field from errors object by key
-    const inputName = errorContainer.dataset.inputName
-    const errorMessages = errors[inputName]
+    const inputName = errorContainer.dataset.inputName;
+    const errorMessages = errors[inputName];
 
     // if inputName is not in the errors object
     // errorMessages could be undefined
     if (errorMessages) {
-      errorMessages.forEach(msg => {
-        const message = document.createElement('p')
-        message.classList = 'text-sm my-1 text-red-400'
-        message.textContent = msg
+      errorMessages.forEach((msg) => {
+        const message = document.createElement('p');
+        message.classList = 'text-sm my-1 text-red-400';
+        message.textContent = msg;
 
-        errorContainer.appendChild(message)
-      })
+        errorContainer.appendChild(message);
+      });
     }
-  })
+  });
 }
 
 function disableSendingButton(sending) {
   if (sending) {
-    sendContactButton.setAttribute('disabled', true)
+    sendContactButton.setAttribute('disabled', true);
     sendContactButton.textContent = 'sending';
   } else {
-    sendContactButton.removeAttribute('disabled')
+    sendContactButton.removeAttribute('disabled');
     sendContactButton.textContent = 'Contact Us';
   }
 }
@@ -81,24 +81,24 @@ async function sendContactRequest(e) {
 
   const payload = {
     model_id: document.getElementById('id_model_id').value,
-    model_nom: document.getElementById('id_model_nom').value,
+    model_full_name: document.getElementById('id_model_full_name').value,
     email: document.getElementById('id_email').value,
-    phone: document.getElementById('id_phone').value
+    phone: document.getElementById('id_phone').value,
+    full_name: document.getElementById('id_full_name').value,
   };
 
   try {
     const { data } = await fetch.post('models/request', payload);
 
     // tell the user that he's request was successfull
-    showSuccessMessage(data.message)
+    showSuccessMessage(data.message);
 
     // Clear old error messages
-    errorContainers.forEach(errorContainer => {
-      errorContainer.innerHTML = ''
-    })
+    errorContainers.forEach((errorContainer) => {
+      errorContainer.innerHTML = '';
+    });
 
-    disableSendingButton(false)
-
+    disableSendingButton(false);
   } catch ({ response }) {
     disableSendingButton(false);
 

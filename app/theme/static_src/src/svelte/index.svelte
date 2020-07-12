@@ -2,21 +2,21 @@
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
   import { fade } from "svelte/transition";
-  import userStore from "./store/main";
+  import UserStore from "./store/user";
   import Navbar from "./components/layout/Navbar";
   import Sidebar from "./components/layout/Sidebar";
-  import General from "./components/General";
-  import Measures from "./components/Measures";
-  import Photos from "./components/Photos";
-  import Settings from "./components/Settings";
+  import General from "./components/General/General";
+  import Measures from "./components/Measures/Measures";
+  import Photos from "./components/Photos/Photos";
+  import Settings from "./components/Settings/Settings";
   import Spinner from "./components/shared/Spinner";
 
-  let promise = userStore.populate();
+  let promise = UserStore.populate();
 
   let tab = parseInt(localStorage.getItem("current_tab"));
 
   // Subscribe to the store
-  $: userData = $userStore;
+  $: userData = $UserStore;
 
   // check if there's a tab and
   // tab is not greater than the pages we have

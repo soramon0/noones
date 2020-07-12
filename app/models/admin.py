@@ -18,14 +18,14 @@ class ModelAdmin(admin.ModelAdmin):
 
 
 class ProfilePictureAdmin(admin.ModelAdmin):
-    list_display = ('id', 'model', 'image', 'createdAt')
+    list_display = ('id', 'model', 'image')
     list_display_links = ('id',)
     list_filter = ('inUse',)
     list_per_page = 324
 
 
 class CoverPictureAdmin(admin.ModelAdmin):
-    list_display = ('id', 'model', 'image', 'createdAt')
+    list_display = ('id', 'model', 'image')
     list_display_links = ('id',)
     list_filter = ('inUse',)
     list_per_page = 32
@@ -51,8 +51,8 @@ class PhotoAdmin(admin.ModelAdmin):
 
 
 class ContactAdmin(admin.ModelAdmin):
-    list_display = ('id', 'model_nom', 'model_email', 'email', 'phone')
-    list_display_links = ('id', 'model_nom')
+    list_display = ('id', 'model_full_name', 'model_email', 'email', 'phone')
+    list_display_links = ('id', 'model_full_name')
     list_per_page = 24
 
 

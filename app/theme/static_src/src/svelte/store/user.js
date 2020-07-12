@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 import http from "../../main/http";
 import UIStore from "./ui";
-import photosStore from "./photo";
+import PhotosStore from "./photo";
 
 const { subscribe, set, update } = writable({
   model: {},
@@ -21,7 +21,7 @@ export default {
       const { data } = await http.get(`models/me/`);
 
       // create the photos' store
-      photosStore.populate({ photos: data.photos });
+      PhotosStore.populate({ photos: data.photos });
 
       // Shaping the store data
       const { model, measures, profilePicture, coverPicture } = data;

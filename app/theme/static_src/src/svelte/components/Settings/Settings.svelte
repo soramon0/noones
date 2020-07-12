@@ -1,8 +1,8 @@
 <script>
-  import Breadcrumb from "./shared/Breadcrumb";
-  import FormInput from "./shared/FormInput";
-  import UpdateButton from "./shared/UpdateButton";
-  import Card from "./shared/Card";
+  import Breadcrumb from "../shared/Breadcrumb";
+  import FormInput from "../shared/FormInput";
+  import UpdateButton from "../shared/UpdateButton";
+  import Card from "../shared/Card";
 
   export let email;
   let submitted = false;

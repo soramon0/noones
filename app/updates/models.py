@@ -10,12 +10,12 @@ from models.models import (
 
 class MeasuresUpdate(AbstractMensuration):
     # This database table is going to hold the measures update data
-    # temporarily until the admin deleltes it
+    # temporarily until the admin deletes it
     measure = models.OneToOneField(
         Mensuration,
         on_delete=models.CASCADE,
     )
-    timestamp = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     accept = models.BooleanField(null=True, blank=True)
     decline = models.BooleanField(null=True, blank=True)
     message = models.TextField(max_length=500, blank=True, default="")
@@ -32,7 +32,7 @@ class PhotosUpdate(models.Model):
     model = models.ForeignKey(Model, on_delete=models.CASCADE)
     related_photo = models.ForeignKey(
         Photo, null=True, blank=True, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     accept = models.BooleanField(null=True, blank=True)
     decline = models.BooleanField(null=True, blank=True)
     message = models.TextField(max_length=500, blank=True, default="")
@@ -47,7 +47,7 @@ class PhotosUpdate(models.Model):
 class ProfilePictureUpdate(models.Model):
     image = models.ImageField(upload_to='photos/%Y/%m/%d')
     model = models.ForeignKey(Model, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     accept = models.BooleanField(null=True, blank=True)
     decline = models.BooleanField(null=True, blank=True)
     message = models.TextField(max_length=500, blank=True, default="")
@@ -62,7 +62,7 @@ class ProfilePictureUpdate(models.Model):
 class CoverPictureUpdate(models.Model):
     image = models.ImageField(upload_to='photos/%Y/%m/%d')
     model = models.ForeignKey(Model, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     accept = models.BooleanField(null=True, blank=True)
     decline = models.BooleanField(null=True, blank=True)
     message = models.TextField(max_length=500, blank=True, default="")
