@@ -1,4 +1,4 @@
-import { fetch } from './http';
+import http from './http';
 
 const contactButton = document.getElementById('model-contact');
 const backdrop = document.getElementById('model-backdrop');
@@ -88,7 +88,7 @@ async function sendContactRequest(e) {
   };
 
   try {
-    const { data } = await fetch.post('models/request', payload);
+    const { data } = await http.post('models/contact/', payload);
 
     // tell the user that he's request was successfull
     showSuccessMessage(data.message);
@@ -100,10 +100,11 @@ async function sendContactRequest(e) {
 
     disableSendingButton(false);
   } catch ({ response }) {
+    console.log(response);
     disableSendingButton(false);
 
     if (response) {
-      updateUIWithErrors(response.data.errors);
+      updateUIWithErrors(response.data);
     }
   }
 }

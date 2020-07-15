@@ -33,6 +33,14 @@ class MinimalModelSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
 
+class ModelContactSerializer(serializers.Serializer):
+    model_id = serializers.CharField(max_length=100)
+    model_full_name = serializers.CharField(min_length=3, max_length=100)
+    full_name = serializers.CharField(min_length=6, max_length=100,)
+    email = serializers.EmailField(max_length=255)
+    phone = serializers.CharField(min_length=6, max_length=100)
+
+
 class ProfilePictureWithModelSerializer(serializers.ModelSerializer):
     model = MinimalModelSerializer()
 

@@ -48,7 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
     );
     // If we get no data stop fetching
     if (data.next) {
-      next = data.next.split('&')[1].split('=')[1];
+      const url = new URL(data.next);
+      const offset = url.searchParams.get('offset');
+      next = offset;
     } else {
       hasMore = false;
     }

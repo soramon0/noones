@@ -38,7 +38,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const { data } = await http.get(`models/?offset=${nextSet}`);
 
     if (data.next) {
-      next = data.next.split('&')[1].split('=')[1];
+      const url = new URL(data.next);
+      const offset = url.searchParams.get('offset');
+      next = offset;
     } else {
       hasMore = false;
     }

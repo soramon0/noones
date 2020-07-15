@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.ListModels.as_view()),
     path('me/', views.me),
     path('search/', views.SearchModels.as_view()),
+    path('contact/', views.model_contact),
     path('photos/profile/', views.ListPorfilePictures.as_view()),
     path('photos/profile/<int:picture_id>/',
          views.ProfilePictureAPIView.as_view()),

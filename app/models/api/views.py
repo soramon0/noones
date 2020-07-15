@@ -6,6 +6,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from django.http import Http404
+from django.conf import settings
+from django.core.mail import send_mail
+
 
 from core.models import User
 from models.models import (
@@ -13,13 +16,15 @@ from models.models import (
     Mensuration,
     Photo,
     ProfilePicture,
-    CoverPicture
+    CoverPicture,
+    Contact
 )
 from models.api.serializers import (
     ModelSerializer,
+    ModelContactSerializer,
+    ProfilePictureWithModelSerializer,
     UserSerializer,
     MeasuresSerializer,
-    ProfilePictureWithModelSerializer,
     ProfilePictureSerializer,
     CoverPictureSerializer,
     PhotoSerializer,
@@ -75,13 +80,47 @@ def me(request):
     return Response(res)
 
 
+@api_view(['POST'])
+def model_contact(request):
+    serializer = ModelContactSerializer(data=request.data)
+
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    model_id = serializer.data.get('model_id')
+    model_full_name = serializer.data.get('model_full_name')
+    full_name = serializer.data.get('full_name')
+    email = serializer.data.get('email')
+    phone = serializer.data.get('phone')
+
+    try:
+        model = Model.objects.only('user').get(pk=model_id)
+        model_email = model.user.email
+    except Model.DoesNotExist:
+        error = {'errors': {'model_full_name': ['model do not exist']}}
+        return Response(error, status=status.HTTP_400_BAD_REQUEST)
+
+    Contact.objects.create(model=model, model_full_name=model_full_name, full_name=full_name,
+                           model_email=model_email, email=email, phone=phone)
+
+    send_mail(
+        f'Contact Request for {model_email}',
+        f'Client {full_name} at {email} - {phone} wants to contact {model_email}',
+        email,
+        [settings.EMAIL_HOST_USER],
+        fail_silently=False,
+    )
+
+    return Response({'message': "Thanks! We'll get back to you soon."})
+
+
 class ListModels(generics.ListAPIView):
     serializer_class = ProfilePictureWithModelSerializer
 
     def get_queryset(self):
         fields = ['image', 'model__first_name',
                   'model__last_name', 'model__country', 'model__city']
-        return ProfilePicture.objects.filter(inUse=True).select_related('model').only(*fields).all()
+        return ProfilePicture.objects.filter(inUse=True).select_related('model').only(*fields).order_by('-model__created_at')
 
     def list(self, request):
         queryset = self.filter_queryset(self.get_queryset())
