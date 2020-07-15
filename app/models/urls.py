@@ -6,6 +6,5 @@ urlpatterns = [
     path('', views.list_models, name='models'),
     path('<uuid:id>', views.detail_model, name='model'),
     path('request', views.model_contact, name='request'),
-    path('subset', views.model_paginated, name='subset'),
     path('search', views.model_search, name='search'),
 ]

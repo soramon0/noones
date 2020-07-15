@@ -43,7 +43,17 @@
   $: console.log(photoData);
 </script>
 
-<div class="mt-4 mb-2 flex justify-end">
+<div class="mt-4 mb-2 py-4 flex justify-between">
+  {#if !showUpdates}
+    <h2 class="text-xl text-gray-700 font-semibold tracking-wide">
+      Profile Pictures
+    </h2>
+  {:else}
+    <h2 class="text-xl text-gray-700 font-semibold tracking-wide">
+      Profile Updates
+    </h2>
+  {/if}
+
   <ToggleButton bind:toggle={showUpdates} />
 </div>
 

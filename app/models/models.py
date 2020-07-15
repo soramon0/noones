@@ -68,7 +68,7 @@ class Model(models.Model):
     cin = models.CharField(max_length=100)
     is_public = models.BooleanField(default=False)
     highlight = models.BooleanField(default=False)
-    # created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL,
                                 on_delete=models.CASCADE)
     measures = models.OneToOneField(

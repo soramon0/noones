@@ -15,16 +15,17 @@ from models.models import (
     ProfilePicture,
     CoverPicture
 )
-from .serializers import (
+from models.api.serializers import (
     ModelSerializer,
     UserSerializer,
     MeasuresSerializer,
+    ProfilePictureWithModelSerializer,
     ProfilePictureSerializer,
     CoverPictureSerializer,
-    PhotoSerializer
+    PhotoSerializer,
+    SearchSerilaizer
 )
-
-from .pagination import CreatedAtPaginator
+from models.api.pagination import CreatedAtPaginator
 
 
 @api_view(['GET'])
@@ -74,8 +75,75 @@ def me(request):
     return Response(res)
 
 
-@api_view(['PUT'])
-@permission_classes([IsAuthenticated])
+class ListModels(generics.ListAPIView):
+    serializer_class = ProfilePictureWithModelSerializer
+
+    def get_queryset(self):
+        fields = ['image', 'model__first_name',
+                  'model__last_name', 'model__country', 'model__city']
+        return ProfilePicture.objects.filter(inUse=True).select_related('model').only(*fields).all()
+
+    def list(self, request):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class SearchModels(generics.ListAPIView):
+    serializer_class = ProfilePictureWithModelSerializer
+    data = {}
+
+    def get_queryset(self):
+        pays = self.data.get('pays')
+        ville = self.data.get('ville')
+        sexe = self.data.get('sexe')
+        cheveux = self.data.get('cheveux')
+        yeux = self.data.get('yeux')
+        taille = self.data.get('taille')
+
+        # data is 1.40-1.60
+        # split to get each one
+        taille = taille.split('-')
+
+        fields = ['image', 'model__first_name',
+                  'model__last_name', 'model__country', 'model__city']
+        return ProfilePicture.objects.filter(
+            inUse=True, model__country__iexact=pays, model__city__iexact=ville,
+            model__sexe__iexact=sexe, model__measures__cheveux__iexact=cheveux,
+            model__measures__yeux__iexact=yeux, model__measures__taille__gte=taille[0],
+            model__measures__taille__lte=taille[1]
+        ).select_related('model').only(*fields).order_by('-model__created_at')
+
+    def set_data(self, data):
+        self.data = data
+
+    def list(self, request):
+        serializer = SearchSerilaizer(data=request.query_params)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        self.set_data(serializer.data)
+
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+@ api_view(['PUT'])
+@ permission_classes([IsAuthenticated])
 def mark_as_profile_picture(request, picture_id):
     model_id = request.user.model.id
 

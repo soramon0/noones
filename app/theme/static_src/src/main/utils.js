@@ -26,7 +26,7 @@ export function lazyLoad(targets, op = {}) {
   io.observe(targets);
 }
 
-export function createCard({ pk, fields }, parent) {
+export function createCard(data, parent) {
   // Create Card
   const card = document.createElement('div');
   const cardHead = document.createElement('div');
@@ -38,6 +38,8 @@ export function createCard({ pk, fields }, parent) {
   const countryText = document.createElement('p');
   const cityText = document.createElement('p');
   const profileButton = document.createElement('a');
+
+  nameTag.title = `${data.model.first_name} ${data.model.last_name}`;
 
   // Style Card
   card.className =
@@ -56,10 +58,10 @@ export function createCard({ pk, fields }, parent) {
     'px-4 py-3 text-xs rounded-lg bg-black hover:bg-gray-700 text-white uppercase tracking-wide';
 
   // Add Content
-  const name = `${fields.first_name} ${fields.last_name}`;
+  const name = `${data.model.first_name} ${data.model.last_name}`;
   // Check For Img
-  if (fields.profilePicture) {
-    img.src = `/media/${fields.profilePicture}`;
+  if (data.image) {
+    img.src = data.image;
   } else {
     img.src = '/static/images/noc-models-mission.jpg';
   }
@@ -67,11 +69,11 @@ export function createCard({ pk, fields }, parent) {
   img.alt = name;
   nameTag.textContent = name;
 
-  countryText.textContent = fields.country;
-  cityText.textContent = fields.city;
+  countryText.textContent = data.model.country;
+  cityText.textContent = data.model.city;
 
   profileButton.textContent = 'Visit Profile';
-  profileButton.href = `/models/${pk}`;
+  profileButton.href = `/models/${data.model.id}`;
 
   // Create Structure
   card.appendChild(cardHead);

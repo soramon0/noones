@@ -1,4 +1,4 @@
-from rest_framework.pagination import CursorPagination
+from rest_framework.pagination import CursorPagination, LimitOffsetPagination
 
 
 class CreatedAtPaginator(CursorPagination):

@@ -1,13 +1,13 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
-from django.core.exceptions import ValidationError
-from django.http.request import RawPostDataException
 from django.core.mail import send_mail
 from django.core.serializers import serialize
 from django.conf import settings
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+import datetime
+import time
 
 
 from pages.forms import SearchForm
@@ -20,15 +20,14 @@ from .models import (
     ProfilePicture,
     CoverPicture
 )
-import json
 
 
 def list_models(request):
     # TODO(karim): check for is_public
-    models = Model.objects.all()[:12]
-
+    models = ProfilePicture.objects.filter(
+        inUse=True, model__is_public=False)[:20]
     context = {
-        'models': models,
+        'data': models,
         'form': SearchForm()
     }
 
@@ -107,21 +106,6 @@ def model_contact(request):
     return Response({'message': "Thanks! We'll get back to you soon."})
 
 
-def model_paginated(request):
-    # TODO(karim): Refactor this to use rest framework
-    try:
-        start = int(request.GET.get('start', 0))
-        count = int(request.GET.get('count', 12))
-    except ValueError:
-        start = 0
-        count = 12
-
-    # TODO(karim): check for is_public
-    models = serialize('json', Model.objects.all()[start:count])
-
-    return JsonResponse({'models': models})
-
-
 def model_search(request):
     form = SearchForm(request.GET)
 
@@ -142,39 +126,22 @@ def model_search(request):
     # split to get each one
     taille = taille.split('-')
 
-    # to avoid errors down the line
-    # TODO(karim): check if we should return more
     start = 0
-    count = 12
-    returnJson = False
-
-    # if we do then we should return json
-    # This will be true only when the client askes for more data
-    if 'start' in request.GET and 'count' in request.GET:
-        returnJson = True
-        # If all is well, get the count
-        try:
-            # TODO(karim): check if we should get more on the first request
-            start = int(request.GET.get('start', 0))
-            count = int(request.GET.get('count', 12))
-        except ValueError:
-            start = 0
-            count = 12
+    count = 20
 
     # Get the data
-    models = Model.objects.filter(
-        country__iexact=pays, city__iexact=ville, sexe__iexact=sexe,
-        measures__cheveux__iexact=cheveux, measures__yeux__iexact=yeux,
-        measures__taille__gte=taille[0], measures__taille__lte=taille[1],
-    )[start:count]
+    fields = ['image', 'model__first_name',
+              'model__last_name', 'model__country', 'model__city']
 
-    # return json when asked by client
-    if returnJson:
-        return JsonResponse({'models': serialize('json', models)})
+    models = ProfilePicture.objects.filter(
+        inUse=True, model__country__iexact=pays, model__city__iexact=ville,
+        model__sexe__iexact=sexe, model__measures__cheveux__iexact=cheveux,
+        model__measures__yeux__iexact=yeux, model__measures__taille__gte=taille[0],
+        model__measures__taille__lte=taille[1]
+    ).only(*fields).order_by('-model__created_at')[start:count]
 
-    # On the initial load return the page
     context = {
-        'models': models,
+        'data': models,
         'form': form
     }
     return render(request, 'models/search.html', context)

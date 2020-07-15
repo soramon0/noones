@@ -13,6 +13,8 @@ def profile(request):
 
 
 def signin(request):
+    if request.user.is_authenticated:
+        return redirect('index')
     if request.method == 'POST':
         form = SigninForm(request.POST)
 

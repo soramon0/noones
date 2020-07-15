@@ -18,14 +18,14 @@ class ModelAdmin(admin.ModelAdmin):
 
 
 class ProfilePictureAdmin(admin.ModelAdmin):
-    list_display = ('id', 'model', 'image')
+    list_display = ('id', 'model', 'image', 'created_at')
     list_display_links = ('id',)
     list_filter = ('inUse',)
     list_per_page = 324
 
 
 class CoverPictureAdmin(admin.ModelAdmin):
-    list_display = ('id', 'model', 'image')
+    list_display = ('id', 'model', 'image', 'created_at')
     list_display_links = ('id',)
     list_filter = ('inUse',)
     list_per_page = 32

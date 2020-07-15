@@ -70,6 +70,8 @@
       PhotoStore.getCoverPictures();
     }
   });
+
+  $: console.log(photoData);
 </script>
 
 <style>
