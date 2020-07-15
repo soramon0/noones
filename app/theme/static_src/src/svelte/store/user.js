@@ -1,7 +1,7 @@
-import { writable } from "svelte/store";
-import http from "../../main/http";
-import UIStore from "./ui";
-import PhotosStore from "./photo";
+import { writable } from 'svelte/store';
+import http from '../../main/http';
+import UIStore from './ui';
+import PhotosStore from './photo';
 
 const { subscribe, set, update } = writable({
   model: {},
@@ -36,7 +36,7 @@ export default {
       }));
     } catch ({ response }) {
       if (response && response.status == 401) {
-        return window.location.replace("/");
+        return window.location.replace('/');
       }
 
       throw response;
@@ -46,51 +46,25 @@ export default {
     update((store) => ({ ...store, profilePicture: data })),
   markAsCoverPicture: (data) =>
     update((store) => ({ ...store, coverPicture: data })),
-  updateModel: async (payload) => {
+  updatePassword: async (payload) => {
     try {
       UIStore.setFetchAndFeedbackModal(true, false);
 
-      const { data } = await http.put(`models/${payload.id}/`, payload);
+      await http.patch(`accounts/update-password/`, payload);
 
       update((store) => ({
         ...store,
-        model: data,
         errors: {},
       }));
 
       UIStore.setFetchAndFeedbackModal(false, true);
     } catch ({ response }) {
+      UIStore.setFetchAndFeedbackModal(false, false);
+
       update((store) => ({
         ...store,
         errors: response.data,
       }));
-
-      UIStore.setFetchAndFeedbackModal(false, false);
-    }
-  },
-  updateMeasures: async (payload) => {
-    try {
-      UIStore.setFetchAndFeedbackModal(true, false);
-
-      const { data } = await http.put(
-        `models/measures/${payload.id}/`,
-        payload
-      );
-
-      update((store) => ({
-        ...store,
-        measures: data,
-        errors: {},
-      }));
-
-      UIStore.setFetchAndFeedbackModal(false, true);
-    } catch ({ response }) {
-      update((store) => ({
-        ...store,
-        errors: response.data,
-      }));
-
-      UIStore.setFetchAndFeedbackModal(false, false);
     }
   },
 };

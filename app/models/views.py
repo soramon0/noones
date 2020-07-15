@@ -61,7 +61,7 @@ def detail_model(request, id):
     return render(request, 'models/model.html', context)
 
 
-def model_search(request):
+def search_models(request):
     form = SearchForm(request.GET)
 
     if not form.is_valid():

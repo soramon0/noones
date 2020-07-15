@@ -13,3 +13,7 @@ class TestUrls(SimpleTestCase):
     def test_detail_model_url_resolves(self):
         url = reverse('model', args=[uuid.uuid4()])
         self.assertEquals(resolve(url).func, views.detail_model)
+
+    def test_search_models_url_resolves(self):
+        url = reverse('search')
+        self.assertEquals(resolve(url).func, views.search_models)

@@ -49,7 +49,7 @@
         {#if userData.errors.detail}
           <div
             transition:fly={{ x: -200, duration: 500 }}
-            class="px-4 py-6 bg-red-500 text-white">
+            class="px-4 py-2 rounded bg-red-400 text-white">
             <p>{userData.errors.detail}</p>
           </div>
         {/if}
