@@ -1,4 +1,7 @@
 from django import forms
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
+from django.contrib.auth import password_validation
+from django.utils.translation import gettext_lazy as _
 
 INPUT_CLASS = {'class': 'form-input'}
 TEXTAREA_CLASS = {'class': 'form-textarea'}
@@ -11,14 +14,14 @@ class SigninForm(forms.Form):
     email = forms.EmailField(
         max_length=255, widget=forms.EmailInput(attrs=INPUT_CLASS))
     password = forms.CharField(
-        min_length=6, max_length=100, widget=forms.PasswordInput(attrs=INPUT_CLASS))
+        min_length=6, max_length=100, strip=False, widget=forms.PasswordInput(attrs=INPUT_CLASS))
 
 
 class RegisterForm(forms.Form):
     email = forms.EmailField(
         max_length=255, widget=forms.EmailInput(attrs=INPUT_CLASS))
     password = forms.CharField(
-        min_length=6, max_length=100, widget=forms.PasswordInput(attrs=INPUT_CLASS))
+        min_length=6, max_length=100, strip=False, widget=forms.PasswordInput(attrs=INPUT_CLASS))
     first_name = forms.CharField(
         min_length=3, max_length=100, widget=forms.TextInput(attrs=INPUT_CLASS))
     last_name = forms.CharField(min_length=3, max_length=100,
@@ -54,8 +57,10 @@ class RegisterForm(forms.Form):
         ('y', 'Oui'),
         ('n', 'Non'),
     ))
-    taille = forms.DecimalField(max_digits=3, decimal_places=2, widget=forms.NumberInput(attrs=INPUT_CLASS))
-    taillenombrill = forms.DecimalField(max_digits=3, decimal_places=2, widget=forms.NumberInput(attrs=INPUT_CLASS))
+    taille = forms.DecimalField(
+        max_digits=3, decimal_places=2, widget=forms.NumberInput(attrs=INPUT_CLASS))
+    taillenombrill = forms.DecimalField(
+        max_digits=3, decimal_places=2, widget=forms.NumberInput(attrs=INPUT_CLASS))
     buste = forms.IntegerField(widget=forms.NumberInput(attrs=INPUT_CLASS))
     epaules = forms.IntegerField(widget=forms.NumberInput(attrs=INPUT_CLASS))
     hanches = forms.IntegerField(widget=forms.NumberInput(attrs=INPUT_CLASS))
@@ -71,3 +76,33 @@ class RegisterForm(forms.Form):
     ), widget=forms.Select(attrs=SELECT_CLASS))
     permitted = forms.BooleanField(
         widget=forms.CheckboxInput(attrs=CHECKBOX_CLASS))
+
+    def clean_password(self):
+        password = self.cleaned_data['password']
+        password_validation.validate_password(password)
+        return password
+
+
+class ResetPasswordForm(PasswordResetForm):
+    email = forms.EmailField(
+        label=_("Email"),
+        max_length=254,
+        widget=forms.EmailInput(
+            attrs={'autocomplete': 'email', **INPUT_CLASS}))
+
+
+class SetNewPasswordForm(SetPasswordForm):
+    new_password1 = forms.CharField(
+        label=_("Password"),
+        strip=False,
+        widget=forms.PasswordInput(
+            attrs={'autocomplete': 'new-password', **INPUT_CLASS}),
+        help_text=password_validation.password_validators_help_text_html(),
+    )
+    new_password2 = forms.CharField(
+        label=_("Password confirmation"),
+        widget=forms.PasswordInput(
+            attrs={'autocomplete': 'new-password', **INPUT_CLASS}),
+        strip=False,
+        help_text=_("Enter the same password as before, for verification."),
+    )
