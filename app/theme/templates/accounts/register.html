@@ -31,7 +31,7 @@
     </div>
   </div>
 
-  <form class="register-form mt-6 px-4 sm:px-0 relative overflow-hidden" action="{% url 'register' %}" method="post">
+  <form class="register-form mt-6 px-4 sm:px-0 relative overflow-hidden" action="{% url 'signup' %}" method="post">
     {% csrf_token %}
     {{ form.non_field_errors }}
     <div class="current transition duration-300 ease-in-out transform">

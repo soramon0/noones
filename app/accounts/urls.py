@@ -5,7 +5,7 @@ from . import views
 from . import forms
 
 urlpatterns = [
-    path('register/', views.register, name='register'),
+    path('signup/', views.signup, name='signup'),
     path('signin/', views.signin, name='signin'),
     path('signout/', views.signout, name='signout'),
     path('profile/', views.profile, name='profile'),
@@ -31,4 +31,6 @@ urlpatterns = [
     ),
         name='password_reset_complete'
     ),
+    path('activate/<uidb64>/<token>',
+         views.ActivateAccount.as_view(), name='activate'),
 ]

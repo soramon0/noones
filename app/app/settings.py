@@ -57,12 +57,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'pages',
-    'core',
-    'accounts',
-    'theme',
+    'accounts.apps.AccountsConfig',
     'models.apps.ModelsConfig',
     'updates.apps.UpdatesConfig',
+    'pages',
+    'core',
+    'theme',
 ]
 
 if DEBUG:

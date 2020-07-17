@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width"> <!-- Forcing initial-scale shouldn't be necessary -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- Use the latest (edge) version of IE rendering engine -->
     <meta name="x-apple-disable-message-reformatting">  <!-- Disable auto-scale in iOS 10 Mail entirely -->
-    <title>Reset Email</title> <!-- The title tag shows in email notifications, like Android 4.4. -->
+    <title>Activate Your Email</title> <!-- The title tag shows in email notifications, like Android 4.4. -->
 </head>
 
 <body width="100%" style="margin: 0; padding: 0 !important; mso-line-height-rule: exactly; background-color: #f1f1f1;">
@@ -20,19 +20,18 @@
             <table>
             	<tr>
             		<td>
-            			<div class="text" style="padding: 0 2.5em; text-align: center;">
-                    <h2>{% blocktrans %}You're receiving this email because you requested a password reset for your user account at {{ site_name }}.{% endblocktrans %}</h2>
-            				<h3>{% trans 'Your username, in case you’ve forgotten:' %} {{ user.get_username }}</h3>
-                    <p>{% trans "Please go to the following page and choose a new password:" %}</p>
-                    {% block reset_link %}
-            				    <p>
+                  <div class="text" style="padding: 0 2.5em; text-align: center;">
+                  <h2>{% blocktrans %}This is to confirm that the registered email address is correct. {{ user.get_username }} at {{ site_name }}.{% endblocktrans %}</h2>
+                  <p><{% trans "Press the button below to complete the mail registration." %}/p>
+                      {% block reset_link %}
+                          <p>
                           <a style="padding: 10px 25px; text-decoration:none; display: inline-block;border-radius: 5px;background: #30e3ca;color: #ffffff;"
-                            href="{{ protocol }}://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}">
-                              {% trans "Reset" %}
+                              href="{{ protocol }}://{{ domain }}{% url 'activate' uidb64=uid token=token %}">
+                              {% trans "Activate" %}
                           </a>
-                        </p>
-                    {% endblock %}
-                  </div>
+                          </p>
+                      {% endblock %}
+                    </div>
             		</td>
             	</tr>
             </table>
@@ -44,7 +43,7 @@
         <tr>
           <td  style="text-align: center;">
             <p> {% trans "Thanks for using our site!" %}</p>
-          	<p>{% blocktrans %}The {{ site_name }} team{% endblocktrans %}></p>
+          	<p>{% blocktrans %}The NOC Models team{% endblocktrans %}</p>
           </td>
         </tr>
       </table>
