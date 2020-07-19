@@ -38,51 +38,45 @@
 <Breadcrumb activeText="User Settings" />
 <SuccessNotifier />
 
-<div class="py-4 border-b-2 border-gray-200">
-  <h2 class="text-lg">Email/Password</h2>
-</div>
+<Card title="Change Your Email">
+  <form on:submit|preventDefault={emailUpdate}>
+    <FormInput
+      bind:value={email}
+      type="email"
+      name="email"
+      label="E-mail Address"
+      on:valueChanged={({ detail }) => (email = detail.value)} />
+    <div class="text-right mt-2">
+      <UpdateButton text="Update Email" />
+    </div>
+  </form>
+</Card>
 
-<div class="mt-4 flex flex-wrap">
-  <Card classes="mb-4 h-40 w-full">
-    <form on:submit|preventDefault={emailUpdate}>
-      <FormInput
-        bind:value={email}
-        type="email"
-        name="email"
-        label="E-mail Address"
-        on:valueChanged={({ detail }) => (email = detail.value)} />
-      <div class="text-right mt-2">
-        <UpdateButton />
-      </div>
-    </form>
-  </Card>
-
-  <Card classes="w-full">
-    <form on:submit|preventDefault={passwordUpdate}>
-      <FormInput
-        bind:value={passwordPayload.password}
-        type="password"
-        name="password"
-        label="Current Password"
-        errors={userData.errors['password']}
-        on:valueChanged={onValueChanged} />
-      <FormInput
-        bind:value={passwordPayload.new_password}
-        type="password"
-        name="new_password"
-        label="New Password"
-        errors={userData.errors['new_password']}
-        on:valueChanged={onValueChanged} />
-      <FormInput
-        bind:value={passwordPayload.confirm_password}
-        type="password"
-        name="confirm_password"
-        label="Confirm New Password"
-        errors={userData.errors['confirm_password']}
-        on:valueChanged={onValueChanged} />
-      <div class="text-right mt-2">
-        <UpdateButton text="Update password" />
-      </div>
-    </form>
-  </Card>
-</div>
+<Card title="Change Your Password">
+  <form on:submit|preventDefault={passwordUpdate}>
+    <FormInput
+      bind:value={passwordPayload.password}
+      type="password"
+      name="password"
+      label="Current Password"
+      errors={userData.errors['password']}
+      on:valueChanged={onValueChanged} />
+    <FormInput
+      bind:value={passwordPayload.new_password}
+      type="password"
+      name="new_password"
+      label="New Password"
+      errors={userData.errors['new_password']}
+      on:valueChanged={onValueChanged} />
+    <FormInput
+      bind:value={passwordPayload.confirm_password}
+      type="password"
+      name="confirm_password"
+      label="Confirm New Password"
+      errors={userData.errors['confirm_password']}
+      on:valueChanged={onValueChanged} />
+    <div class="text-right mt-2">
+      <UpdateButton text="Update password" />
+    </div>
+  </form>
+</Card>

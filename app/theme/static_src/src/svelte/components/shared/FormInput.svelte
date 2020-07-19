@@ -8,11 +8,17 @@
   export let name;
   export let label;
   export let errors;
+  export let selectOptions = [];
+  let selected = value;
 
   const valueChanged = e => {
-    value = e.target.value;
-    value = type === "number" ? +value : value;
-    dispatch("valueChanged", { name, value });
+    if (type === "select") {
+      dispatch("valueChanged", { name, value: selected });
+    } else {
+      value = e.target.value;
+      value = type === "number" ? +value : value;
+      dispatch("valueChanged", { name, value });
+    }
   };
 </script>
 
@@ -27,6 +33,12 @@
     on:change={valueChanged}
     class="form-textarea h-32 w-full text-gray-800 font-mono transition-colors
     duration-300 ease-in-out {errors ? 'border border-red-500' : ''}" />
+{:else if type === 'select'}
+  <select class="form-select" bind:value={selected} on:blur={valueChanged}>
+    {#each selectOptions as option}
+      <option value={option}>{option.toUpperCase()}</option>
+    {/each}
+  </select>
 {:else}
   <input
     id={name}

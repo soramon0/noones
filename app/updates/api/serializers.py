@@ -2,11 +2,31 @@ from django.utils import timezone
 from rest_framework import serializers
 
 from updates.models import (
+    ModelUpdate,
     MeasuresUpdate,
     PhotosUpdate,
     ProfilePictureUpdate,
     CoverPictureUpdate
 )
+
+
+class ModelUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ModelUpdate
+        fields = ('id', 'model', 'bio', 'accept', 'decline', 'message')
+        read_only_fields = ('id', 'accept', 'decline', 'message')
+
+    def update(self, instance, validated_data):
+        if instance.decline:
+            # if the instance has decline set to True
+            # it means that the admin declined the update
+            # and we should lift up the 24h update restriction
+            # by setting decline to None and removing the previous
+            # message the next time a user makes a new update request
+            instance.decline = None
+            instance.created_at = timezone.now()
+            instance.message = ""
+        return super().update(instance, validated_data)
 
 
 class MeasuresUpdateSerializer(serializers.ModelSerializer):

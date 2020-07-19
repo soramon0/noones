@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import (
+from updates.models import (
+    ModelUpdate,
     MeasuresUpdate,
     PhotosUpdate,
     ProfilePictureUpdate,
@@ -24,6 +25,15 @@ class CoverPictureUpdateAdmin(admin.ModelAdmin):
     list_per_page = 24
 
 
+class ModelUpdateAdmin(admin.ModelAdmin):
+    list_display = ('id', 'model')
+    list_display_links = ('id', 'model')
+    list_filter = ('created_at', 'accept', 'decline')
+    date_hierarchy = 'created_at'
+    search_fields = ('model__user__email',)
+    list_per_page = 24
+
+
 class MeasuresUpdateAdmin(admin.ModelAdmin):
     list_display = ('id', 'measure')
     list_display_links = ('id', 'measure')
@@ -44,5 +54,6 @@ class PhotosUpdateAdmin(admin.ModelAdmin):
 
 admin.site.register(ProfilePictureUpdate, ProfilePictureUpdateAdmin)
 admin.site.register(CoverPictureUpdate, CoverPictureUpdateAdmin)
+admin.site.register(ModelUpdate, ModelUpdateAdmin)
 admin.site.register(MeasuresUpdate, MeasuresUpdateAdmin)
 admin.site.register(PhotosUpdate, PhotosUpdateAdmin)

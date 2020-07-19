@@ -42,6 +42,28 @@ export default {
       throw response;
     }
   },
+  async updateModel(payload) {
+    try {
+      UIStore.setFetchAndFeedbackModal(true, false);
+
+      const { data } = await http.patch(`models/${payload.id}/`, payload);
+
+      update((store) => ({
+        ...store,
+        errors: {},
+        model: data,
+      }));
+
+      UIStore.setFetchAndFeedbackModal(false, true);
+    } catch ({ response }) {
+      UIStore.setFetchAndFeedbackModal(false, false);
+
+      update((store) => ({
+        ...store,
+        errors: response.data,
+      }));
+    }
+  },
   markAsProfilePicture: (data) =>
     update((store) => ({ ...store, profilePicture: data })),
   markAsCoverPicture: (data) =>

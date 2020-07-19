@@ -1,13 +1,13 @@
-import { writable } from "svelte/store";
-import http from "../../main/http";
-import UIStore from "./ui";
-import { onUploadProgress } from "./photo";
+import { writable } from 'svelte/store';
+import http from '../../main/http';
+import UIStore from './ui';
+import { onUploadProgress } from './photo';
 
 const GALLERYSIZELIMIT = 1024 * 1024 * 5; // 5MB
 const PROFILEPICSIZELIMIT = 1024 * 1024 * 3; // 3MB
 
-function validFileType(type = "") {
-  return !type.startsWith("image/") ? false : true;
+function validFileType(type = '') {
+  return !type.startsWith('image/') ? false : true;
 }
 
 function validFileSize(fileSize, sizeLimit) {
@@ -15,6 +15,8 @@ function validFileSize(fileSize, sizeLimit) {
 }
 
 const { subscribe, set, update } = writable({
+  model: {},
+  modelErrors: {},
   measures: {},
   measuresErrors: {},
   profilePictures: [],
@@ -27,6 +29,101 @@ export default {
   subscribe,
   update,
   set,
+  createModelUpdate: async (payload) => {
+    try {
+      UIStore.setFetchAndFeedbackModal(true, false);
+
+      const { data } = await http.post(`update/model/`, payload);
+
+      data.errors = {};
+
+      update((store) => ({
+        ...store,
+        model: data,
+        modelErrors: {},
+      }));
+
+      UIStore.setFetchAndFeedbackModal(false, true);
+    } catch ({ response }) {
+      UIStore.setFetchAndFeedbackModal(false, false);
+
+      update((store) => ({
+        ...store,
+        modelErrors: response.data,
+      }));
+    }
+  },
+  modifyModelUpdate: async (modelId, payload) => {
+    try {
+      UIStore.setFetchAndFeedbackModal(true, false);
+
+      const { data } = await http.put(`update/model/${modelId}/`, payload);
+
+      data.errors = {};
+
+      update((store) => ({
+        ...store,
+        model: data,
+        modelErrors: {},
+      }));
+
+      UIStore.setFetchAndFeedbackModal(false, true);
+    } catch ({ response }) {
+      UIStore.setFetchAndFeedbackModal(false, false);
+
+      // if we couldn't find an update with the given id
+      // then it probably was removed by admin
+      if (response && response.status === 404) {
+        const errors = {
+          model: ['Update has been removed. Check your email for details.'],
+        };
+
+        update((store) => ({
+          ...store,
+          model: { ...store.model, errors },
+        }));
+      }
+
+      update((store) => ({
+        ...store,
+        model: { ...store.model, errors: response.data },
+      }));
+    }
+  },
+  getModelUpdate: async () => {
+    try {
+      const { data } = await http.get(`update/model/`);
+      data.errors = {};
+      update((store) => ({ ...store, model: data }));
+    } catch (_) {
+      return;
+    }
+  },
+  deleteModelUpdate: async (modelId) => {
+    try {
+      UIStore.setFetchAndFeedbackModal(true, false);
+
+      await http.delete(`update/model/${modelId}/`);
+      update((store) => ({ ...store, model: {}, modelErrors: {} }));
+
+      UIStore.setFetchAndFeedbackModal(false, true);
+    } catch ({ response }) {
+      UIStore.setFetchAndFeedbackModal(false, false);
+
+      // if we couldn't find an update with the given id
+      // then it probably was removed by admin
+      if (response && response.status === 404) {
+        const errors = {
+          model: ['Update has been removed. Check your email for details.'],
+        };
+
+        update((store) => ({
+          ...store,
+          model: { ...store.model, errors },
+        }));
+      }
+    }
+  },
   createMeasuresUpdate: async (payload) => {
     try {
       UIStore.setFetchAndFeedbackModal(true, false);
@@ -52,12 +149,12 @@ export default {
       }));
     }
   },
-  modifyMeasuresUpdate: async (measures_id, payload) => {
+  modifyMeasuresUpdate: async (measuresId, payload) => {
     try {
       UIStore.setFetchAndFeedbackModal(true, false);
 
       const { data } = await http.put(
-        `update/measures/${measures_id}/`,
+        `update/measures/${measuresId}/`,
         payload
       );
 
@@ -77,7 +174,7 @@ export default {
       // then it probably was removed by admin
       if (response && response.status === 404) {
         const errors = {
-          measure: ["Update has been removed. Check your email for details."],
+          measure: ['Update has been removed. Check your email for details.'],
         };
 
         update((store) => ({
@@ -92,9 +189,9 @@ export default {
       }));
     }
   },
-  getMeasuresUpdate: async (measureId) => {
+  getMeasuresUpdate: async () => {
     try {
-      const { data } = await http.get(`update/measures/${measureId}/`);
+      const { data } = await http.get(`update/measures/`);
       data.errors = {};
       update((store) => ({ ...store, measures: data }));
     } catch (_) {
@@ -115,12 +212,12 @@ export default {
       // if we couldn't find an update with the given id
       // then it probably was removed by admin
       if (response && response.status === 404) {
+        const errors = {
+          measure: ['Update has been removed. Check your email for details.'],
+        };
         update((store) => ({
           ...store,
-          measures: {},
-          errors: {
-            measure: ["Update has been removed. Check your email for details."],
-          },
+          measures: { ...store.measures, errors },
         }));
       }
     }
@@ -146,7 +243,7 @@ export default {
         return;
       }
       const imageData = new FormData();
-      imageData.append("image", file);
+      imageData.append('image', file);
 
       UIStore.setFetchAndFeedbackModal(true, false);
 
@@ -175,7 +272,7 @@ export default {
   },
   getProfilePicturesUpdate: async () => {
     try {
-      const { data } = await http.get("update/photos/profile/");
+      const { data } = await http.get('update/photos/profile/');
       // add errors object which will store errors
       // related to each photo entry
       const pictures = data.map((pic) => ({ ...pic, errors: {} })).reverse();
@@ -226,7 +323,7 @@ export default {
       UIStore.setFetchAndFeedbackModal(true, false);
 
       const imageData = new FormData();
-      imageData.append("image", file);
+      imageData.append('image', file);
 
       const { data } = await http.put(
         `update/photos/profile/${photoId}/`,
@@ -261,7 +358,7 @@ export default {
         );
 
         if (index != -1) {
-          profilePictures[index]["errors"] = response.data;
+          profilePictures[index]['errors'] = response.data;
         }
 
         return {
@@ -297,14 +394,14 @@ export default {
         update((store) => {
           const { profilePictures } = store;
           const errors = {
-            image: ["Update has been removed. Check your email for details."],
+            image: ['Update has been removed. Check your email for details.'],
           };
           const index = profilePictures.findIndex(
             (photo) => photo.id === photoId
           );
 
           if (index != -1) {
-            profilePictures[index]["errors"] = errors;
+            profilePictures[index]['errors'] = errors;
           }
 
           return {
@@ -334,7 +431,7 @@ export default {
         }));
       }
       const imageData = new FormData();
-      imageData.append("image", file);
+      imageData.append('image', file);
 
       UIStore.setFetchAndFeedbackModal(true, false);
 
@@ -364,7 +461,7 @@ export default {
   },
   getCoverPictureUpdate: async () => {
     try {
-      const { data } = await http.get("update/photos/cover/");
+      const { data } = await http.get('update/photos/cover/');
       // add errors object which will store errors
       // related to each photo entry
       const pictures = data.map((pic) => ({ ...pic, errors: {} })).reverse();
@@ -415,7 +512,7 @@ export default {
       UIStore.setFetchAndFeedbackModal(true, false);
 
       const imageData = new FormData();
-      imageData.append("image", file);
+      imageData.append('image', file);
 
       const { data } = await http.put(
         `update/photos/cover/${photoId}/`,
@@ -446,7 +543,7 @@ export default {
         const index = coverPictures.findIndex((photo) => photo.id === photoId);
 
         if (index != -1) {
-          coverPictures[index]["errors"] = response.data;
+          coverPictures[index]['errors'] = response.data;
         }
 
         return {
@@ -480,14 +577,14 @@ export default {
         update((store) => {
           const { coverPictures } = store;
           const errors = {
-            image: ["Update has been removed. Check your email for details."],
+            image: ['Update has been removed. Check your email for details.'],
           };
           const index = coverPictures.findIndex(
             (photo) => photo.id === photoId
           );
 
           if (index != -1) {
-            coverPictures[index]["errors"] = errors;
+            coverPictures[index]['errors'] = errors;
           }
 
           return {
@@ -524,7 +621,7 @@ export default {
           isValid = false;
           return;
         }
-        imageData.append("image", file);
+        imageData.append('image', file);
       });
 
       if (!isValid) return;
@@ -575,7 +672,7 @@ export default {
         return;
       }
       const imageData = new FormData();
-      imageData.append("image", file);
+      imageData.append('image', file);
 
       UIStore.setFetchAndFeedbackModal(true, false);
       const { status, data } = await http.put(
@@ -615,7 +712,7 @@ export default {
   },
   getGalleryUpdate: async () => {
     try {
-      const { data } = await http.get("update/photos/gallery/");
+      const { data } = await http.get('update/photos/gallery/');
       // add errors object which will store errors
       // related to each photo entry
       const gallery = data.map((el) => ({ ...el, errors: {} })).reverse();
@@ -662,7 +759,7 @@ export default {
       UIStore.setFetchAndFeedbackModal(true, false);
 
       const imageData = new FormData();
-      imageData.append("image", file);
+      imageData.append('image', file);
 
       const { data } = await http.put(
         `update/photos/gallery/${photoId}/`,
@@ -693,7 +790,7 @@ export default {
         const index = gallery.findIndex((photo) => photo.id === photoId);
 
         if (index != -1) {
-          gallery[index]["errors"] = response.data;
+          gallery[index]['errors'] = response.data;
         }
 
         return {
@@ -727,12 +824,12 @@ export default {
         update((store) => {
           const { gallery } = store;
           const errors = {
-            image: ["Update has been removed. Check your email for details."],
+            image: ['Update has been removed. Check your email for details.'],
           };
           const index = gallery.findIndex((photo) => photo.id === photoId);
 
           if (index != -1) {
-            gallery[index]["errors"] = errors;
+            gallery[index]['errors'] = errors;
           }
 
           return {
@@ -742,6 +839,13 @@ export default {
         });
       }
     }
+  },
+  clearModelErrors: () => update((store) => ({ ...store, modelErrors: {} })),
+  clearModelUpdateErrors: () => {
+    update((store) => ({
+      ...store,
+      model: { ...store.model, errors: {} },
+    }));
   },
   clearMeasuresErrors: () =>
     update((store) => ({ ...store, measuresErrors: {} })),

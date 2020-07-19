@@ -13,7 +13,7 @@
   };
 </script>
 
-<div class="px-4 my-2 ml-4 border-b whitespace-no-wrap sm:ml-0" data-simplebar>
+<div class="px-4 my-2 ml-4 whitespace-no-wrap sm:ml-0" data-simplebar>
   <div class="space-x-4">
     {#each tabs as tab}
       <button

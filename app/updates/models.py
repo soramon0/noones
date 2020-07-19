@@ -8,6 +8,26 @@ from models.models import (
 )
 
 
+class ModelUpdate(models.Model):
+    # This database table is going to hold the model update data
+    # temporarily until the admin deletes it
+    model = models.OneToOneField(
+        Model,
+        on_delete=models.CASCADE,
+    )
+    bio = models.CharField(max_length=500)
+    created_at = models.DateTimeField(auto_now_add=True)
+    accept = models.BooleanField(null=True, blank=True)
+    decline = models.BooleanField(null=True, blank=True)
+    message = models.TextField(max_length=500, blank=True, default="")
+
+    class Meta:
+        verbose_name_plural = "Model Updates"
+
+    def __str__(self):
+        return str(self.id)
+
+
 class MeasuresUpdate(AbstractMensuration):
     # This database table is going to hold the measures update data
     # temporarily until the admin deletes it

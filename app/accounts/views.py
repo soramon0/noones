@@ -3,7 +3,7 @@ from django.contrib import messages, auth
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import get_template
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str, DjangoUnicodeDecodeError
+from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from django.views.generic import View
@@ -153,20 +153,19 @@ def signup(request):
     return render(request, 'accounts/register.html', {'form': RegisterForm()})
 
 
-class ActivateAccount(View):
-    def get(self, request, uidb64, token):
-        try:
-            uid = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=uid)
-        except Exception:
-            # ex can be:
-            # (DjangoUnicodeDecodeError, User.DoesNotExist, ValueError, TypeError, OverflowError, ValidationError)
-            user = None
+def activate_account(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except Exception:
+        # ex can be:
+        # (DjangoUnicodeDecodeError, User.DoesNotExist, ValueError, TypeError, OverflowError, ValidationError)
+        user = None
 
-        if user is not None and generate_token.check_token(user, token):
-            user.is_active = True
-            user.save()
-            messages.success(request, 'Account activated Successfully.')
-            return redirect('signin')
+    if user is not None and generate_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        messages.success(request, 'Account activated Successfully.')
+        return redirect('signin')
 
-        return render(request, 'accounts/activate_failed.html', status=status.HTTP_401_UNAUTHORIZED)
+    return render(request, 'accounts/activate_failed.html', status=status.HTTP_401_UNAUTHORIZED)

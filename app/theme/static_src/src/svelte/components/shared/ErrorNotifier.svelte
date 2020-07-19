@@ -17,7 +17,8 @@
   <div
     in:fly={{ x: -200, duration: 400 }}
     out:fade={{ duration: 400 }}
-    class="p-3 bg-red-400 border-l-4 border-red-500 rounded-sm relative sm:p-4">
+    class="p-3 mt-2 bg-red-400 border-l-4 border-red-500 rounded-sm relative
+    sm:p-4">
     {#each errors[errorKey] as error}
       <p class="mr-5 text-xs text-white sm:text-sm md:text-base">{error}</p>
     {/each}

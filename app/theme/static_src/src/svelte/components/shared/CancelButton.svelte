@@ -7,6 +7,7 @@
   type="button"
   disabled={fetching}
   on:click
-  class="px-6 py-3 hover:bg-gray-400 rounded-md {fetching ? 'bg-gray-600 cursor-not-allowed' : ''}">
+  class="text-sm px-6 py-3 text-gray-700 hover:bg-gray-400 rounded-md
+  sm:text-base {fetching ? 'bg-gray-600 cursor-not-allowed' : ''}">
   {text}
 </button>

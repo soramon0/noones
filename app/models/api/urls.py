@@ -5,8 +5,9 @@ from . import views
 app_name = 'models'
 
 urlpatterns = [
-    path('', views.ListModels.as_view()),
     path('me/', views.me),
+    path('', views.ListModels.as_view()),
+    path('<uuid:pk>/', views.UpdateModel.as_view()),
     path('search/', views.SearchModels.as_view()),
     path('contact/', views.model_contact),
     path('photos/profile/', views.ListPorfilePictures.as_view()),

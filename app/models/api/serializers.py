@@ -78,13 +78,6 @@ class PhotoSerializer(serializers.ModelSerializer):
         fields = ['id', 'image', 'model']
         read_only_fields = ['id']
 
-    @ staticmethod
-    def delete_old_image(image):
-        # if we have an old image; delete it
-        if image and os.path.isfile(image.path):
-            # Get full path to old image
-            os.remove(image.path)
-
 
 class SearchSerilaizer(serializers.Serializer):
     pays = serializers.ChoiceField(choices=(

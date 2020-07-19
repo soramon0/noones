@@ -1,5 +1,3 @@
-import os
-
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -8,17 +6,9 @@ from rest_framework.views import APIView
 from django.http import Http404
 from django.conf import settings
 from django.core.mail import send_mail
+from django.contrib.auth import get_user_model
 
-
-from core.models import User
-from models.models import (
-    Model,
-    Mensuration,
-    Photo,
-    ProfilePicture,
-    CoverPicture,
-    Contact
-)
+from models.api.pagination import CreatedAtPaginator
 from models.api.serializers import (
     ModelSerializer,
     ModelContactSerializer,
@@ -30,7 +20,17 @@ from models.api.serializers import (
     PhotoSerializer,
     SearchSerilaizer
 )
-from models.api.pagination import CreatedAtPaginator
+from models.models import (
+    Model,
+    Mensuration,
+    Photo,
+    ProfilePicture,
+    CoverPicture,
+    Contact
+)
+
+
+User = get_user_model()
 
 
 @api_view(['GET'])
@@ -134,6 +134,30 @@ class ListModels(generics.ListAPIView):
         return Response(serializer.data)
 
 
+class UpdateModel(generics.RetrieveUpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ModelSerializer
+
+    def get_object(self):
+        user = self.request.user
+        return user.model
+
+    def patch(self, request, pk=None):
+        model = self.get_object()
+
+        data = request.data
+
+        data.pop('bio', None)
+
+        serializer = self.get_serializer(model, data=data, partial=True)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+
+        return Response(serializer.data)
+
+
 class SearchModels(generics.ListAPIView):
     serializer_class = ProfilePictureWithModelSerializer
     data = {}
@@ -181,8 +205,8 @@ class SearchModels(generics.ListAPIView):
         return Response(serializer.data)
 
 
-@ api_view(['PUT'])
-@ permission_classes([IsAuthenticated])
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def mark_as_profile_picture(request, picture_id):
     model_id = request.user.model.id
 

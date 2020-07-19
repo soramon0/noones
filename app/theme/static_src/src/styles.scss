@@ -3,6 +3,10 @@
 @tailwind base;
 @tailwind components;
 
+body {
+  font-family: 'Sora', sans-serif;
+}
+
 .error {
   @apply mx-2 mt-2 bg-gray-100 border-t-4 border-red-400 px-2 py-5 shadow-lg rounded-sm max-w-lg;
 }
