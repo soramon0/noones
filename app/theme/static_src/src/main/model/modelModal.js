@@ -1,4 +1,4 @@
-import http from './http';
+import http from '../http';
 
 const contactButton = document.getElementById('model-contact');
 const backdrop = document.getElementById('model-backdrop');
@@ -100,7 +100,6 @@ async function sendContactRequest(e) {
 
     disableSendingButton(false);
   } catch ({ response }) {
-    console.log(response);
     disableSendingButton(false);
 
     if (response) {
