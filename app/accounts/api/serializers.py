@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
@@ -35,3 +36,10 @@ class ChangePasswordSerializer(serializers.Serializer):
     def validate_new_password(self, value):
         validate_password(value)
         return value
+
+
+class ChangeEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        return BaseUserManager.normalize_email(value)

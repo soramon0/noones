@@ -3,15 +3,20 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate, update_session_auth_hash
+from django.contrib.auth import authenticate, update_session_auth_hash, get_user_model
 
+from accounts.utils import send_verification_email
 from accounts.api.serializers import (
     SigninSerializer,
-    ChangePasswordSerializer
+    ChangePasswordSerializer,
+    ChangeEmailSerializer,
 )
 
 
-@api_view(['POST'])
+User = get_user_model()
+
+
+@api_view(('POST',))
 def signin(request):
     context = {}
 
@@ -37,8 +42,8 @@ def signin(request):
         return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['PATCH'])
-@permission_classes([IsAuthenticated])
+@api_view(('PATCH',))
+@permission_classes((IsAuthenticated,))
 def update_password(request):
     user = request.user
     serializer = ChangePasswordSerializer(data=request.data)
@@ -62,3 +67,34 @@ def update_password(request):
     user.save()
     update_session_auth_hash(request, user)
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(('PATCH',))
+@permission_classes((IsAuthenticated,))
+def update_email(request):
+    user = request.user
+    serializer = ChangeEmailSerializer(data=request.data)
+
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    email = serializer.data.get('email')
+
+    if email == user.email:
+        context = {
+            'email': ['You did not change your email.']
+        }
+        return Response(context, status=status.HTTP_400_BAD_REQUEST)
+
+    if User.objects.filter(email=email).exists():
+        context = {
+            'email': ['That email is being used by another user.']
+        }
+        return Response(context, status=status.HTTP_400_BAD_REQUEST)
+
+    user.is_active = False
+    user.email = email
+    user.save()
+    send_verification_email(request, user)
+
+    return Response(status=status.HTTP_200_OK)

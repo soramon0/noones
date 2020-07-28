@@ -1,22 +1,16 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages, auth
-from django.contrib.sites.shortcuts import get_current_site
-from django.template.loader import get_template
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str
-from django.core.mail import EmailMultiAlternatives
-from django.conf import settings
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
 from django.views.generic import View
 from rest_framework import status
 
 from models.models import Model, Mensuration, History
 from accounts.forms import RegisterForm, SigninForm
-from accounts.utils import generate_token
+from accounts.utils import send_verification_email, generate_token
 
 
 User = auth.get_user_model()
-email_txt = get_template('accounts/activate_email.txt')
-email_html = get_template('accounts/activate_email.html')
 
 
 def profile(request):
@@ -121,29 +115,7 @@ def signup(request):
                                      instagram=instagram, phone=phone, addresse=addresse, city=city, country=country, zipcode=zipcode,
                                      cin=cin, sexe=sexe, history_id=history.id, measures=measures, user=user)
 
-        # Setup for email verfication link
-        current_site = get_current_site(request)
-        email_subject = 'Activate Your Account'
-        context = {
-            'user': user,
-            'domain': current_site.domain,
-            'protocol': request.scheme,
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-            'token': generate_token.make_token(user)
-        }
-        text_content = email_txt.render(context)
-        html_content = email_html.render(context)
-
-        email = EmailMultiAlternatives(
-            email_subject,
-            text_content,
-            settings.EMAIL_HOST_USER,
-            [user.email]
-        )
-
-        email.attach_alternative(html_content, 'text/html')
-
-        email.send()
+        send_verification_email(request, user)
 
         messages.success(
             request, 'Please Confirm your email to complete registration.')

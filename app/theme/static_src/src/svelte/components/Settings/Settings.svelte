@@ -1,19 +1,19 @@
 <script>
-  import UIStore from "../../store/ui";
-  import UserStore from "../../store/user";
-  import Breadcrumb from "../shared/Breadcrumb";
-  import FormInput from "../shared/FormInput";
-  import UpdateButton from "../shared/UpdateButton";
-  import Card from "../shared/Card";
-  import SuccessNotifier from "../shared/SuccessNotifier";
+  import UIStore from '../../store/ui';
+  import UserStore from '../../store/user';
+  import Breadcrumb from '../shared/Breadcrumb';
+  import FormInput from '../shared/FormInput';
+  import UpdateButton from '../shared/UpdateButton';
+  import Card from '../shared/Card';
+  import SuccessNotifier from '../shared/SuccessNotifier';
 
   export let email;
   $: uiData = $UIStore;
   $: userData = $UserStore;
   const passwordPayload = {
-    password: "",
-    new_password: "",
-    confirm_password: ""
+    password: '',
+    new_password: '',
+    confirm_password: '',
   };
 
   const onValueChanged = ({ detail }) => {
@@ -21,16 +21,16 @@
   };
 
   const emailUpdate = async () => {
-    console.log(email);
+    await UserStore.changeEmail(email);
   };
 
   const passwordUpdate = async () => {
-    await UserStore.updatePassword(passwordPayload);
+    await UserStore.changePassword(passwordPayload);
 
     if (Object.keys(userData.errors).length === 0) {
-      passwordPayload.password = "";
-      passwordPayload.new_password = "";
-      passwordPayload.confirm_password = "";
+      passwordPayload.password = '';
+      passwordPayload.new_password = '';
+      passwordPayload.confirm_password = '';
     }
   };
 </script>
@@ -38,13 +38,16 @@
 <Breadcrumb activeText="User Settings" />
 <SuccessNotifier />
 
-<Card title="Change Your Email">
+<Card
+  title="Change Your Email"
+  description="Your account will be disabled til you confirm your new email.">
   <form on:submit|preventDefault={emailUpdate}>
     <FormInput
       bind:value={email}
       type="email"
       name="email"
       label="E-mail Address"
+      errors={userData.errors['email']}
       on:valueChanged={({ detail }) => (email = detail.value)} />
     <div class="text-right mt-2">
       <UpdateButton text="Update Email" />

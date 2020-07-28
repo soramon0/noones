@@ -16,7 +16,7 @@ export default {
   subscribe,
   update,
   set,
-  populate: async () => {
+  async populate() {
     try {
       const { data } = await http.get(`models/me/`);
 
@@ -64,15 +64,17 @@ export default {
       }));
     }
   },
-  markAsProfilePicture: (data) =>
-    update((store) => ({ ...store, profilePicture: data })),
-  markAsCoverPicture: (data) =>
-    update((store) => ({ ...store, coverPicture: data })),
-  updatePassword: async (payload) => {
+  markAsProfilePicture(data) {
+    update((store) => ({ ...store, profilePicture: data }));
+  },
+  markAsCoverPicture(data) {
+    update((store) => ({ ...store, coverPicture: data }));
+  },
+  async changePassword(payload) {
     try {
       UIStore.setFetchAndFeedbackModal(true, false);
 
-      await http.patch(`accounts/update-password/`, payload);
+      await http.patch(`accounts/update_password/`, payload);
 
       update((store) => ({
         ...store,
@@ -80,6 +82,30 @@ export default {
       }));
 
       UIStore.setFetchAndFeedbackModal(false, true);
+    } catch ({ response }) {
+      UIStore.setFetchAndFeedbackModal(false, false);
+
+      update((store) => ({
+        ...store,
+        errors: response.data,
+      }));
+    }
+  },
+  async changeEmail(email) {
+    try {
+      UIStore.setFetchAndFeedbackModal(true, false);
+
+      await http.patch(`accounts/update_email/`, { email });
+
+      update((store) => ({
+        ...store,
+        errors: {},
+        email,
+      }));
+
+      UIStore.setFetchAndFeedbackModal(false, true);
+
+      window.location.replace('/accounts/signin/');
     } catch ({ response }) {
       UIStore.setFetchAndFeedbackModal(false, false);
 
