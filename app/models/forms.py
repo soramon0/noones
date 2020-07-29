@@ -16,7 +16,7 @@ INPUT_CLASS_DISABLED = {'class': 'form-input', 'disabled': 'true'}
 class UserForm(MForm):
     class Meta:
         model = User
-        fields = ['email', 'password']
+        fields = ('email', 'password')
         widgets = {
             'email': forms.EmailInput(attrs=INPUT_CLASS),
             'password': forms.PasswordInput(attrs=INPUT_CLASS)
@@ -26,8 +26,8 @@ class UserForm(MForm):
 class ModelForm(MForm):
     class Meta:
         model = Model
-        fields = ['sexe', 'first_name', 'last_name', 'bio', 'birth_date',
-                  'facebook', 'instagram', 'phone', 'addresse', 'city', 'country', 'zipcode', 'cin']
+        fields = ('sexe', 'first_name', 'last_name', 'bio', 'birth_date',
+                  'facebook', 'instagram', 'phone', 'addresse', 'city', 'country', 'zipcode', 'cin')
         widgets = {
             'first_name': TextInput(attrs=INPUT_CLASS),
             'last_name': TextInput(attrs=INPUT_CLASS),
@@ -47,7 +47,7 @@ class ModelForm(MForm):
 class HistoryForm(MForm):
     class Meta:
         model = History
-        fields = ['q1', 'q2', 'q3', 'q4']
+        fields = ('q1', 'q2', 'q3', 'q4')
         widgets = {
             'q1': Textarea(attrs=TEXTAREA_CLASS),
             'q2': Textarea(attrs=TEXTAREA_CLASS),
@@ -59,8 +59,8 @@ class HistoryForm(MForm):
 class MensurationForm(MForm):
     class Meta:
         model = Mensuration
-        fields = ['taille', 'taillenombrill', 'buste', 'epaules',
-                  'hanches', 'poids', 'pointure', 'cheveux', 'yeux', 'permitted']
+        fields = ('taille', 'taillenombrill', 'buste', 'epaules',
+                  'hanches', 'poids', 'pointure', 'cheveux', 'yeux', 'permitted')
         widgets = {
             'taille': NumberInput(attrs=INPUT_CLASS),
             'taillenombrill': NumberInput(attrs=INPUT_CLASS),

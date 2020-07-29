@@ -81,7 +81,7 @@ def me(request):
 
 
 @api_view(['POST'])
-def model_contact(request):
+def contact_model(request):
     serializer = ModelContactSerializer(data=request.data)
 
     if not serializer.is_valid():

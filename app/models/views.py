@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from rest_framework import status
 
 from pages.forms import SearchForm
 from models.forms import ModelContactForm
@@ -24,24 +25,20 @@ def list_models(request):
 
 
 def detail_model(request, id):
-    fields = ['first_name', 'last_name', 'country', 'city', 'bio', 'measures']
+    fields = ('first_name', 'last_name', 'country', 'city', 'bio', 'measures')
     queryset = Model.objects.only(*fields)
     model = get_object_or_404(queryset, pk=id)
+    photos = Photo.objects.only('image').filter(model_id=model.id)[:8]
 
     context = {
         'model': model,
         'measures': model.measures,
+        'photos': photos,
         'form': ModelContactForm(initial={
             'model_id': model.id,
             'model_full_name': f'{model.first_name} {model.last_name}',
         })
     }
-
-    try:
-        photos = Photo.objects.only('image').filter(model_id=model.id)
-        context['photos'] = photos
-    except Photo.DoesNotExist:
-        context['photos'] = []
 
     try:
         profile_picture = ProfilePicture.objects.only('image').get(
@@ -68,7 +65,7 @@ def search_models(request):
         context = {
             'form': form,
         }
-        return render(request, 'models/search.html', context)
+        return render(request, 'models/search.html', context, status=status.HTTP_400_BAD_REQUEST)
 
     pays = form.cleaned_data.get('pays')
     ville = form.cleaned_data.get('ville')
@@ -85,8 +82,8 @@ def search_models(request):
     count = 20
 
     # Get the data
-    fields = ['image', 'model__first_name',
-              'model__last_name', 'model__country', 'model__city']
+    fields = ('image', 'model__first_name',
+              'model__last_name', 'model__country', 'model__city')
 
     models = ProfilePicture.objects.filter(
         inUse=True, model__country__iexact=pays, model__city__iexact=ville,

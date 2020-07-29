@@ -11,7 +11,7 @@ class TestUrls(SimpleTestCase):
         self.assertEquals(resolve(url).func, views.list_models)
 
     def test_detail_model_url_resolves(self):
-        url = reverse('model', args=[uuid.uuid4()])
+        url = reverse('model', args=(uuid.uuid4(),))
         self.assertEquals(resolve(url).func, views.detail_model)
 
     def test_search_models_url_resolves(self):
