@@ -1,11 +1,17 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% load static %}
+
+{% block content %}
 
 <!-- Model Header -->
 {% include "partials/_header.html" with title="Models" %}
 
 {% include "partials/_search_form.html" with form=form %}
 
-<h2 class="text-center text-xl uppercase mt-16">Touts les models</h2>
+<h2 class="text-center text-xl uppercase mt-16">{% trans "All Models" %}</h2>
 
 <section class="card-container mt-10 mx-auto w-11/12 flex flex-wrap flex-col items-center justify-center sm:flex-row">
   {% for item in data %}
@@ -14,21 +20,21 @@
           <img
             class="w-full h-full object-fit"
             src="{{item.image.url}}"
-            alt="{{item.model.first_name}}"
+            alt="{{item.profile.first_name}}"
           />
         <div class="-mt-4 w-full h-10 transform -skew-y-6 bg-white">
         </div>
         <div class="-mt-16 mr-4 py-2 px-4 truncate w-48 uppercase tracking-wider bg-white rounded text-center shadow absolute right-0">
-          {{item.model.first_name}} {{item.model.last_name}}
+          {{item.profile.first_name}} {{item.profile.last_name}}
         </div>
       </div>
       <div class="mt-6 px-4 pb-4 text-sm flex justify-between items-center relative">
         <div class="tracking-wide">
-          <p class="uppercase tracking-wider">{{item.model.country}}</p>
-          <p class="capitalize text-gray-800 font-semibold">{{item.model.city}}</p>
+          <p class="uppercase tracking-wider">{{item.profile.country}}</p>
+          <p class="capitalize text-gray-800 font-semibold">{{item.profile.city}}</p>
         </div>
-        <a href="{% url 'model' item.model.id %}" class="px-4 py-3 text-xs rounded-lg bg-black hover:bg-gray-700 text-white uppercase tracking-wide">
-          Visit Profile
+        <a href="{% url 'model' item.profile.id %}" class="px-4 py-3 text-xs rounded-lg bg-black hover:bg-gray-700 text-white uppercase tracking-wide">
+          {% trans "Profile" %}
         </a>
       </div>
     </div>

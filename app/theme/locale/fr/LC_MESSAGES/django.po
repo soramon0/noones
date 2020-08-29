@@ -1,0 +1,212 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-08-05 12:01+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: templates/accounts/activate_email.html:24
+#, python-format
+msgid ""
+"This is to confirm that the registered email address is correct "
+"%(user.get_username)s at NOC Models."
+msgstr ""
+"Ceci pour confirmer que l'adresse e-mail enregistrée est correcte "
+"%(user.get_username)s chez NOC Models."
+
+#: templates/accounts/activate_email.html:25
+msgid "Press the button below to complete the mail registration."
+msgstr ""
+"appuyez sur le bouton ci-dessous pour terminer l'enregistrement du courrier."
+
+#: templates/accounts/activate_email.html:30
+msgid "Activate"
+msgstr "Activer"
+
+#: templates/accounts/activate_email.html:45
+#: templates/accounts/password_reset_email.html:46
+msgid "Thanks for using our site!"
+msgstr "Merci d'utiliser notre site!"
+
+#: templates/accounts/activate_email.html:46
+msgid "The NOC Models team"
+msgstr "L'équipe NOC Models"
+
+#: templates/accounts/password_reset_email.html:24
+#, python-format
+msgid ""
+"You're receiving this email because you requested a password reset for your "
+"user account at %(site_name)s."
+msgstr ""
+
+#: templates/accounts/password_reset_email.html:25
+msgid "Your username, in case you’ve forgotten:"
+msgstr "Votre nom d'utilisateur, au cas où vous auriez oublié:"
+
+#: templates/accounts/password_reset_email.html:26
+msgid "Please go to the following page and choose a new password:"
+msgstr ""
+"Veuillez vous rendre sur la page suivante et choisir un nouveau mot de passe:"
+
+#: templates/accounts/password_reset_email.html:31
+msgid "Reset"
+msgstr "Réinitialiser"
+
+#: templates/accounts/password_reset_email.html:47
+#, python-format
+msgid "The %(site_name)s team"
+msgstr "L'équipe %(site_name)s"
+
+#: templates/accounts/register.html:221
+msgid "in cm"
+msgstr "em cm"
+
+#: templates/models/index.html:12 templates/models/search.html:14
+msgid "All Models"
+msgstr "Touts les models"
+
+#: templates/models/index.html:36 templates/models/search.html:37
+msgid "Profile"
+msgstr "profil"
+
+#: templates/models/model.html:30
+msgid "Presentation"
+msgstr "Présentation"
+
+#: templates/models/model.html:57
+msgid "Height"
+msgstr "Taille"
+
+#: templates/models/model.html:61
+msgid "Waist"
+msgstr "Taille (nombrill)"
+
+#: templates/models/model.html:64
+msgid "Bust"
+msgstr "Buste"
+
+#: templates/models/model.html:68
+msgid "Shoulders"
+msgstr "Épaules"
+
+#: templates/models/model.html:72
+msgid "Hips"
+msgstr "Hanches"
+
+#: templates/models/model.html:75
+msgid "Weight"
+msgstr "Poids"
+
+#: templates/models/model.html:79
+msgid "Shoe size"
+msgstr "Épaules"
+
+#: templates/models/model.html:83
+msgid "Hair"
+msgstr "Cheveux"
+
+#: templates/models/model.html:87
+msgid "Eyes"
+msgstr "Yeux"
+
+#: templates/models/model.html:93 templates/partials/_footer.html:20
+#: templates/partials/_navbar.html:30 templates/partials/_navbar.html:55
+#: templates/partials/_navbar.html:72 templates/partials/_navbar.html:108
+msgid "Contact"
+msgstr "Contact"
+
+#: templates/models/model.html:102
+msgid "Where can we find you"
+msgstr "Où pouvons-nous vous trouver"
+
+#: templates/models/model.html:165
+msgid "Gallery"
+msgstr "Galerie"
+
+#: templates/pages/index.html:40
+msgid "Our Models"
+msgstr "Nos modèles"
+
+#: templates/pages/index.html:71
+msgid "Become our <br /><span class='font-semibold'>model</span>"
+msgstr "Devenez notre<br /><span class='font-semibold'>modèle</span>"
+
+#: templates/pages/index.html:74
+msgid "Register"
+msgstr "S'inscrire"
+
+#: templates/partials/_footer.html:8
+msgid "Models"
+msgstr "Des modèles"
+
+#: templates/partials/_footer.html:14 templates/partials/_search_form.html:40
+msgid "Search"
+msgstr "Chercher"
+
+#: templates/partials/_footer.html:26 templates/partials/_navbar.html:118
+msgid "Powered by"
+msgstr "Alimenté par"
+
+#: templates/partials/_footer.html:30 templates/partials/_navbar.html:84
+#: templates/partials/_navbar.html:112
+msgid "Blog"
+msgstr "Blog"
+
+#: templates/partials/_footer.html:31 templates/partials/_navbar.html:85
+#: templates/partials/_navbar.html:113
+msgid "FAQ"
+msgstr "FAQ"
+
+#: templates/partials/_footer.html:32 templates/partials/_navbar.html:86
+#: templates/partials/_navbar.html:114
+msgid "Policy"
+msgstr "Mention légale"
+
+#: templates/partials/_navbar.html:27 templates/partials/_navbar.html:46
+#: templates/partials/_navbar.html:69 templates/partials/_navbar.html:97
+msgid "Our models"
+msgstr "Nos modèles"
+
+#: templates/partials/_navbar.html:33 templates/partials/_navbar.html:77
+msgid "Dashboard"
+msgstr "Tableau de bord"
+
+#: templates/partials/_navbar.html:36 templates/partials/_navbar.html:80
+msgid "Sign out"
+msgstr "Déconnexion"
+
+#: templates/partials/_navbar.html:40 templates/partials/_navbar.html:91
+msgid "About"
+msgstr "À propos"
+
+#: templates/partials/_navbar.html:43 templates/partials/_navbar.html:94
+msgid "Vision and mission"
+msgstr "Vision et mission"
+
+#: templates/partials/_navbar.html:49 templates/partials/_navbar.html:102
+msgid "Become our model"
+msgstr "Devenez notre modèle"
+
+#: templates/partials/_navbar.html:52 templates/partials/_navbar.html:105
+msgid "Sign In"
+msgstr "Se connecter"
+
+#: templates/partials/_search_form.html:3
+msgid "Find a model"
+msgstr "Trouver un model"
+
+#~ msgid "model"
+#~ msgstr "Des modèles"

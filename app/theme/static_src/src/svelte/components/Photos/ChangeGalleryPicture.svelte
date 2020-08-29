@@ -1,14 +1,14 @@
-<script>
-  import updatesStore from "../../store/updates";
+<script lang="ts">
+  import { UpdatesStore } from '../../store/index';
 
-  export let size = "w-4 h-4";
-  export let pictureId = null;
+  export let size = 'w-4 h-4';
+  export let pictureId: string;
 
   const onGalleryPictureUpdate = ({ target }) => {
     const file = target.files[0];
 
     if (file) {
-      updatesStore.createOrModifyGalleryUpdate(file, pictureId);
+      UpdatesStore.createOrModifyGalleryUpdate(file, pictureId);
     }
   };
 </script>

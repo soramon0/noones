@@ -2,6 +2,14 @@ import { writable } from 'svelte/store';
 import http from '../../main/http';
 import UIStore from './ui';
 import { onUploadProgress } from './photo';
+import type {
+  IProfileUpdate,
+  IMeasureseUpdate,
+  IProfilePictureeUpdate,
+  ICoverPictureUpdate,
+  IGallaryUpdate,
+  IMeasures,
+} from '../types/models';
 
 const GALLERYSIZELIMIT = 1024 * 1024 * 5; // 5MB
 const PROFILEPICSIZELIMIT = 1024 * 1024 * 3; // 3MB
@@ -14,11 +22,19 @@ function validFileSize(fileSize, sizeLimit) {
   return fileSize > sizeLimit ? false : true;
 }
 
-const { subscribe, set, update } = writable({
-  model: {},
-  modelErrors: {},
-  measures: {},
-  measuresErrors: {},
+type ProfileUpdates = {
+  model: IProfileUpdate;
+  measures: IMeasureseUpdate;
+  profilePictures: IProfilePictureeUpdate[];
+  coverPictures: ICoverPictureUpdate[];
+  gallery: IGallaryUpdate[];
+  errors: any;
+};
+
+// TODO(karim): fix error handling for profile
+const { subscribe, set, update } = writable<ProfileUpdates>({
+  model: {} as IProfileUpdate,
+  measures: {} as IMeasureseUpdate,
   profilePictures: [],
   coverPictures: [],
   gallery: [],
@@ -29,18 +45,22 @@ export default {
   subscribe,
   update,
   set,
-  createModelUpdate: async (payload) => {
+  async createProfileUpdate(bio: string) {
     try {
       UIStore.setFetchAndFeedbackModal(true, false);
 
-      const { data } = await http.post(`update/model/`, payload);
+      const { data } = await http.post<IProfileUpdate>(`update/profile/`, {
+        bio,
+      });
 
+      // Add a errors objects to the data. It can be
+      // used to display errors specific to this update.
       data.errors = {};
 
       update((store) => ({
         ...store,
         model: data,
-        modelErrors: {},
+        errors: {},
       }));
 
       UIStore.setFetchAndFeedbackModal(false, true);
@@ -49,22 +69,24 @@ export default {
 
       update((store) => ({
         ...store,
-        modelErrors: response.data,
+        errors: response.data,
       }));
     }
   },
-  modifyModelUpdate: async (modelId, payload) => {
+  async modifyProfileUpdate(updateId: string, payload: IProfileUpdate) {
     try {
       UIStore.setFetchAndFeedbackModal(true, false);
 
-      const { data } = await http.put(`update/model/${modelId}/`, payload);
+      const { data } = await http.put<IProfileUpdate>(
+        `update/profile/${updateId}/`,
+        payload
+      );
 
       data.errors = {};
 
       update((store) => ({
         ...store,
         model: data,
-        modelErrors: {},
       }));
 
       UIStore.setFetchAndFeedbackModal(false, true);
@@ -73,38 +95,41 @@ export default {
 
       // if we couldn't find an update with the given id
       // then it probably was removed by admin
-      if (response && response.status === 404) {
+      if (response?.status === 404) {
         const errors = {
-          model: ['Update has been removed. Check your email for details.'],
+          model: ['Update has been removed.'],
         };
 
         update((store) => ({
           ...store,
           model: { ...store.model, errors },
         }));
+      } else {
+        update((store) => ({
+          ...store,
+          model: { ...store.model, errors: response.data },
+        }));
       }
-
-      update((store) => ({
-        ...store,
-        model: { ...store.model, errors: response.data },
-      }));
     }
   },
-  getModelUpdate: async () => {
+  async getProfileUpdate() {
     try {
-      const { data } = await http.get(`update/model/`);
+      const { data } = await http.get<IProfileUpdate>(`update/profile/`);
       data.errors = {};
       update((store) => ({ ...store, model: data }));
     } catch (_) {
       return;
     }
   },
-  deleteModelUpdate: async (modelId) => {
+  async deleteProfileUpdate(updateId: string) {
     try {
       UIStore.setFetchAndFeedbackModal(true, false);
 
-      await http.delete(`update/model/${modelId}/`);
-      update((store) => ({ ...store, model: {}, modelErrors: {} }));
+      await http.delete(`update/profile/${updateId}/`);
+      update((store) => ({
+        ...store,
+        model: {} as IProfileUpdate,
+      }));
 
       UIStore.setFetchAndFeedbackModal(false, true);
     } catch ({ response }) {
@@ -112,23 +137,33 @@ export default {
 
       // if we couldn't find an update with the given id
       // then it probably was removed by admin
-      if (response && response.status === 404) {
+      if (response?.status === 404) {
         const errors = {
-          model: ['Update has been removed. Check your email for details.'],
+          model: ['Update has been removed.'],
         };
 
         update((store) => ({
           ...store,
-          model: { ...store.model, errors },
+          errors,
+          model: {} as IProfileUpdate,
+        }));
+      } else {
+        update((store) => ({
+          ...store,
+          errors: response?.data,
+          model: {} as IProfileUpdate,
         }));
       }
     }
   },
-  createMeasuresUpdate: async (payload) => {
+  createMeasuresUpdate: async (payload: IMeasures) => {
     try {
       UIStore.setFetchAndFeedbackModal(true, false);
 
-      const { data } = await http.post(`update/measures/`, payload);
+      const { data } = await http.post<IMeasureseUpdate>(
+        `update/measures/`,
+        payload
+      );
       // add errors object which will store errors
       // related to measures
       data.errors = {};
@@ -136,7 +171,7 @@ export default {
       update((store) => ({
         ...store,
         measures: data,
-        measuresErrors: {},
+        errors: {},
       }));
 
       UIStore.setFetchAndFeedbackModal(false, true);
@@ -145,16 +180,16 @@ export default {
 
       update((store) => ({
         ...store,
-        measuresErrors: response.data,
+        errors: response.data,
       }));
     }
   },
-  modifyMeasuresUpdate: async (measuresId, payload) => {
+  modifyMeasuresUpdate: async (updateId: string, payload: IMeasureseUpdate) => {
     try {
       UIStore.setFetchAndFeedbackModal(true, false);
 
-      const { data } = await http.put(
-        `update/measures/${measuresId}/`,
+      const { data } = await http.put<IMeasureseUpdate>(
+        `update/measures/${updateId}/`,
         payload
       );
 
@@ -163,7 +198,7 @@ export default {
       update((store) => ({
         ...store,
         measures: data,
-        measuresErrors: {},
+        errors: {},
       }));
 
       UIStore.setFetchAndFeedbackModal(false, true);
@@ -172,38 +207,38 @@ export default {
 
       // if we couldn't find an update with the given id
       // then it probably was removed by admin
-      if (response && response.status === 404) {
+      if (response?.status === 404) {
         const errors = {
-          measure: ['Update has been removed. Check your email for details.'],
+          measures: ['Update has been removed.'],
         };
 
         update((store) => ({
           ...store,
           measures: { ...store.measures, errors },
         }));
+      } else {
+        update((store) => ({
+          ...store,
+          measures: { ...store.measures, errors: response.data },
+        }));
       }
-
-      update((store) => ({
-        ...store,
-        measures: { ...store.measures, errors: response.data },
-      }));
     }
   },
   getMeasuresUpdate: async () => {
     try {
-      const { data } = await http.get(`update/measures/`);
+      const { data } = await http.get<IMeasureseUpdate>(`update/measures/`);
       data.errors = {};
       update((store) => ({ ...store, measures: data }));
     } catch (_) {
       return;
     }
   },
-  deleteMeasuresUpdate: async (measureId) => {
+  deleteMeasuresUpdate: async (updateId: string) => {
     try {
       UIStore.setFetchAndFeedbackModal(true, false);
 
-      await http.delete(`update/measures/${measureId}/`);
-      update((store) => ({ ...store, measures: {} }));
+      await http.delete(`update/measures/${updateId}/`);
+      update((store) => ({ ...store, measures: {} as IMeasureseUpdate }));
 
       UIStore.setFetchAndFeedbackModal(false, true);
     } catch ({ response }) {
@@ -211,13 +246,20 @@ export default {
 
       // if we couldn't find an update with the given id
       // then it probably was removed by admin
-      if (response && response.status === 404) {
+      if (response?.status === 404) {
         const errors = {
-          measure: ['Update has been removed. Check your email for details.'],
+          measures: ['Update has been removed.'],
         };
         update((store) => ({
           ...store,
-          measures: { ...store.measures, errors },
+          measures: {} as IMeasureseUpdate,
+          errors,
+        }));
+      } else {
+        update((store) => ({
+          ...store,
+          errors: response?.data,
+          measures: {} as IMeasureseUpdate,
         }));
       }
     }
@@ -260,7 +302,7 @@ export default {
 
       UIStore.setFetchAndFeedbackModal(false, true);
       UIStore.setfileUploadPercentage(0);
-    } catch (error) {
+    } catch ({ response }) {
       UIStore.setFetchAndFeedbackModal(false, false);
       UIStore.setfileUploadPercentage(0);
 
@@ -368,7 +410,7 @@ export default {
       });
     }
   },
-  deleteProfilePictureUpdate: async (photoId) => {
+  deleteProfilePictureUpdate: async (photoId: string) => {
     try {
       UIStore.setFetchAndFeedbackModal(true, false);
 
@@ -394,7 +436,7 @@ export default {
         update((store) => {
           const { profilePictures } = store;
           const errors = {
-            image: ['Update has been removed. Check your email for details.'],
+            image: ['Update has been removed.'],
           };
           const index = profilePictures.findIndex(
             (photo) => photo.id === photoId
@@ -440,7 +482,6 @@ export default {
 
       update((store) => {
         const { coverPictures } = store;
-        console.log(coverPictures);
 
         coverPictures.unshift(data);
 
@@ -449,7 +490,7 @@ export default {
 
       UIStore.setFetchAndFeedbackModal(false, true);
       UIStore.setfileUploadPercentage(0);
-    } catch (error) {
+    } catch ({ response }) {
       UIStore.setFetchAndFeedbackModal(false, false);
       UIStore.setfileUploadPercentage(0);
 
@@ -577,7 +618,7 @@ export default {
         update((store) => {
           const { coverPictures } = store;
           const errors = {
-            image: ['Update has been removed. Check your email for details.'],
+            image: ['Update has been removed.'],
           };
           const index = coverPictures.findIndex(
             (photo) => photo.id === photoId
@@ -639,7 +680,7 @@ export default {
 
         gallery.unshift(...data);
 
-        return { ...store, gallery };
+        return { ...store, gallery, errors: {} };
       });
 
       UIStore.setFetchAndFeedbackModal(false, true);
@@ -648,7 +689,7 @@ export default {
       UIStore.setFetchAndFeedbackModal(false, false);
       UIStore.setfileUploadPercentage(0);
 
-      update((store) => ({ ...store, errors: { gallery: response.data } }));
+      update((store) => ({ ...store, errors: { ...response.data } }));
     }
   },
   createOrModifyGalleryUpdate: async (file, photoId) => {
@@ -824,7 +865,7 @@ export default {
         update((store) => {
           const { gallery } = store;
           const errors = {
-            image: ['Update has been removed. Check your email for details.'],
+            image: ['Update has been removed.'],
           };
           const index = gallery.findIndex((photo) => photo.id === photoId);
 
@@ -840,15 +881,12 @@ export default {
       }
     }
   },
-  clearModelErrors: () => update((store) => ({ ...store, modelErrors: {} })),
-  clearModelUpdateErrors: () => {
+  clearProfileUpdateErrors: () => {
     update((store) => ({
       ...store,
       model: { ...store.model, errors: {} },
     }));
   },
-  clearMeasuresErrors: () =>
-    update((store) => ({ ...store, measuresErrors: {} })),
   clearMeasuresUpdateErrors: () => {
     update((store) => ({
       ...store,
@@ -904,7 +942,7 @@ export default {
     update((store) => {
       const { errors } = store;
 
-      if (Array.isArray(errors[key]) && errors[key].length > 0) {
+      if (errors[key] && errors[key].length > 0) {
         errors[key] = [];
       }
 

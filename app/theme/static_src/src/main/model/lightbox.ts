@@ -24,6 +24,7 @@ function toggleLightbox() {
 function setImgByIndex(index) {
   currentIndex = index;
   const el = gallery[currentIndex].firstElementChild;
+  // @ts-ignore
   lightboxImg.src = el.src;
 }
 
@@ -40,6 +41,7 @@ gallery.forEach((entry) => {
     // Html structure should be a div that has an image inside it
     if (img) {
       // get the index of which image the user clicked on
+      // @ts-ignore
       currentIndex = parseInt(entry.dataset.id, 10);
 
       // Hide prev button if the user clicks on the first image
@@ -56,9 +58,11 @@ gallery.forEach((entry) => {
         showElement(nextButton);
       }
 
+      // @ts-ignore
       const src = img.src;
 
       if (src) {
+        // @ts-ignore
         lightboxImg.src = src;
         toggleLightbox();
       }

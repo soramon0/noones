@@ -1,14 +1,13 @@
-<script>
-  import UIStore from '../../store/ui';
-  import UserStore from '../../store/user';
-  import Breadcrumb from '../shared/Breadcrumb';
-  import FormInput from '../shared/FormInput';
-  import UpdateButton from '../shared/UpdateButton';
-  import Card from '../shared/Card';
-  import SuccessNotifier from '../shared/SuccessNotifier';
+<script lang="ts">
+  import { UserStore, UIStore } from '../../store/index';
+  import Breadcrumb from '../shared/Breadcrumb.svelte';
+  import FormInput from '../shared/FormInput.svelte';
+  import UpdateButton from '../shared/UpdateButton.svelte';
+  import Card from '../shared/Card.svelte';
+  import SuccessNotifier from '../shared/SuccessNotifier.svelte';
 
-  export let email;
-  $: uiData = $UIStore;
+  export let email: string;
+  $: UIData = $UIStore;
   $: userData = $UserStore;
   const passwordPayload = {
     password: '',
@@ -50,7 +49,7 @@
       errors={userData.errors['email']}
       on:valueChanged={({ detail }) => (email = detail.value)} />
     <div class="text-right mt-2">
-      <UpdateButton text="Update Email" />
+      <UpdateButton text="Update Email" fetching={UIData.fetching} />
     </div>
   </form>
 </Card>
@@ -79,7 +78,7 @@
       errors={userData.errors['confirm_password']}
       on:valueChanged={onValueChanged} />
     <div class="text-right mt-2">
-      <UpdateButton text="Update password" />
+      <UpdateButton text="Update password" fetching={UIData.fetching} />
     </div>
   </form>
 </Card>

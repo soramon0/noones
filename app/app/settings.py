@@ -11,13 +11,14 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 DEBUG = int(os.environ.get("DEBUG", default=0))
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
@@ -31,85 +32,86 @@ if not DEBUG:
     sentry_sdk.init(
         dsn="https://969f1f4da12e4dc5b8bdf1418d5464ad@sentry.io/2134391",
         integrations=[DjangoIntegration()],
-        send_default_pii=True
+        send_default_pii=True,
     )
 
     # Reading docker-compose secret files for production
-    with open('/run/secrets/SECRET_KEY', 'r') as f:
-        os.environ['SECRET_KEY'] = f.readline()
+    with open("/run/secrets/SECRET_KEY", "r") as f:
+        os.environ["SECRET_KEY"] = f.readline()
 
-    with open('/run/secrets/DJANGO_ALLOWED_HOSTS', 'r') as f:
-        os.environ['DJANGO_ALLOWED_HOSTS'] = f.readline()
+    with open("/run/secrets/DJANGO_ALLOWED_HOSTS", "r") as f:
+        os.environ["DJANGO_ALLOWED_HOSTS"] = f.readline()
 
-    with open('/run/secrets/POSTGRES_PASSWORD', 'r') as f:
-        os.environ['POSTGRES_PASSWORD'] = f.readline()
+    with open("/run/secrets/POSTGRES_PASSWORD", "r") as f:
+        os.environ["POSTGRES_PASSWORD"] = f.readline()
 
-    with open('/run/secrets/POSTGRES_USER', 'r') as f:
-        os.environ['POSTGRES_USER'] = f.readline()
+    with open("/run/secrets/POSTGRES_USER", "r") as f:
+        os.environ["POSTGRES_USER"] = f.readline()
 
 # Application definition
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'rest_framework.authtoken',
-    'accounts.apps.AccountsConfig',
-    'models.apps.ModelsConfig',
-    'updates.apps.UpdatesConfig',
-    'pages',
-    'core',
-    'theme',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "accounts.apps.AccountsConfig",
+    "models.apps.ModelsConfig",
+    "updates.apps.UpdatesConfig",
+    "pages",
+    "core",
+    "theme",
 ]
 
 if DEBUG:
-    INSTALLED_APPS.append('django_seed')
+    INSTALLED_APPS.append("django_seed")
 
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'app.urls'
+ROOT_URLCONF = "app.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'theme/templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [os.path.join(BASE_DIR, "theme/templates")],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'app.wsgi.application'
+WSGI_APPLICATION = "app.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_NAME'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': os.environ.get('POSTGRES_HOST'),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("POSTGRES_NAME"),
+        "USER": os.environ.get("POSTGRES_USER"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+        "HOST": os.environ.get("POSTGRES_HOST"),
     }
 }
 
@@ -119,26 +121,22 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
 ]
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en"
+# Provide a lists of languages which the site supports.
+LANGUAGES = (("en", _("English")), ("fr", _("French")))
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -146,44 +144,46 @@ USE_L10N = True
 
 USE_TZ = True
 
+APPEND_SLASH = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"
 
 # Custom User
-AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = "core.User"
 
 # Static files
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'app/static')
-]
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "app/static")]
 
 # Media Folder Settings
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
 
 # EMAIL
-with open('/run/secrets/email_user', 'r') as f:
-    os.environ['EMAIL_USER'] = f.readline()
-with open('/run/secrets/email_pass', 'r') as f:
-    os.environ['EMAIL_PASS'] = f.readline()
+with open("/run/secrets/email_user", "r") as f:
+    os.environ["EMAIL_USER"] = f.readline()
+with open("/run/secrets/email_pass", "r") as f:
+    os.environ["EMAIL_PASS"] = f.readline()
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+if DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+    EMAIL_FILE_PATH = os.path.join(BASE_DIR, "temp/emails")
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
+EMAIL_HOST_USER = os.environ.get("EMAIL_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASS")
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 20,
-    'MAX_LIMIT': 20,
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 20,
+    "MAX_LIMIT": 20,
 }

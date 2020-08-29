@@ -1,13 +1,14 @@
-export function lazyLoad(targets, op = {}) {
+export function lazyLoad(targets, op: IntersectionObserverInit = {}) {
   const options = {
     root: op.root || null,
-    rootMargins: op.rootMargins || '0px',
+    rootMargin: op.rootMargin || '0px',
     threshold: op.threshold || 0,
   };
 
-  function handle(enteries) {
+  function handle(enteries: IntersectionObserverEntry[]) {
     enteries.forEach((entry) => {
       if (entry.isIntersecting) {
+        // @ts-ignore
         if (entry.target.src) return;
 
         // TODO(karim): optimize this, a second thread
@@ -15,6 +16,7 @@ export function lazyLoad(targets, op = {}) {
         const newImg = new Image();
         newImg.src = img.getAttribute('data-src');
         newImg.onload = () => {
+          // @ts-ignore
           img.src = newImg.src;
         };
         io.unobserve(img);
@@ -39,7 +41,7 @@ export function createCard(data, parent) {
   const cityText = document.createElement('p');
   const profileButton = document.createElement('a');
 
-  nameTag.title = `${data.model.first_name} ${data.model.last_name}`;
+  nameTag.title = `${data.profile.first_name} ${data.profile.last_name}`;
 
   // Style Card
   card.className =
@@ -58,7 +60,7 @@ export function createCard(data, parent) {
     'px-4 py-3 text-xs rounded-lg bg-black hover:bg-gray-700 text-white uppercase tracking-wide';
 
   // Add Content
-  const name = `${data.model.first_name} ${data.model.last_name}`;
+  const name = `${data.profile.first_name} ${data.profile.last_name}`;
   // Check For Img
   if (data.image) {
     img.src = data.image;
@@ -69,11 +71,11 @@ export function createCard(data, parent) {
   img.alt = name;
   nameTag.textContent = name;
 
-  countryText.textContent = data.model.country;
-  cityText.textContent = data.model.city;
+  countryText.textContent = data.profile.country;
+  cityText.textContent = data.profile.city;
 
   profileButton.textContent = 'Visit Profile';
-  profileButton.href = `/models/${data.model.id}`;
+  profileButton.href = `/models/${data.profile.id}`;
 
   // Create Structure
   card.appendChild(cardHead);
@@ -100,7 +102,7 @@ export async function isOnline(cb) {
 
     if (navigator.onLine) {
       // disbaled button and send request
-      reconnectButton.setAttribute('disabled', true);
+      reconnectButton.setAttribute('disabled', 'true');
       await cb();
 
       // update ui

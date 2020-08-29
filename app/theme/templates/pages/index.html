@@ -1,4 +1,10 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% load static %}
+
+{% block content %}
 
 <section class="w-full h-64 relative overflow-hidden sm:h-500">
   <button
@@ -31,19 +37,17 @@
 
 {% include "partials/_search_form.html" with form=form %}
 
-<h3 class="mt-16 text-center text-lg uppercase sm:text-2xl">Nos models</h3>
+<h3 class="mt-16 text-center text-lg uppercase sm:text-2xl">{% trans "Our Models" %}</h3>
 
 <section class="mt-10 mx-4 sm:max-w-6xl md:mx-auto">
-  {% if models %}
+  {% if data %}
   <div class="drag-slider whitespace-no-wrap pb-2" data-simplebar>
-    {% for model in models %}
-    <a class="w-64 h-56 mr-4 inline-block rounded-lg shadow overflow-hidden cursor-pointer sm:h-64"
-      href="{% url 'model' model.id %}">
-      {% if model.profilePicture %}
-      <img class="w-full h-full object-cover" src="{{model.profilePicture.url}}" alt="{{model.first_name}}" />
+    {% for item in data %}
+    <a class="w-64 h-56 mr-4 inline-block rounded-lg shadow overflow-hidden cursor-pointer sm:h-64" href="{% url 'model' item.profile.id %}">
+      {% if item.image %}
+        <img class="w-full h-full object-cover" src="{{item.image.url}}" alt="{{item.profile.first_name}}" />
       {% else %}
-      <img class="w-full h-full object-cover" src="{% static 'images/noc-models-mission.jpg' %}"
-        alt="{{model.first_name}}" />
+        <img class="w-full h-full object-cover" src="{% static 'images/noc-models-mission.jpg' %}" alt="{{item.profile.first_name}}" />
       {% endif %}
     </a>
     {% endfor %}
@@ -64,10 +68,10 @@
   <img class="h-64 w-full sm:h-full" src="{% static 'images/cta-bg-1024.jpg' %}" alt="model smiling" />
   <div class="signup-text-container absolute mr-2">
     <h2 class="text-2xl text-white uppercase md:text-4xl lg:text-5xl">
-      Devenir notre <br /><span class="font-semibold">model</span>
+      {% trans "Become our <br /><span class='font-semibold'>model</span>" %}</span>
     </h2>
     <a class="inline-block mt-2 px-10 py-1 text-lg text-black bg-white rounded-lg"
-      href="{% url 'signup' %}">S'inscrire</a>
+      href="{% url 'signup' %}">{% translate "Register" %}</a>
   </div>
 </section>
 

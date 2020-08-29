@@ -1,5 +1,5 @@
-<script>
-  export let toggle = false;
+<script lang="ts">
+  export let toggle: boolean = false;
 </script>
 
 <div

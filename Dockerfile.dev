@@ -12,6 +12,7 @@ RUN apt-get update \
     python3-dev \
     libpq-dev \
     gcc \
+    gettext \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip install --upgrade pip

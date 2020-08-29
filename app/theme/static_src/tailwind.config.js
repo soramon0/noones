@@ -1,4 +1,13 @@
 module.exports = {
+  future: {
+    removeDeprecatedGapUtilities: true,
+  },
+  purge: {
+    content: ['./src/svelte/**/*.svelte', '../templates/**/*.*'],
+    options: {
+      whitelist: ['simplebar', 'scrollbar'],
+    },
+  },
   theme: {
     extend: {
       inset: {

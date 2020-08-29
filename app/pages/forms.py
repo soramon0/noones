@@ -1,4 +1,8 @@
 from django import forms
+from django.utils.translation import gettext_lazy as _
+
+from models.models import GENDER_CHOICES
+from models.forms import HAIR_CHOICES
 
 INPUT_CLASS = {'class': 'form-input'}
 TEXTAREA_CLASS = {'class': 'form-textarea w-full h-48'}
@@ -19,28 +23,42 @@ class ContactForm(forms.Form):
 
 
 class SearchForm(forms.Form):
-    pays = forms.ChoiceField(choices=(
-        ('maroc', 'Maroc'),
-        ('france', 'France'),
-    ), widget=forms.Select(attrs=SELECT_CLASS))
-    ville = forms.ChoiceField(choices=(
-        ('marrakech', 'Marrakech'),
-        ('agadir', 'Agadir'),
-    ), widget=forms.Select(attrs=SELECT_CLASS))
-    sexe = forms.ChoiceField(choices=(
-        ('f', 'Femme'),
-        ('h', 'Homme'),
-    ), widget=forms.Select(attrs=SELECT_CLASS))
-    cheveux = forms.ChoiceField(choices=(
-        ('brown', 'Brown'),
-        ('yellow', 'Yellow'),
-    ), widget=forms.Select(attrs=SELECT_CLASS))
-    yeux = forms.ChoiceField(choices=(
-        ('yellow', 'Yellow'),
-        ('brown', 'Brown'),
-    ), widget=forms.Select(attrs=SELECT_CLASS))
-    taille = forms.ChoiceField(choices=(
-        ('1.40-1.60', '1.40-1.60'),
-        ('1.60-1.80', '1.60-1.80'),
-        ('1.80-2.00', '1.80-2.00'),
-    ), widget=forms.Select(attrs=SELECT_CLASS))
+    # TODO(karim): transalte or get a mdae up list of countries and cities
+    country = forms.ChoiceField(
+        choices=(
+            ('maroc', 'Maroc'),
+            ('france', 'France'),
+        ),
+        label=_('country'),
+        widget=forms.Select(attrs=SELECT_CLASS)
+    )
+    city = forms.ChoiceField(
+        choices=(
+            ('marrakech', 'Marrakech'),
+            ('agadir', 'Agadir'),
+        ),
+        label=_('city'),
+        widget=forms.Select(attrs=SELECT_CLASS)
+    )
+    gender = forms.ChoiceField(
+        choices=GENDER_CHOICES,
+        label=_('gender'),
+        widget=forms.Select(attrs=SELECT_CLASS)
+    )
+    hair = forms.ChoiceField(
+        choices=HAIR_CHOICES, label=_('hair'),
+        widget=forms.Select(attrs=SELECT_CLASS),
+    )
+    eyes = forms.ChoiceField(
+        choices=HAIR_CHOICES, label=_('eyes'),
+        widget=forms.Select(attrs=SELECT_CLASS)
+    )
+    height = forms.ChoiceField(
+        choices=(
+            ('1.40-1.60', '1.40-1.60'),
+            ('1.60-1.80', '1.60-1.80'),
+            ('1.80-2.00', '1.80-2.00'),
+        ),
+        label=_('height'),
+        widget=forms.Select(attrs=SELECT_CLASS)
+    )

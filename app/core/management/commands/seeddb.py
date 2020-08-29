@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 from django.conf import settings
 from core.models import User
 
-from models.models import Model, Mensuration, History
+from models.models import Profile, Mensuration, History
 
 
 if settings.DEBUG:
@@ -38,7 +38,7 @@ if settings.DEBUG:
                 'cheveux': lambda x: colors[random.randint(0, len(colors) - 1)],
                 'yeux': lambda x: colors[random.randint(0, len(colors) - 1)],
             })
-            seeder.add_entity(Model, 1, {
+            seeder.add_entity(Profile, 1, {
                 'cin': lambda x: random.randint(10000, 99999),
                 'handle': lambda x: seeder.faker.name().replace(' ', '-'),
                 'country': lambda x: countries[random.randint(0, len(countries) - 1)],

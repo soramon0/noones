@@ -1,125 +1,81 @@
-from django.utils import timezone
 from rest_framework import serializers
 
 from updates.models import (
-    ModelUpdate,
+    ProfileUpdate,
     MeasuresUpdate,
-    PhotosUpdate,
+    GalleryUpdate,
     ProfilePictureUpdate,
-    CoverPictureUpdate
+    CoverPictureUpdate,
 )
 
 
-class ModelUpdateSerializer(serializers.ModelSerializer):
+class OutputProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ModelUpdate
-        fields = ('id', 'model', 'bio', 'accept', 'decline', 'message')
-        read_only_fields = ('id', 'accept', 'decline', 'message')
-
-    def update(self, instance, validated_data):
-        if instance.decline:
-            # if the instance has decline set to True
-            # it means that the admin declined the update
-            # and we should lift up the 24h update restriction
-            # by setting decline to None and removing the previous
-            # message the next time a user makes a new update request
-            instance.decline = None
-            instance.created_at = timezone.now()
-            instance.message = ""
-        return super().update(instance, validated_data)
+        model = ProfileUpdate
+        fields = ("id", "bio", "accept", "decline", "message")
 
 
-class MeasuresUpdateSerializer(serializers.ModelSerializer):
+class InputProfileUpdateSerializer(serializers.Serializer):
+    bio = serializers.CharField(max_length=500)
+
+
+class OutputMeasuresUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = MeasuresUpdate
-        fields = ('id', 'measure', 'taille', 'taillenombrill', 'buste', 'epaules',
-                  'hanches', 'poids', 'pointure', 'cheveux', 'yeux', 'accept', 'decline', 'message')
-        read_only_fields = ('id', 'accept', 'decline', 'message')
+        fields = (
+            "id",
+            "height",
+            "waist",
+            "bust",
+            "shoulders",
+            "hips",
+            "weight",
+            "shoe_size",
+            "hair",
+            "eyes",
+            "accept",
+            "decline",
+            "message",
+        )
 
-    def update(self, instance, validated_data):
-        if instance.decline:
-            # if the instance has decline set to True
-            # it means that the admin declined the update
-            # and we should lift up the 24h update restriction
-            # by setting decline to None and removing the previous
-            # message the next time a user makes a new update request
-            instance.decline = None
-            instance.created_at = timezone.now()
-            instance.message = ""
-        return super().update(instance, validated_data)
+
+class InputMeasuresUpdateSerializer(serializers.Serializer):
+    height = serializers.DecimalField(max_digits=5, decimal_places=2)
+    waist = serializers.DecimalField(max_digits=5, decimal_places=2)
+    bust = serializers.IntegerField()
+    shoulders = serializers.IntegerField()
+    hips = serializers.IntegerField()
+    weight = serializers.IntegerField()
+    shoe_size = serializers.IntegerField()
+    hair = serializers.CharField(max_length=100)
+    eyes = serializers.CharField(max_length=100)
 
 
-class PhotosUpdateSerializer(serializers.ModelSerializer):
+class OutputGalleryUpdateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PhotosUpdate
-        fields = ('id', 'image', 'model', 'accept',
-                  'decline', 'message', 'related_photo')
-        read_only_fields = ('id', 'accept', 'decline', 'message')
-
-    def update(self, instance, validated_data):
-        if instance.decline:
-            # if the instance has decline set to True
-            # it means that the admin declined the update
-            # and we should lift up the 24h update restriction
-            # by setting decline to None and removing the previous
-            # message the next time a user makes a new update request
-            instance.decline = None
-            instance.created_at = timezone.now()
-            instance.message = ""
-        return super().update(instance, validated_data)
+        model = GalleryUpdate
+        fields = ("id", "image", "accept", "decline", "message", "related_photo")
 
 
-class PhotosUpdateResterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PhotosUpdate
-        fields = ('id', 'image', 'model', 'accept',
-                  'decline', 'message', 'related_photo', 'created_at')
-        read_only_fields = ('id',)
-
-    def update(self, instance, validated_data):
-        # This serializer is only used to update a gallery image
-        # and when we update it we always want to reset these fields
-        # NOTE(karim): never use this serializer to create updates
-        instance.created_at = timezone.now()
-        instance.accept = None
-        instance.decline = None
-        instance.message = ''
-        return super().update(instance, validated_data)
+class InputGalleryUpdateSerializer(serializers.Serializer):
+    image = serializers.ImageField()
 
 
-class ProfilePictureUpdateSerializer(serializers.ModelSerializer):
+class OutputProfilePictureUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProfilePictureUpdate
-        fields = ('id', 'image', 'model', 'accept', 'decline', 'message')
-        read_only_fields = ('id', 'accept', 'decline', 'message')
-
-    def update(self, instance, validated_data):
-        if instance.decline:
-            # if the instance has decline set to True
-            # it means that the admin declined the update
-            # and we should lift up the 24h update restriction
-            # by setting decline to None and removing the previous
-            # message the next time a user makes a new update request
-            instance.decline = None
-            instance.created_at = timezone.now()
-            instance.message = ""
-        return super().update(instance, validated_data)
+        fields = ("id", "image", "accept", "decline", "message")
 
 
-class CoverPictureUpdateSerializer(serializers.ModelSerializer):
+class InputProfilePictureUpdateSerializer(serializers.Serializer):
+    image = serializers.ImageField()
+
+
+class OutputCoverPictureUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CoverPictureUpdate
-        fields = ('id', 'image', 'model', 'accept', 'decline', 'message')
-        read_only_fields = ('id', 'accept', 'decline', 'message')
+        fields = ("id", "image", "accept", "decline", "message")
 
-    def update(self, instance, validated_data):
-        if instance.decline:
-            # if the instance has decline set to True
-            # it means that the admin declined the update
-            # and we should lift up the 24h update restriction
-            # by setting decline to None and removing the previous
-            # message the next time a user makes a new update request
-            instance.decline = None
-            instance.created_at = timezone.now()
-            instance.message = ""
-        return super().update(instance, validated_data)
+
+class InputCoverPictureUpdateSerializer(serializers.Serializer):
+    image = serializers.ImageField()

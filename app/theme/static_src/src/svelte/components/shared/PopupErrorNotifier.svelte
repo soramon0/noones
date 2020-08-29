@@ -1,16 +1,16 @@
-<script>
-  import { createEventDispatcher } from "svelte";
-  import { fade, scale } from "svelte/transition";
-  import CancelButton from "./CancelButton";
+<script lang="ts">
+  import { createEventDispatcher } from 'svelte';
+  import { fade, scale } from 'svelte/transition';
+  import CancelButton from './CancelButton.svelte';
 
-  export let errors = {};
-  export let errorKey = null;
+  export let errors: any = {};
+  export let errorKey: string | null = null;
 
   const dispatch = createEventDispatcher();
 
   const hideErrorNotifier = () => {
     errors = {};
-    dispatch("clearErrors");
+    dispatch('clearErrors');
   };
 </script>
 

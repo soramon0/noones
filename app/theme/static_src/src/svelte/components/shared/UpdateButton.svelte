@@ -1,7 +1,7 @@
-<script>
-  export let text = "Update";
-  export let fetching;
-  export let type = "submit";
+<script lang="ts">
+  export let text = 'Update';
+  export let fetching: boolean;
+  export let type = 'submit';
 </script>
 
 <button

@@ -3,6 +3,8 @@ from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 from django.contrib.auth import password_validation
 from django.utils.translation import gettext_lazy as _
 
+from models.models import GENDER_CHOICES
+
 INPUT_CLASS = {'class': 'form-input'}
 TEXTAREA_CLASS = {'class': 'form-textarea'}
 SELECT_CLASS = {'class': 'form-select'}
@@ -41,12 +43,10 @@ class RegisterForm(forms.Form):
                            widget=forms.TextInput(attrs=INPUT_CLASS))
     zipcode = forms.CharField(max_length=50,
                               widget=forms.TextInput(attrs=INPUT_CLASS))
-    cin = forms.CharField(max_length=50,
+    nin = forms.CharField(max_length=50,
                           widget=forms.TextInput(attrs=INPUT_CLASS))
-    sexe = forms.ChoiceField(choices=(
-        ('f', 'Femme'),
-        ('h', 'Homme'),
-    ), widget=forms.Select(attrs=SELECT_CLASS))
+    gender = forms.ChoiceField(
+        choices=GENDER_CHOICES, widget=forms.Select(attrs=SELECT_CLASS))
     q1 = forms.CharField(max_length=500, widget=forms.Textarea(
         attrs=TEXTAREA_CLASS))
     q2 = forms.CharField(max_length=500, widget=forms.Textarea(
@@ -57,20 +57,20 @@ class RegisterForm(forms.Form):
         ('y', 'Oui'),
         ('n', 'Non'),
     ))
-    taille = forms.DecimalField(
+    height = forms.DecimalField(
         max_digits=3, decimal_places=2, widget=forms.NumberInput(attrs=INPUT_CLASS))
-    taillenombrill = forms.DecimalField(
+    waist = forms.DecimalField(
         max_digits=3, decimal_places=2, widget=forms.NumberInput(attrs=INPUT_CLASS))
-    buste = forms.IntegerField(widget=forms.NumberInput(attrs=INPUT_CLASS))
-    epaules = forms.IntegerField(widget=forms.NumberInput(attrs=INPUT_CLASS))
-    hanches = forms.IntegerField(widget=forms.NumberInput(attrs=INPUT_CLASS))
-    poids = forms.IntegerField(widget=forms.NumberInput(attrs=INPUT_CLASS))
-    pointure = forms.IntegerField(widget=forms.NumberInput(attrs=INPUT_CLASS))
-    cheveux = forms.ChoiceField(choices=(
+    bust = forms.IntegerField(widget=forms.NumberInput(attrs=INPUT_CLASS))
+    shoulders = forms.IntegerField(widget=forms.NumberInput(attrs=INPUT_CLASS))
+    hips = forms.IntegerField(widget=forms.NumberInput(attrs=INPUT_CLASS))
+    weight = forms.IntegerField(widget=forms.NumberInput(attrs=INPUT_CLASS))
+    show_size = forms.IntegerField(widget=forms.NumberInput(attrs=INPUT_CLASS))
+    hair = forms.ChoiceField(choices=(
         ('brown', 'brown'),
         ('yellow', 'yellow'),
     ), widget=forms.Select(attrs=SELECT_CLASS))
-    yeux = forms.ChoiceField(choices=(
+    eyes = forms.ChoiceField(choices=(
         ('brown', 'brown'),
         ('yellow', 'yellow'),
     ), widget=forms.Select(attrs=SELECT_CLASS))

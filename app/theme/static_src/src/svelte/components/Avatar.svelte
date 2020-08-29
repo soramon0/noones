@@ -1,11 +1,11 @@
 <script>
-  import photoStore from "../store/photo";
+  import { PhotoStore } from '../store/photo';
 
   // TODO(karim): change this if i reuse this component
-  export const id = "";
+  export const id = '';
 
   // Subscribe to the store
-  $: photoData = $photoStore;
+  $: photoData = $PhotoStore;
 </script>
 
 <div
@@ -16,7 +16,7 @@
     {#if photoData.profile}
       <img
         src={photoData.profile}
-        alt="user profile picture"
+        alt="user profile"
         class="h-full w-full object-cover" />
     {:else}
       <svg class="fill-current text-gray-700 w-full h-full" viewBox="0 0 20 20">

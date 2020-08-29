@@ -12,14 +12,14 @@ urlpatterns = [
     path('contact/', views.contact_model, name='contact_model'),
     path('photos/profile/',
          views.ListPorfilePictures.as_view(), name='list_profile_pictures'),
-    path('photos/profile/<int:picture_id>/',
+    path('photos/profile/<uuid:picture_id>/',
          views.ProfilePictureAPIView.as_view(), name='delete_profile_picture'),
-    path('photos/profile/<int:picture_id>/mark/',
+    path('photos/profile/<uuid:picture_id>/mark/',
          views.mark_as_profile_picture, name='mark_profile_picture'),
     path('photos/cover/',
          views.ListCoverPictures.as_view(), name='list_cover_pictures'),
-    path('photos/cover/<int:picture_id>/',
+    path('photos/cover/<uuid:picture_id>/',
          views.CoverPictureAPIView.as_view(), name='delete_cover_picture'),
-    path('photos/cover/<int:picture_id>/mark/',
+    path('photos/cover/<uuid:picture_id>/mark/',
          views.mark_as_cover_picture, name='mark_cover_picture')
 ]

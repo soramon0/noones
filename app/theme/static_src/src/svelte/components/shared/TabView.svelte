@@ -1,15 +1,19 @@
-<script>
-  import { createEventDispatcher } from "svelte";
+<script lang="ts">
+  import { createEventDispatcher } from 'svelte';
 
-  export let tabs = [];
-  export let tabName = tabs[0].name || "";
-  const currentTabStyles = "text-black border-b-2 border-black";
+  type tabOptions = {
+    name: string;
+  };
+
+  export let tabs: tabOptions[] = [];
+  export let tabName: string = tabs[0].name || '';
+  const currentTabStyles = 'text-black border-b-2 border-black';
 
   const dispatch = createEventDispatcher();
 
-  const setTab = newTab => {
+  const setTab = (newTab: string) => {
     tabName = newTab;
-    dispatch("change", tabName);
+    dispatch('change', tabName);
   };
 </script>
 

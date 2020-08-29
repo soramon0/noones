@@ -1,6 +1,7 @@
 import random
 
 import factory
+from factory.django import DjangoModelFactory
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 
@@ -9,7 +10,7 @@ from models import models
 User = get_user_model()
 
 
-class UserFactory(factory.django.DjangoModelFactory):
+class UserFactory(DjangoModelFactory):
     class Meta:
         model = User
 
@@ -17,7 +18,7 @@ class UserFactory(factory.django.DjangoModelFactory):
     password = 'superultimatesecretpassword'
 
 
-class MeasuresFactory(factory.django.DjangoModelFactory):
+class MeasuresFactory(DjangoModelFactory):
     class Meta:
         model = models.Mensuration
 
@@ -33,7 +34,7 @@ class MeasuresFactory(factory.django.DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
 
 
-class HistoryFacotry(factory.django.DjangoModelFactory):
+class HistoryFacotry(DjangoModelFactory):
     class Meta:
         model = models.History
 
@@ -44,9 +45,9 @@ class HistoryFacotry(factory.django.DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
 
 
-class ModelFactory(factory.django.DjangoModelFactory):
+class ModelFactory(DjangoModelFactory):
     class Meta:
-        model = models.Model
+        model = models.Profile
 
     sexe = factory.LazyFunction(lambda: random.choice(('f', 'h')))
     first_name = factory.Faker('first_name')
@@ -67,7 +68,7 @@ class ModelFactory(factory.django.DjangoModelFactory):
     history = factory.SubFactory(HistoryFacotry)
 
 
-class ContactFactory(factory.django.DjangoModelFactory):
+class ContactFactory(DjangoModelFactory):
     class Meta:
         model = models.Contact
 
@@ -80,10 +81,9 @@ class ContactFactory(factory.django.DjangoModelFactory):
     phone = factory.Faker('phone_number')
 
 
-class ProfilePictureFactory(factory.django.DjangoModelFactory):
+class ProfilePictureFactory(DjangoModelFactory):
     class Meta:
         model = models.ProfilePicture
 
     model = factory.SubFactory(ModelFactory)
-    image = factory.django.ImageField()
-    inUse = True
+    image = "image.jpg"

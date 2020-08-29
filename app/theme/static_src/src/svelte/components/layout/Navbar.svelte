@@ -1,19 +1,20 @@
-<script>
-  import { onMount } from "svelte";
-  import photoStore from "../../store/photo";
+<script lang="ts">
+  import { onMount } from 'svelte';
+  import { PhotoStore } from '../../store/index';
+  import type { IProfilePicture } from '../../types/models';
 
-  export let modelId;
-  export let fullname = "";
-  export let profilePicture;
+  export let modelId: string;
+  export let fullname = '';
+  export let profilePicture: IProfilePicture;
 
   // Subscribe to the store
-  $: photoData = $photoStore;
+  $: photoData = $PhotoStore;
 
   let showPopup = false;
 
   onMount(() => {
-    document.addEventListener("keyup", e => {
-      if (e.key == "Escape") {
+    document.addEventListener('keyup', (e) => {
+      if (e.key == 'Escape') {
         showPopup = false;
       }
     });

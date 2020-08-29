@@ -1,11 +1,12 @@
-<script>
-  import { scale } from "svelte/transition";
-  import { createEventDispatcher } from "svelte";
-  import SaveButton from "../shared/SaveButton";
-  import CancelButton from "../shared/CancelButton";
+<script lang="ts">
+  import { scale } from 'svelte/transition';
+  import { createEventDispatcher } from 'svelte';
+  import SaveButton from '../shared/SaveButton.svelte';
+  import CancelButton from '../shared/CancelButton.svelte';
 
   export let photo;
-  export let markText = "Mark as Profile Picture";
+  export let markText = 'Mark as Profile Picture';
+  export let fetching: boolean = false;
   let showConfirm = false;
   let showDropdown = false;
   const dispatch = createEventDispatcher();
@@ -19,7 +20,7 @@
   }
 
   function onRemove(id) {
-    dispatch("delete", id);
+    dispatch('delete', id);
     toggleConfirm();
   }
 </script>
@@ -87,8 +88,11 @@
         class="w-64 top-0 p-4 absolute z-40 bg-white rounded-lg shadow-md">
         <p class="text-gray-600">Are you sure?</p>
         <div class="mt-2 flex justify-between items-center">
-          <CancelButton on:click={toggleConfirm} />
-          <SaveButton text="Remove" on:click={() => onRemove(photo.id)} />
+          <CancelButton on:click={toggleConfirm} {fetching} />
+          <SaveButton
+            text="Remove"
+            on:click={() => onRemove(photo.id)}
+            {fetching} />
         </div>
       </div>
     {/if}

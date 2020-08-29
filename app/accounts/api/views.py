@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate, update_session_auth_hash, get_user_model
 
-from accounts.utils import send_verification_email
+from accounts.services import confirmation_email_send
 from accounts.api.serializers import (
     SigninSerializer,
     ChangePasswordSerializer,
@@ -16,7 +16,7 @@ from accounts.api.serializers import (
 User = get_user_model()
 
 
-@api_view(('POST',))
+@api_view(("POST",))
 def signin(request):
     context = {}
 
@@ -25,8 +25,8 @@ def signin(request):
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    email = serializer.data.get('email')
-    password = serializer.data.get('password')
+    email = serializer.data.get("email")
+    password = serializer.data.get("password")
 
     user = authenticate(email=email, password=password)
     if user:
@@ -34,15 +34,15 @@ def signin(request):
             token = Token.objects.get(user=user)
         except Token.DoesNotExist:
             token = Token.objects.create(user=user)
-        context['pk'] = user.pk
-        context['token'] = token.key
+        context["pk"] = user.pk
+        context["token"] = token.key
         return Response(context)
     else:
-        context['detail'] = 'Invalid credentials.'
+        context["detail"] = "Invalid credentials."
         return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(('PATCH',))
+@api_view(("PATCH",))
 @permission_classes((IsAuthenticated,))
 def update_password(request):
     user = request.user
@@ -51,16 +51,16 @@ def update_password(request):
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    password = serializer.data.get('password')
-    new_password = serializer.data.get('new_password')
-    confirm_password = serializer.data.get('confirm_password')
+    password = serializer.data.get("password")
+    new_password = serializer.data.get("new_password")
+    confirm_password = serializer.data.get("confirm_password")
 
     if new_password != confirm_password:
-        res = {'confirm_password': ['Passwords do not match.']}
+        res = {"confirm_password": ["Passwords do not match."]}
         return Response(res, status=status.HTTP_400_BAD_REQUEST)
 
     if not user.check_password(password):
-        res = {'password': ['Wrong Password.']}
+        res = {"password": ["Wrong Password."]}
         return Response(res, status=status.HTTP_400_BAD_REQUEST)
 
     user.set_password(new_password)
@@ -69,7 +69,7 @@ def update_password(request):
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(('PATCH',))
+@api_view(("PATCH",))
 @permission_classes((IsAuthenticated,))
 def update_email(request):
     user = request.user
@@ -78,23 +78,19 @@ def update_email(request):
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    email = serializer.data.get('email')
+    email = serializer.data.get("email")
 
     if email == user.email:
-        context = {
-            'email': ['You did not change your email.']
-        }
+        context = {"email": ["You did not change your email."]}
         return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
     if User.objects.filter(email=email).exists():
-        context = {
-            'email': ['That email is being used by another user.']
-        }
+        context = {"email": ["That email is being used by another user."]}
         return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
     user.is_active = False
     user.email = email
     user.save()
-    send_verification_email(request, user)
+    confirmation_email_send(request, user)
 
     return Response(status=status.HTTP_200_OK)

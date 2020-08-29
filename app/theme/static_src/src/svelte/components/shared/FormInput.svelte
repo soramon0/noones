@@ -1,23 +1,24 @@
-<script>
-  import { createEventDispatcher } from "svelte";
-  import { fade } from "svelte/transition";
+<script lang="ts">
+  import { createEventDispatcher } from 'svelte';
+  import { fade } from 'svelte/transition';
 
   const dispatch = createEventDispatcher();
-  export let value = "";
-  export let type = "text";
-  export let name;
-  export let label;
-  export let errors;
+  export let value: string | number = '';
+  export let type = 'text';
+  export let name: string;
+  export let label: string | undefined;
+  export let errors = [];
   export let selectOptions = [];
   let selected = value;
+  $: isErrorsEmpty = !errors || errors.length === 0;
 
-  const valueChanged = e => {
-    if (type === "select") {
-      dispatch("valueChanged", { name, value: selected });
+  const valueChanged = (e) => {
+    if (type === 'select') {
+      dispatch('valueChanged', { name, value: selected });
     } else {
       value = e.target.value;
-      value = type === "number" ? +value : value;
-      dispatch("valueChanged", { name, value });
+      value = type === 'number' ? +value : value;
+      dispatch('valueChanged', { name, value });
     }
   };
 </script>
@@ -32,7 +33,7 @@
     {value}
     on:change={valueChanged}
     class="form-textarea h-32 w-full text-gray-800 font-mono transition-colors
-    duration-300 ease-in-out {errors ? 'border border-red-500' : ''}" />
+    duration-300 ease-in-out {!isErrorsEmpty ? 'border border-red-500' : ''}" />
 {:else if type === 'select'}
   <select class="form-select" bind:value={selected} on:blur={valueChanged}>
     {#each selectOptions as option}
@@ -47,10 +48,10 @@
     step={type === 'number' ? '.01' : null}
     on:change={valueChanged}
     class="form-input text-gray-800 font-mono transition-colors duration-300
-    ease-in-out {errors ? 'border border-red-500' : ''}" />
+    ease-in-out {!isErrorsEmpty ? 'border border-red-500' : ''}" />
 {/if}
 
-{#if errors}
+{#if !isErrorsEmpty}
   <div transition:fade>
     {#each errors as error}
       <p class="text-sm my-1 text-red-400">{error}</p>

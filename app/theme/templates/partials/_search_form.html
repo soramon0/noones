@@ -1,40 +1,42 @@
-<h1 class="mt-8 text-center text-lg uppercase sm:text-2xl">Trouver un model</h1>
+{% load i18n %}
+
+<h1 class="mt-8 text-center text-lg uppercase sm:text-2xl">{% trans "Find a model" %}</h1>
 <form id="search-form" class="mt-6" method="get" action="{% url 'search' %}">
   {{ form.non_field_errors }}
   <div class="px-4 sm:px-2 sm:flex sm:flex-wrap sm:mx-auto sm:max-w-4xl md:px-0">
     <div class="mb-4 sm:w-1/3 sm:px-2">
-      <label class="block mb-2" for="{{ form.pays.id_for_label }}">Pays:</label>
-      {{ form.pays }}
-      {% include "partials/_form_errors.html" with key=form.pays %}
+      <label class="block mb-2" for="{{ form.country.id_for_label }}">{{form.country.label_tag}}</label>
+      {{ form.country }}
+      {% include "partials/_form_errors.html" with key=form.country %}
     </div>
     <div class="mb-4 sm:w-1/3 sm:px-2">
-      <label class="block mb-2" for="{{ form.ville.id_for_label }}">Ville:</label>
-      {{ form.ville }}
-      {% include "partials/_form_errors.html" with key=form.ville %}
+      <label class="block mb-2" for="{{ form.city.id_for_label }}">{{form.city.label_tag}}</label>
+      {{ form.city }}
+      {% include "partials/_form_errors.html" with key=form.city %}
     </div>
     <div class="mb-4 sm:w-1/3 sm:px-2">
-      <label class="block mb-2" for="{{ form.sexe.id_for_label }}">Sexe:</label>
-      {{ form.sexe }}
-      {% include "partials/_form_errors.html" with key=form.sexe %}
+      <label class="block mb-2" for="{{ form.gender.id_for_label }}">{{form.gender.label_tag}}</label>
+      {{ form.gender }}
+      {% include "partials/_form_errors.html" with key=form.gender %}
     </div>
     <div class="mb-4 sm:w-1/3 sm:px-2">
-      <label class="block mb-2" for="{{ form.cheveux.id_for_label }}">Cheveux:</label>
-      {{ form.cheveux }}
-      {% include "partials/_form_errors.html" with key=form.cheveux %}
+      <label class="block mb-2" for="{{ form.hair.id_for_label }}">{{form.hair.label_tag}}</label>
+      {{ form.hair }}
+      {% include "partials/_form_errors.html" with key=form.hair %}
     </div>
     <div class="mb-4 sm:w-1/3 sm:px-2">
-      <label class="block mb-2" for="{{ form.yeux.id_for_label }}">Yeux:</label>
-      {{ form.yeux }}
-      {% include "partials/_form_errors.html" with key=form.yeux %}
+      <label class="block mb-2" for="{{ form.eyes.id_for_label }}">{{form.eyes.label_tag}}</label>
+      {{ form.eyes }}
+      {% include "partials/_form_errors.html" with key=form.eyes %}
     </div>
     <div class="mb-4 sm:w-1/3 sm:px-2">
-      <label class="block mb-2" for="{{ form.taille.id_for_label }}">Taille:</label>
-      {{ form.taille }}
-      {% include "partials/_form_errors.html" with key=form.taille %}
+      <label class="block mb-2" for="{{ form.height.id_for_label }}">{{form.height.label_tag}}</label>
+      {{ form.height }}
+      {% include "partials/_form_errors.html" with key=form.height %}
     </div>
   </div>
   <div class="mt-6 px-4 text-center sm:mt-4">
     <button class="w-full px-10 py-2 rounded-lg bg-black hover:bg-gray-700 text-white uppercase tracking-wide sm:w-auto"
-      type="submit">Search</button>
+      type="submit">{% trans "Search" %}</button>
   </div>
 </form>

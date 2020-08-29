@@ -3,34 +3,37 @@ import os
 from rest_framework import serializers
 
 from models.models import (
-    Model,
+    Profile,
     Mensuration,
-    Photo,
+    Gallery,
     ProfilePicture,
     CoverPicture,
+    GENDER_CHOICES,
 )
+from models.forms import HAIR_CHOICES
+
 from core.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['email']
+        fields = ('email',)
 
 
-class ModelSerializer(serializers.ModelSerializer):
+class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Model
-        fields = ['id', 'user', 'sexe', 'first_name', 'last_name', 'bio', 'birth_date',
-                  'facebook', 'instagram', 'phone', 'addresse', 'city', 'country', 'zipcode', 'cin']
-        read_only_fields = ['user', 'id']
+        model = Profile
+        fields = ('id', 'user', 'gender', 'first_name', 'last_name', 'bio', 'birth_date',
+                  'facebook', 'instagram', 'phone', 'address', 'city', 'country', 'zipcode', 'nin')
+        read_only_fields = ('user', 'id')
 
 
 class MinimalModelSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Model
-        fields = ['id', 'first_name', 'last_name', 'city', 'country']
-        read_only_fields = ['id']
+        model = Profile
+        fields = ('id', 'first_name', 'last_name', 'city', 'country')
+        read_only_fields = ('id',)
 
 
 class ModelContactSerializer(serializers.Serializer):
@@ -42,64 +45,56 @@ class ModelContactSerializer(serializers.Serializer):
 
 
 class ProfilePictureWithModelSerializer(serializers.ModelSerializer):
-    model = MinimalModelSerializer()
+    profile = MinimalModelSerializer()
 
     class Meta:
         model = ProfilePicture
-        fields = ['id', 'image', 'model']
-        read_only_fields = ['id']
+        fields = ('id', 'image', 'profile')
+        read_only_fields = ('id',)
 
 
 class ProfilePictureSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProfilePicture
-        fields = ['id', 'image', 'inUse']
-        read_only_fields = ['id', 'inUse']
+        fields = ('id', 'image', 'inUse')
+        read_only_fields = ('id', 'inUse')
 
 
 class CoverPictureSerializer(serializers.ModelSerializer):
     class Meta:
         model = CoverPicture
-        fields = ['id', 'image', 'inUse']
-        read_only_fields = ['id', 'inUse']
+        fields = ('id', 'image', 'inUse')
+        read_only_fields = ('id', 'inUse')
 
 
 class MeasuresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Mensuration
-        fields = ['id', 'user', 'taille', 'taillenombrill', 'buste', 'epaules',
-                  'hanches', 'poids', 'pointure', 'cheveux', 'yeux']
-        read_only_fields = ['user', 'id']
+        fields = ('id', 'user', 'height', 'waist', 'bust', 'shoulders',
+                  'hips', 'weight', 'shoe_size', 'hair', 'eyes')
+        read_only_fields = ('user', 'id')
 
 
 class PhotoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Photo
-        fields = ['id', 'image', 'model']
-        read_only_fields = ['id']
+        model = Gallery
+        fields = ('id', 'image', 'profile')
+        read_only_fields = ('id',)
 
 
 class SearchSerilaizer(serializers.Serializer):
-    pays = serializers.ChoiceField(choices=(
+    country = serializers.ChoiceField(choices=(
         ('maroc', 'Maroc'),
         ('france', 'France'),
     ))
-    ville = serializers.ChoiceField(choices=(
+    city = serializers.ChoiceField(choices=(
         ('marrakech', 'Marrakech'),
         ('agadir', 'Agadir'),
     ))
-    sexe = serializers.ChoiceField(choices=(
-        ('f', 'Femme'),
-        ('h', 'Homme'),))
-    cheveux = serializers.ChoiceField(choices=(
-        ('brown', 'Brown'),
-        ('yellow', 'Yellow'),
-    ))
-    yeux = serializers.ChoiceField(choices=(
-        ('yellow', 'Yellow'),
-        ('brown', 'Brown'),
-    ))
-    taille = serializers.ChoiceField(choices=(
+    gender = serializers.ChoiceField(choices=GENDER_CHOICES)
+    hair = serializers.ChoiceField(choices=HAIR_CHOICES)
+    eyes = serializers.ChoiceField(choices=HAIR_CHOICES)
+    height = serializers.ChoiceField(choices=(
         ('1.40-1.60', '1.40-1.60'),
         ('1.60-1.80', '1.60-1.80'),
         ('1.80-2.00', '1.80-2.00'),

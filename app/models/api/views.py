@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 
 from models.api.pagination import CreatedAtPaginator
 from models.api.serializers import (
-    ModelSerializer,
+    ProfileSerializer,
     ModelContactSerializer,
     ProfilePictureWithModelSerializer,
     UserSerializer,
@@ -18,109 +18,117 @@ from models.api.serializers import (
     ProfilePictureSerializer,
     CoverPictureSerializer,
     PhotoSerializer,
-    SearchSerilaizer
+    SearchSerilaizer,
 )
 from models.models import (
-    Model,
+    Profile,
     Mensuration,
-    Photo,
+    Gallery,
     ProfilePicture,
     CoverPicture,
-    Contact
+    Contact,
 )
 
 
 User = get_user_model()
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@api_view(("GET",))
+@permission_classes((IsAuthenticated,))
 def me(request):
-    try:
-        user = request.user
-        model = user.model
-        measures = user.mensuration
-    except User.model.RelatedObjectDoesNotExist:
-        # Handling when admin user logs in
-        # admin does't have the requried fields for this page
-        # So we redirect him
-        # TODO(karim): handle the navigation to not include a link to this page
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    user = request.user
+    profile = user.profile
+    measures = user.mensuration
 
     user_serializer = UserSerializer(user)
-    model_serializer = ModelSerializer(model)
+    model_serializer = ProfileSerializer(profile)
     measures_serializer = MeasuresSerializer(measures)
 
     # Gallery
-    photos = Photo.objects.filter(model=model, inUse=True)[:8]
+    photos = Gallery.objects.filter(profile=profile, inUse=True)[:8]
     photo_serializer = PhotoSerializer(photos, many=True)
 
-    res = {
-        'model': model_serializer.data,
-        'measures': measures_serializer.data,
-        'photos': photo_serializer.data
+    context = {
+        "model": model_serializer.data,
+        "measures": measures_serializer.data,
+        "photos": photo_serializer.data,
     }
-    res['model'].update({'email': user_serializer.data['email']})
+    context["model"].update({"email": user_serializer.data["email"]})
 
     try:
-        profile_picture = ProfilePicture.objects.get(
-            model=model.id, inUse=True)
+        profile_picture = ProfilePicture.objects.get(profile_id=profile.id, inUse=True)
         profile_picture_serializer = ProfilePictureSerializer(profile_picture)
-        res['profilePicture'] = profile_picture_serializer.data
+        context["profilePicture"] = profile_picture_serializer.data
     except ProfilePicture.DoesNotExist:
-        res['profilePicture'] = {}
+        context["profilePicture"] = {}
 
     try:
-        cover_picture = CoverPicture.objects.get(model=model.id, inUse=True)
+        cover_picture = CoverPicture.objects.get(profile_id=profile.id, inUse=True)
         cover_picture_serializer = CoverPictureSerializer(cover_picture)
-        res['coverPicture'] = cover_picture_serializer.data
+        context["coverPicture"] = cover_picture_serializer.data
     except CoverPicture.DoesNotExist:
-        res['coverPicture'] = {}
+        context["coverPicture"] = {}
 
-    return Response(res)
+    return Response(context)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def contact_model(request):
     serializer = ModelContactSerializer(data=request.data)
 
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    model_id = serializer.data.get('model_id')
-    model_full_name = serializer.data.get('model_full_name')
-    full_name = serializer.data.get('full_name')
-    email = serializer.data.get('email')
-    phone = serializer.data.get('phone')
+    model_id = serializer.data.get("model_id")
+    model_full_name = serializer.data.get("model_full_name")
+    full_name = serializer.data.get("full_name")
+    email = serializer.data.get("email")
+    phone = serializer.data.get("phone")
 
     try:
-        model = Model.objects.only('user').get(pk=model_id)
-        model_email = model.user.email
-    except Model.DoesNotExist:
-        error = {'errors': {'model_full_name': ['model do not exist']}}
+        user = User.objects.get(profile=model_id)
+        user_email = user.email
+    except User.DoesNotExist:
+        error = {"errors": {"model_full_name": ["model do not exist"]}}
         return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
-    Contact.objects.create(model=model, model_full_name=model_full_name, full_name=full_name,
-                           model_email=model_email, email=email, phone=phone)
+    Contact.objects.create(
+        user=user,
+        model_full_name=model_full_name,
+        full_name=full_name,
+        model_email=user_email,
+        email=email,
+        phone=phone,
+    )
 
     send_mail(
-        f'Contact Request for {model_email}',
-        f'Client {full_name} at {email} - {phone} wants to contact {model_email}',
+        f"Contact Request for {user_email}",
+        f"Client {full_name} at {email} - {phone} wants to contact {user_email}",
         email,
-        [settings.EMAIL_HOST_USER],
+        (settings.EMAIL_HOST_USER,),
         fail_silently=False,
     )
 
-    return Response({'message': "Thanks! We'll get back to you soon."})
+    return Response({"message": "Thanks! We'll get back to you soon."})
 
 
 class ListModels(generics.ListAPIView):
     serializer_class = ProfilePictureWithModelSerializer
 
     def get_queryset(self):
-        fields = ['image', 'model__first_name',
-                  'model__last_name', 'model__country', 'model__city']
-        return ProfilePicture.objects.filter(inUse=True).select_related('model').only(*fields).order_by('-model__created_at')
+        fields = (
+            "image",
+            "profile__first_name",
+            "profile__last_name",
+            "profile__country",
+            "profile__city",
+        )
+        return (
+            ProfilePicture.objects.filter(inUse=True)
+            .select_related("profile")
+            .only(*fields)
+            .order_by("-user__created_at")
+        )
 
     def list(self, request):
         queryset = self.filter_queryset(self.get_queryset())
@@ -136,20 +144,19 @@ class ListModels(generics.ListAPIView):
 
 class UpdateModel(generics.RetrieveUpdateAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = ModelSerializer
+    serializer_class = ProfileSerializer
 
     def get_object(self):
-        user = self.request.user
-        return user.model
+        return self.request.user.profile
 
     def patch(self, request, pk=None):
-        model = self.get_object()
+        profile = self.get_object()
 
         data = request.data
 
-        data.pop('bio', None)
+        data.pop("bio", None)
 
-        serializer = self.get_serializer(model, data=data, partial=True)
+        serializer = self.get_serializer(profile, data=data, partial=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -163,25 +170,40 @@ class SearchModels(generics.ListAPIView):
     data = {}
 
     def get_queryset(self):
-        pays = self.data.get('pays')
-        ville = self.data.get('ville')
-        sexe = self.data.get('sexe')
-        cheveux = self.data.get('cheveux')
-        yeux = self.data.get('yeux')
-        taille = self.data.get('taille')
+        country = self.data.get("country")
+        city = self.data.get("city")
+        gender = self.data.get("gender")
+        hair = self.data.get("hair")
+        eyes = self.data.get("eyes")
+        height = self.data.get("height")
 
         # data is 1.40-1.60
         # split to get each one
-        taille = taille.split('-')
+        height = height.split("-")
 
-        fields = ['image', 'model__first_name',
-                  'model__last_name', 'model__country', 'model__city']
-        return ProfilePicture.objects.filter(
-            inUse=True, model__country__iexact=pays, model__city__iexact=ville,
-            model__sexe__iexact=sexe, model__measures__cheveux__iexact=cheveux,
-            model__measures__yeux__iexact=yeux, model__measures__taille__gte=taille[0],
-            model__measures__taille__lte=taille[1]
-        ).select_related('model').only(*fields).order_by('-model__created_at')
+        fields = (
+            "image",
+            "profile__first_name",
+            "profile__last_name",
+            "profile__country",
+            "profile__city",
+        )
+
+        return (
+            ProfilePicture.objects.filter(
+                inUse=True,
+                profile__country__iexact=country,
+                profile__city__iexact=city,
+                profile__gender__iexact=gender,
+                user__mensuration__hair__iexact=hair,
+                user__mensuration__eyes__iexact=eyes,
+                user__mensuration__height__gte=height[0],
+                user__mensuration__height__lte=height[1],
+            )
+            .select_related("profile")
+            .only(*fields)
+            .order_by("-user__created_at")
+        )
 
     def set_data(self, data):
         self.data = data
@@ -205,27 +227,25 @@ class SearchModels(generics.ListAPIView):
         return Response(serializer.data)
 
 
-@api_view(['PUT'])
-@permission_classes([IsAuthenticated])
+@api_view(("PUT",))
+@permission_classes((IsAuthenticated,))
 def mark_as_profile_picture(request, picture_id):
-    model_id = request.user.model.id
+    user_id = request.user.id
 
     try:
         objs = [
-            ProfilePicture.objects.get(pk=picture_id, model=model_id),
-            ProfilePicture.objects.get(model=model_id, inUse=True)
+            ProfilePicture.objects.get(pk=picture_id, user_id=user_id),
+            ProfilePicture.objects.get(user_id=user_id, inUse=True),
         ]
 
         if objs[0].id == objs[1].id:
-            res = {
-                "profilePicture": ["Picture is already marked."]
-            }
+            res = {"profilePicture": ["Picture is already marked."]}
             return Response(res, status=status.HTTP_400_BAD_REQUEST)
 
         objs[0].inUse = True
         objs[1].inUse = False
 
-        ProfilePicture.objects.bulk_update(objs, ['inUse'])
+        ProfilePicture.objects.bulk_update(objs, ["inUse"])
 
         return Response()
     except ProfilePicture.DoesNotExist:
@@ -234,11 +254,11 @@ def mark_as_profile_picture(request, picture_id):
 
 class ListPorfilePictures(generics.ListAPIView):
     serializer_class = ProfilePictureSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
     pagination_class = CreatedAtPaginator
 
     def get_queryset(self):
-        return ProfilePicture.objects.filter(model=self.request.user.model.id)
+        return ProfilePicture.objects.filter(user_id=self.request.user.id)
 
     def list(self, request):
         queryset = self.filter_queryset(self.get_queryset())
@@ -253,11 +273,11 @@ class ListPorfilePictures(generics.ListAPIView):
 
 
 class ProfilePictureAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self, pk):
         try:
-            return ProfilePicture.objects.get(pk=pk, model=self.request.user.model.id)
+            return ProfilePicture.objects.get(pk=pk, user_id=self.request.user.id)
         except ProfilePicture.DoesNotExist:
             raise Http404
 
@@ -265,37 +285,35 @@ class ProfilePictureAPIView(APIView):
         picture = self.get_object(picture_id)
 
         if picture.inUse:
-            res = {
+            context = {
                 "profilePicture": ["Can not delete current used profile picture."]
             }
-            return Response(res, status=status.HTTP_400_BAD_REQUEST)
+            return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
         picture.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['PUT'])
-@permission_classes([IsAuthenticated])
+@api_view(("PUT",))
+@permission_classes((IsAuthenticated,))
 def mark_as_cover_picture(request, picture_id):
-    model_id = request.user.model.id
+    user_id = request.user.id
 
     try:
         objs = [
-            CoverPicture.objects.get(pk=picture_id, model=model_id),
-            CoverPicture.objects.get(model=model_id, inUse=True)
+            CoverPicture.objects.get(pk=picture_id, user_id=user_id),
+            CoverPicture.objects.get(user_id=user_id, inUse=True),
         ]
 
         if objs[0].id == objs[1].id:
-            res = {
-                "coverPicture": ["Picture is already marked."]
-            }
+            res = {"coverPicture": ["Picture is already marked."]}
             return Response(res, status=status.HTTP_400_BAD_REQUEST)
 
         objs[0].inUse = True
         objs[1].inUse = False
 
-        CoverPicture.objects.bulk_update(objs, ['inUse'])
+        CoverPicture.objects.bulk_update(objs, ["inUse"])
 
         return Response()
     except CoverPicture.DoesNotExist:
@@ -304,11 +322,11 @@ def mark_as_cover_picture(request, picture_id):
 
 class ListCoverPictures(generics.ListAPIView):
     serializer_class = CoverPictureSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
     pagination_class = CreatedAtPaginator
 
     def get_queryset(self):
-        return CoverPicture.objects.filter(model=self.request.user.model.id)
+        return CoverPicture.objects.filter(user_id=self.request.user.id)
 
     def list(self, request):
         queryset = self.filter_queryset(self.get_queryset())
@@ -323,11 +341,11 @@ class ListCoverPictures(generics.ListAPIView):
 
 
 class CoverPictureAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self, pk):
         try:
-            return CoverPicture.objects.get(pk=pk, model=self.request.user.model.id)
+            return CoverPicture.objects.get(pk=pk, user_id=self.request.user.id)
         except CoverPicture.DoesNotExist:
             raise Http404
 
@@ -335,10 +353,8 @@ class CoverPictureAPIView(APIView):
         picture = self.get_object(picture_id)
 
         if picture.inUse:
-            res = {
-                "coverPicture": ["Can not delete current used cover picture."]
-            }
-            return Response(res, status=status.HTTP_400_BAD_REQUEST)
+            context = {"coverPicture": ["Can not delete current used cover picture."]}
+            return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
         picture.delete()
 

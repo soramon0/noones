@@ -1,13 +1,29 @@
 import { writable } from 'svelte/store';
 import http from '../../main/http';
+import PhotoStore from './photo';
 import UIStore from './ui';
-import PhotosStore from './photo';
+import type {
+  IProfile,
+  IMeasures,
+  IProfilePicture,
+  ICoverPicture,
+  IGallary,
+} from '../types/models';
 
-const { subscribe, set, update } = writable({
-  model: {},
-  measures: {},
-  profilePicture: {},
-  coverPicture: {},
+type Profile = {
+  model: IProfile;
+  measures: IMeasures;
+  email: string;
+  profilePicture: IProfilePicture;
+  coverPicture: ICoverPicture;
+  errors: any;
+};
+
+const { subscribe, set, update } = writable<Profile>({
+  model: {} as IProfile,
+  measures: {} as IMeasures,
+  coverPicture: {} as ICoverPicture,
+  profilePicture: {} as IProfilePicture,
   email: null,
   errors: {},
 });
@@ -18,10 +34,15 @@ export default {
   set,
   async populate() {
     try {
-      const { data } = await http.get(`models/me/`);
+      // email and errors objects will not be in the response
+      type MeResponse = Profile & {
+        photos: IGallary;
+      };
+
+      const { data } = await http.get<MeResponse>(`models/me/`);
 
       // create the photos' store
-      PhotosStore.populate({ photos: data.photos });
+      PhotoStore.populate({ photos: data.photos });
 
       // Shaping the store data
       const { model, measures, profilePicture, coverPicture } = data;
@@ -35,10 +56,6 @@ export default {
         email: model.email,
       }));
     } catch ({ response }) {
-      if (response && response.status == 401) {
-        return window.location.replace('/');
-      }
-
       throw response;
     }
   },
@@ -46,7 +63,10 @@ export default {
     try {
       UIStore.setFetchAndFeedbackModal(true, false);
 
-      const { data } = await http.patch(`models/${payload.id}/`, payload);
+      const { data }: { data: IProfile } = await http.patch(
+        `models/${payload.id}/`,
+        payload
+      );
 
       update((store) => ({
         ...store,
@@ -64,10 +84,10 @@ export default {
       }));
     }
   },
-  markAsProfilePicture(data) {
+  markAsProfilePicture(data: IProfilePicture) {
     update((store) => ({ ...store, profilePicture: data }));
   },
-  markAsCoverPicture(data) {
+  markAsCoverPicture(data: ICoverPicture) {
     update((store) => ({ ...store, coverPicture: data }));
   },
   async changePassword(payload) {
@@ -91,7 +111,7 @@ export default {
       }));
     }
   },
-  async changeEmail(email) {
+  async changeEmail(email: string) {
     try {
       UIStore.setFetchAndFeedbackModal(true, false);
 

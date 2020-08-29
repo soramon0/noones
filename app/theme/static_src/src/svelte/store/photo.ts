@@ -1,7 +1,7 @@
-import { writable } from "svelte/store";
-import http from "../../main/http";
-import UIStore from "./ui";
-import UserStore from "./user";
+import { writable } from 'svelte/store';
+import http from '../../main/http';
+import UserStore from './user';
+import UIStore from './ui';
 
 const { subscribe, set, update } = writable({
   photos: [],
@@ -21,8 +21,8 @@ export function onUploadProgress(progressEvent) {
   // if not try and get the decompressed content length
   const totalLength = progressEvent.lengthComputable
     ? progressEvent.total
-    : progressEvent.target.getResponseHeader("content-length") ||
-      progressEvent.target.getResponseHeader("x-decompressed-content-length");
+    : progressEvent.target.getResponseHeader('content-length') ||
+      progressEvent.target.getResponseHeader('x-decompressed-content-length');
 
   if (totalLength != null) {
     const percentage = Math.round((progressEvent.loaded * 100) / totalLength);
@@ -33,7 +33,7 @@ export function onUploadProgress(progressEvent) {
 
 function fileIsValid(file, key, sizeLimit) {
   // TODO(kairm): check with project manager for supported mimetypes
-  if (!file.type.startsWith("image/")) {
+  if (!file.type.startsWith('image/')) {
     update((store) => ({
       ...store,
       errors: {
@@ -63,14 +63,16 @@ export default {
   subscribe,
   update,
   set,
-  populate: (data) => update((store) => ({ ...store, ...data })),
-  getProfilePictures: async (cursor = "") => {
+  populate(data) {
+    return update((store) => ({ ...store, ...data }));
+  },
+  async getProfilePictures(cursor = '') {
     try {
       const { data } = await http.get(`/models/photos/profile/?${cursor}`);
       let nextCursor = null;
 
       if (data.next) {
-        nextCursor = data.next.split("?")[1];
+        nextCursor = data.next.split('?')[1];
       }
 
       // add errors object which will store errors
@@ -124,8 +126,8 @@ export default {
       UIStore.setFetchAndFeedbackModal(false, false);
 
       update((store) => {
-        store.errors["profilePicture"] = response.data["profilePicture"] || [
-          response.data["detail"],
+        store.errors['profilePicture'] = response.data['profilePicture'] || [
+          response.data['detail'],
         ];
 
         return {
@@ -159,8 +161,8 @@ export default {
       UIStore.setFetchAndFeedbackModal(false, false);
 
       update((store) => {
-        store.errors["profilePicture"] = response.data["profilePicture"] || [
-          response.data["detail"],
+        store.errors['profilePicture'] = response.data['profilePicture'] || [
+          response.data['detail'],
         ];
 
         return {
@@ -169,13 +171,13 @@ export default {
       });
     }
   },
-  getCoverPictures: async (cursor = "") => {
+  getCoverPictures: async (cursor = '') => {
     try {
       const { data } = await http.get(`/models/photos/cover/?${cursor}`);
       let nextCursor = null;
 
       if (data.next) {
-        nextCursor = data.next.split("?")[1];
+        nextCursor = data.next.split('?')[1];
       }
 
       // add errors object which will store errors
@@ -229,8 +231,8 @@ export default {
       UIStore.setFetchAndFeedbackModal(false, false);
 
       update((store) => {
-        store.errors["coverPicture"] = response.data["coverPicture"] || [
-          response.data["detail"],
+        store.errors['coverPicture'] = response.data['coverPicture'] || [
+          response.data['detail'],
         ];
 
         return {
@@ -264,8 +266,8 @@ export default {
       UIStore.setFetchAndFeedbackModal(false, false);
 
       update((store) => {
-        store.errors["coverPicture"] = response.data["coverPicture"] || [
-          response.data["detail"],
+        store.errors['coverPicture'] = response.data['coverPicture'] || [
+          response.data['detail'],
         ];
 
         return {

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% load static %}
 
@@ -31,87 +32,88 @@
     </div>
   </div>
 
+  <span class="hidden" id="signup-step">{{step}}</span>
   <form class="register-form mt-6 px-4 sm:px-0 relative overflow-hidden" action="{% url 'signup' %}" method="post">
     {% csrf_token %}
-    {{ form.non_field_errors }}
+    {{ profile_form.non_field_errors }}
+    {{ history_form.non_field_errors }}
+    {{ measures_form.non_field_errors }}
     <div class="current transition duration-300 ease-in-out transform">
       <h3 class="uppercase text-2xl font-normal mt-12 tracking-wide">Contact</h3>
       {% include "partials/_alerts.html" %}
       <div class="mt-4 sm:flex">
         <div class="sm:flex-1">
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.first_name.id_for_label }}">Prénom:</label>
-            {{ form.first_name }}
-            {% include "partials/_form_errors.html" with key=form.first_name %}
+            <label class="block text-gray-800 font-semibold" for="{{ profile_form.first_name.id_for_label }}">{{profile_form.first_name.label_tag}}</label>
+            {{ profile_form.first_name }}
+            {% include "partials/_form_errors.html" with key=profile_form.first_name %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.last_name.id_for_label }}">Nom</label>
-            {{ form.last_name }}
-            {% include "partials/_form_errors.html" with key=form.last_name %}
+            <label class="block text-gray-800 font-semibold" for="{{ profile_form.last_name.id_for_label }}">{{profile_form.last_name.label_tag}}</label>
+            {{ profile_form.last_name }}
+            {% include "partials/_form_errors.html" with key=profile_form.last_name %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.email.id_for_label }}">Email:</label>
-            {{ form.email }}
-            {% include "partials/_form_errors.html" with key=form.email %}
+            <label class="block text-gray-800 font-semibold" for="{{ profile_form.email.id_for_label }}">{{profile_form.email.label_tag}}</label>
+            {{ profile_form.email }}
+            {% include "partials/_form_errors.html" with key=profile_form.email %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.password.id_for_label }}">Password</label>
-            {{ form.password }}
-            {% include "partials/_form_errors.html" with key=form.password %}
+            <label class="block text-gray-800 font-semibold" for="{{ profile_form.password.id_for_label }}">{{profile_form.password.label_tag}}</label>
+            {{ profile_form.password }}
+            {% include "partials/_form_errors.html" with key=profile_form.password %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.birth_date.id_for_label }}">Date De
-              Niassance</label>
-            {{ form.birth_date }}
-            {% include "partials/_form_errors.html" with key=form.birth_date %}
+            <label class="block text-gray-800 font-semibold" for="{{ profile_form.birth_date.id_for_label }}">{{profile_form.birth_date.label_tag}}</label>
+            {{ profile_form.birth_date }}
+            {% include "partials/_form_errors.html" with key=profile_form.birth_date %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.city.id_for_label }}">Ville</label>
-            {{ form.city }}
-            {% include "partials/_form_errors.html" with key=form.city %}
+            <label class="block text-gray-800 font-semibold" for="{{ profile_form.city.id_for_label }}">{{profile_form.city.label_tag}}</label>
+            {{ profile_form.city }}
+            {% include "partials/_form_errors.html" with key=profile_form.city %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.country.id_for_label }}">Pays</label>
-            {{ form.country }}
-            {% include "partials/_form_errors.html" with key=form.country %}
+            <label class="block text-gray-800 font-semibold" for="{{ profile_form.country.id_for_label }}">{{profile_form.country.label_tag}}</label>
+            {{ profile_form.country }}
+            {% include "partials/_form_errors.html" with key=profile_form.country %}
           </div>
         </div>
         <div class="sm:flex-1 sm:ml-12">
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.facebook.id_for_label }}">Facebook:</label>
-            {{ form.facebook }}
-            {% include "partials/_form_errors.html" with key=form.facebook %}
+            <label class="block text-gray-800 font-semibold" for="{{ profile_form.facebook.id_for_label }}">Facebook:</label>
+            {{ profile_form.facebook }}
+            {% include "partials/_form_errors.html" with key=profile_form.facebook %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.instagram.id_for_label }}">Instagram</label>
-            {{ form.instagram }}
-            {% include "partials/_form_errors.html" with key=form.instagram %}
+            <label class="block text-gray-800 font-semibold" for="{{ profile_form.instagram.id_for_label }}">Instagram:</label>
+            {{ profile_form.instagram }}
+            {% include "partials/_form_errors.html" with key=profile_form.instagram %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.phone.id_for_label }}">Phone:</label>
-            {{ form.phone }}
-            {% include "partials/_form_errors.html" with key=form.phone %}
+            <label class="block text-gray-800 font-semibold" for="{{ profile_form.phone.id_for_label }}">{{profile_form.phone.label_tag}}</label>
+            {{ profile_form.phone }}
+            {% include "partials/_form_errors.html" with key=profile_form.phone %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.sexe.id_for_label }}">Sexe</label>
-            {{ form.sexe }}
-            {% include "partials/_form_errors.html" with key=form.sexe %}
+            <label class="block text-gray-800 font-semibold" for="{{ profile_form.gender.id_for_label }}">{{profile_form.gender.label_tag}}</label>
+            {{ profile_form.gender }}
+            {% include "partials/_form_errors.html" with key=profile_form.gender %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.cin.id_for_label }}">CNI or Numéro de
-              Passport</label>
-            {{ form.cin }}
-            {% include "partials/_form_errors.html" with key=form.cin %}
+            <label class="block text-gray-800 font-semibold" for="{{ profile_form.nin.id_for_label }}">{{profile_form.nin.label_tag}} or Numéro de Passport</label>
+            {{ profile_form.nin }}
+            {% include "partials/_form_errors.html" with key=profile_form.nin %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.addresse.id_for_label }}">Adresse</label>
-            {{ form.addresse }}
-            {% include "partials/_form_errors.html" with key=form.addresse %}
+            <label class="block text-gray-800 font-semibold" for="{{ profile_form.address.id_for_label }}">{{profile_form.address.label_tag}}</label>
+            {{ profile_form.address }}
+            {% include "partials/_form_errors.html" with key=profile_form.address %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.zipcode.id_for_label }}">Zipcode</label>
-            {{ form.zipcode }}
-            {% include "partials/_form_errors.html" with key=form.zipcode %}
+            <label class="block text-gray-800 font-semibold" for="{{ profile_form.zipcode.id_for_label }}">{{profile_form.zipcode.label_tag}}</label>
+            {{ profile_form.zipcode }}
+            {% include "partials/_form_errors.html" with key=profile_form.zipcode %}
           </div>
         </div>
       </div>
@@ -124,21 +126,20 @@
       <h3 class="mt-12 uppercase text-2xl font-normal tracking-wide">Racontez nous</h3>
       <div class="mt-4 md:pl-0 md:flex md:flex-wrap">
         <div class="mt-2 md:w-1/2">
-          <label class="block text-gray-800 font-semibold" for="{{ form.q1.id_for_label }}">Qui étés vous?:</label>
-          {{ form.q1 }}
-          {% include "partials/_form_errors.html" with key=form.q1 %}
+          {% comment %} {{measures_form.height.label_tag}} {% endcomment %}
+          <label class="block text-gray-800 font-semibold" for="{{ history_form.q1.id_for_label }}">{{history_form.q1.help_text}}</label>
+          {{ history_form.q1 }}
+          {% include "partials/_form_errors.html" with key=history_form.q1 %}
         </div>
         <div class="mt-2 md:w-1/2">
-          <label class="block text-gray-800 font-semibold" for="{{ form.q2.id_for_label }}">Que connaissez-vous à propos
-            de la MODE?:</label>
-          {{ form.q2 }}
-          {% include "partials/_form_errors.html" with key=form.q2 %}
+          <label class="block text-gray-800 font-semibold" for="{{ history_form.q2.id_for_label }}">{{history_form.q2.help_text}}</label>
+          {{ history_form.q2 }}
+          {% include "partials/_form_errors.html" with key=history_form.q2 %}
         </div>
         <div class="mt-2 md:w-1/2">
-          <label class="block text-gray-800 font-semibold" for="{{ form.q3.id_for_label }}">Pourquoi devons-nous
-            approuver votre inscription?:</label>
-          {{ form.q3 }}
-          {% include "partials/_form_errors.html" with key=form.q3 %}
+          <label class="block text-gray-800 font-semibold" for="{{ history_form.q3.id_for_label }}">{{history_form.q3.help_text}}:</label>
+          {{ history_form.q3 }}
+          {% include "partials/_form_errors.html" with key=history_form.q3 %}
         </div>
       </div>
       <div class="mt-4 text-xs sm:text-sm">
@@ -159,15 +160,15 @@
           <li class="disc-list-item"><span class="list-disc"></span> Elle/Il est à la UNE sur la page NOCMODELS dans
             www.nocmodels.com`</li>
         </ul>
-        <div class="mt-2 mt-4">
-          <label class="block text-gray-800 font-semibold mb-2" for="{{ form.q4.id_for_label }}">Voulez-vous devenir
+        <div class="mt-4">
+          <label class="block text-gray-800 font-semibold mb-2" for="{{ history_form.q4.id_for_label }}">Voulez-vous devenir
             un(e) NOC MODEL?:</label>
-          {% for radio in form.q4  %}
-          <div class="block mb-2">
-            {{ radio }}
-          </div>
+          {% for radio in history_form.q4  %}
+            <div class="block mb-2">
+              {{ radio }}
+            </div>
           {% endfor %}
-          {% include "partials/_form_errors.html" with key=form.q4 %}
+          {% include "partials/_form_errors.html" with key=history_form.q4 %}
         </div>
       </div>
       <div class="button-container text-right mt-6 mx-2">
@@ -187,65 +188,63 @@
       <div class="mt-4 sm:flex">
         <div class="sm:flex-1">
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.taille.id_for_label }}">Taille:</label>
-            {{ form.taille }}
-            {% include "partials/_form_errors.html" with key=form.taille %}
+            <label class="block text-gray-800 font-semibold" for="{{ measures_form.height.id_for_label }}">{{measures_form.height.label_tag}}</label>
+            {{ measures_form.height }}
+            {% include "partials/_form_errors.html" with key=measures_form.height %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.buste.id_for_label }}">Buste</label>
-            {{ form.buste }}
-            {% include "partials/_form_errors.html" with key=form.buste %}
+            <label class="block text-gray-800 font-semibold" for="{{ measures_form.bust.id_for_label }}">{{measures_form.bust.label_tag}}</label>
+            {{ measures_form.bust }}
+            {% include "partials/_form_errors.html" with key=measures_form.bust %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.poids.id_for_label }}">Poids:</label>
-            {{ form.poids }}
-            {% include "partials/_form_errors.html" with key=form.poids %}
+            <label class="block text-gray-800 font-semibold" for="{{ measures_form.weight.id_for_label }}">{{measures_form.weight.label_tag}}</label>
+            {{ measures_form.weight }}
+            {% include "partials/_form_errors.html" with key=measures_form.weight %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.epaules.id_for_label }}">Epaules</label>
-            {{ form.epaules }}
-            {% include "partials/_form_errors.html" with key=form.epaules %}
+            <label class="block text-gray-800 font-semibold" for="{{ measures_form.shoulders.id_for_label }}">{{measures_form.shoulders.label_tag}}</label>
+            {{ measures_form.shoulders }}
+            {% include "partials/_form_errors.html" with key=measures_form.shoulders %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.cheveux.id_for_label }}">Couleurs de
-              Cheveux</label>
-            {{ form.cheveux }}
-            {% include "partials/_form_errors.html" with key=form.cheveux %}
+            <label class="block text-gray-800 font-semibold" for="{{ measures_form.hair.id_for_label }}">{{measures_form.hair.help_text}}</label>
+            {{ measures_form.hair }}
+            {% include "partials/_form_errors.html" with key=measures_form.hair %}
           </div>
         </div>
         <div class="sm:flex-1 sm:ml-12">
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.taillenombrill.id_for_label }}">Taille
-              (Nombrill) en cm:</label>
-            {{ form.taillenombrill }}
-            {% include "partials/_form_errors.html" with key=form.taillenombrill %}
+            <label class="block text-gray-800 font-semibold" for="{{ measures_form.waist.id_for_label }}">{{measures_form.waist.label_tag}} {% trans "in cm" %}</label>
+            {{ measures_form.waist }}
+            {% include "partials/_form_errors.html" with key=measures_form.waist %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.instagram.id_for_label }}">Hanches</label>
-            {{ form.hanches }}
-            {% include "partials/_form_errors.html" with key=form.hanches %}
+            <label class="block text-gray-800 font-semibold" for="{{ measures_form.hips.id_for_label }}">{{measures_form.hips.label_tag}}</label>
+            {{ measures_form.hips }}
+            {% include "partials/_form_errors.html" with key=measures_form.hips %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.pointure.id_for_label }}">Pointure:</label>
-            {{ form.pointure }}
-            {% include "partials/_form_errors.html" with key=form.pointure %}
+            <label class="block text-gray-800 font-semibold" for="{{ measures_form.shoe_size.id_for_label }}">{{measures_form.shoe_size.label_tag}}</label>
+            {{ measures_form.shoe_size }}
+            {% include "partials/_form_errors.html" with key=measures_form.shoe_size %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ form.yeux.id_for_label }}">Couleur des Yeux</label>
-            {{ form.yeux }}
-            {% include "partials/_form_errors.html" with key=form.yeux %}
+            <label class="block text-gray-800 font-semibold" for="{{ measures_form.eyes.id_for_label }}">{{measures_form.eyes.help_text}}</label>
+            {{ measures_form.eyes }}
+            {% include "partials/_form_errors.html" with key=measures_form.eyes %}
           </div>
         </div>
       </div>
       <div class="mt-6">
-        <label class="block text-gray-800 font-bold mb-2" for="{{ form.permitted.id_for_label }}">Veuillez notre que non
+        <label class="block text-gray-800 font-bold mb-2" for="{{ measures_form.permitted.id_for_label }}">Veuillez notre que non
           toute information que vous avez écrite sur l'application sera vue sur www.nocmodels.com:</label>
-        {{ form.permitted }} <span class="text-xs ml-2">
+        {{ measures_form.permitted }} <span class="text-xs ml-2">
           <!-- TODO(sora): check this for spelling -->
           Moi, le candidat confirme que je soumets mes propres photos et informations. Je prends lal'entiére
           responsabilité de mon inscription
         </span>
-        {% include "partials/_form_errors.html" with key=form.permitted %}
+        {% include "partials/_form_errors.html" with key=measures_form.permitted %}
       </div>
       <div class="button-container text-right mt-6 mx-2">
         <button type="button"

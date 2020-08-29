@@ -1,23 +1,21 @@
-<script>
-  import { onMount, onDestroy } from "svelte";
-  import { fade, scale } from "svelte/transition";
-  import PhotoStore from "../../store/photo";
-  import UIStore from "../../store/ui";
-  import UpdatesStore from "../../store/updates";
-  import ErrorNotifier from "../shared/ErrorNotifier";
-  import ToggleButton from "../shared/ToggleButton";
-  import PopupErrorNotifier from "../shared/PopupErrorNotifier";
-  import PhotoUpdateCard from "./PhotoUpdateCard";
-  import PhotoCard from "./PhotoCard";
+<script lang="ts">
+  import { onMount, onDestroy } from 'svelte';
+  import { fade, scale } from 'svelte/transition';
+  import { UIStore, UpdatesStore, PhotoStore } from '../../store/index';
+  import ErrorNotifier from '../shared/ErrorNotifier.svelte';
+  import ToggleButton from '../shared/ToggleButton.svelte';
+  import PopupErrorNotifier from '../shared/PopupErrorNotifier.svelte';
+  import PhotoUpdateCard from './PhotoUpdateCard.svelte';
+  import PhotoCard from './PhotoCard.svelte';
 
   $: photoData = $PhotoStore;
-  $: uiData = $UIStore;
+  $: UIData = $UIStore;
   $: updatesData = $UpdatesStore;
 
   let showUpdates = false;
-  let io, target;
+  let io: IntersectionObserver, target: Element;
 
-  async function handleIntersection(enteries) {
+  async function handleIntersection(enteries: IntersectionObserverEntry[]) {
     if (enteries[0].isIntersecting) {
       if (photoData.profile.next) {
         await PhotoStore.getProfilePictures(photoData.profile.next);
@@ -26,12 +24,15 @@
   }
 
   onMount(async () => {
+    if (!photoData.cover.data.length) {
+      await PhotoStore.getCoverPictures();
+    }
     const options = {
       root: null,
-      rootMargins: "200px 0px 0px 0px",
-      threshold: 0.5
+      rootMargin: '200px 0px 0px 0px',
+      threshold: 0.5,
     };
-    target = document.querySelector(".fetch");
+    target = document.querySelector('.fetch');
     io = new IntersectionObserver(handleIntersection, options);
     io.observe(target);
   });
@@ -65,6 +66,7 @@
       <PhotoCard
         markText="Mark as Cover Picture"
         {photo}
+        fetching={UIData.fetching}
         on:mark={({ detail }) => PhotoStore.markCoverPicture(detail, i)}
         on:delete={({ detail }) => PhotoStore.deleteCoverPicture(detail)} />
     {:else}
@@ -77,7 +79,7 @@
     <PhotoUpdateCard
       {photo}
       {index}
-      fetching={uiData.fetching}
+      fetching={UIData.fetching}
       on:update={({ detail: { file, photoId } }) => UpdatesStore.modifyCoverPictureUpdate(file, photoId)}
       on:delete={({ detail }) => UpdatesStore.deleteCoverPictureUpdate(detail)}
       on:clearErrors={UpdatesStore.clearCoverPictureErrors.bind(this, index)} />

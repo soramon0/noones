@@ -1,6 +1,6 @@
-<script>
-  export let activeText;
-  export let text = "Edit Profile";
+<script lang="ts">
+  export let activeText: string;
+  export let text = 'Edit Profile';
 </script>
 
 <div class="ml-4 py-3 sm:ml-0">

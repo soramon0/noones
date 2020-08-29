@@ -1,40 +1,39 @@
-<script>
-  import { onMount } from "svelte";
-  import { fade } from "svelte/transition";
-  import PhotoStore from "../../store/photo";
-  import UIStore from "../../store/ui";
-  import UpdatesStore from "../../store/updates";
-  import SaveButton from "../shared/SaveButton";
-  import TabView from "../shared/TabView";
-  import SuccessNotifier from "../shared/SuccessNotifier";
-  import ErrorNotifier from "../shared/ErrorNotifier";
-  import UploadModal from "../shared/UploadModal";
-  import ChangeGalleryPicture from "./ChangeGalleryPicture";
-  import PhotoUpdateCard from "./PhotoUpdateCard";
-  import ProfilePicturesTab from "./ProfilePicturesTab";
-  import CoverPicturesTab from "./CoverPicturesTab";
+<script lang="ts">
+  import { onMount } from 'svelte';
+  import { fade } from 'svelte/transition';
+  import { UIStore, UpdatesStore, PhotoStore } from '../../store/index';
+  import type { IProfilePicture, ICoverPicture } from '../../types/models';
+  import SaveButton from '../shared/SaveButton.svelte';
+  import TabView from '../shared/TabView.svelte';
+  import SuccessNotifier from '../shared/SuccessNotifier.svelte';
+  import ErrorNotifier from '../shared/ErrorNotifier.svelte';
+  import UploadModal from '../shared/UploadModal.svelte';
+  import ChangeGalleryPicture from './ChangeGalleryPicture.svelte';
+  import PhotoUpdateCard from './PhotoUpdateCard.svelte';
+  import ProfilePicturesTab from './ProfilePicturesTab.svelte';
+  import CoverPicturesTab from './CoverPicturesTab.svelte';
 
-  export let profilePicture;
-  export let coverPicture;
+  export let profilePicture: IProfilePicture;
+  export let coverPicture: ICoverPicture;
 
   let selectedGalleryImage = 0;
   let showProfileModal = false;
   let showGalleryModal = false;
   let showCoverModal = false;
   let tabs = [
-    { name: "All" },
-    { name: "Profile Pictures" },
-    { name: "Cover Pictures" },
-    { name: "Gallery" }
+    { name: 'All' },
+    { name: 'Profile Pictures' },
+    { name: 'Cover Pictures' },
+    { name: 'Gallery' },
   ];
   let tabName = tabs[0].name;
 
   // Subscribe to the store
   $: photoData = $PhotoStore;
-  $: uiData = $UIStore;
+  $: UIData = $UIStore;
   $: updatesData = $UpdatesStore;
 
-  const setSelectedGalleryImage = index => {
+  const setSelectedGalleryImage = (index) => {
     selectedGalleryImage = index;
   };
 
@@ -61,17 +60,10 @@
     if (!updatesData.profilePictures.length) {
       UpdatesStore.getProfilePicturesUpdate();
     }
-
-    if (!photoData.profile.data.length) {
-      PhotoStore.getProfilePictures();
-    }
-
-    if (!photoData.cover.data.length) {
-      PhotoStore.getCoverPictures();
-    }
   });
 
   $: console.log(photoData);
+  $: console.log(updatesData);
 </script>
 
 <style>
@@ -91,26 +83,20 @@
     title="Upload a cover picture"
     errorKey="coverPicture"
     on:show={onShowCoverModal}
-    on:file={({ detail }) => UpdatesStore.createCoverPictureUpdate(detail)}
-    {photoData}
-    {uiData} />
+    on:file={({ detail }) => UpdatesStore.createCoverPictureUpdate(detail)} />
 {:else if showProfileModal}
   <UploadModal
     title="Upload a Profile picture"
     errorKey="profilePicture"
     on:show={onShowProfileModal}
-    on:file={({ detail }) => UpdatesStore.createProfilePictureUpdate(detail)}
-    {photoData}
-    {uiData} />
+    on:file={({ detail }) => UpdatesStore.createProfilePictureUpdate(detail)} />
 {:else if showGalleryModal}
   <UploadModal
     title="Gallery Images"
     errorKey="gallery"
     multiple
     on:show={onShowGalleryModal}
-    on:file={({ detail }) => UpdatesStore.createGallaryPhotoUpdate(detail)}
-    {photoData}
-    {uiData} />
+    on:file={({ detail }) => UpdatesStore.createGallaryPhotoUpdate(detail)} />
 {/if}
 
 <SuccessNotifier />
@@ -267,7 +253,10 @@
           approved and {updatesData.gallery.length} update(s).
         </p>
         <div class="mt-4">
-          <SaveButton text="START UPLOADING" on:click={onShowGalleryModal} />
+          <SaveButton
+            text="START UPLOADING"
+            fetching={UIData.fetching}
+            on:click={onShowGalleryModal} />
         </div>
       {/if}
 
@@ -284,7 +273,7 @@
       <PhotoUpdateCard
         {photo}
         {index}
-        fetching={uiData.fetching}
+        fetching={UIData.fetching}
         on:update={({ detail: { file, photoId } }) => UpdatesStore.modifyGalleryPhotoUpdate(file, photoId)}
         on:delete={({ detail }) => UpdatesStore.deleteGalleryPhotoUpdate(detail)}
         on:clearErrors={UpdatesStore.clearGalleryPhotoErrors.bind(this, index)} />

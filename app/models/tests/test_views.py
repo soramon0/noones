@@ -40,7 +40,8 @@ class TestViews(TestCase):
         self.assertEqual(context['cover'], None)
 
     def test_model_details(self):
-        factories.ProfilePictureFactory(model=self.model)
+        profile = factories.ProfilePictureFactory(
+            model=self.model, inUse=True)
 
         res = self.client.get(self.model_details_url)
         context = res.context[-1]

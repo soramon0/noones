@@ -1,16 +1,15 @@
-<script>
-  import { createEventDispatcher } from "svelte";
-  import { fly, fade } from "svelte/transition";
-  import SaveButton from "../shared/SaveButton";
-  import UpdateButton from "../shared/UpdateButton";
-  import CancelButton from "../shared/CancelButton";
-  import SuccessNotifier from "../shared/SuccessNotifier";
-  import ErrorNotifier from "../shared/ErrorNotifier";
-  import ChangeGalleryPicture from "./ChangeGalleryPicture";
+<script lang="ts">
+  import { createEventDispatcher } from 'svelte';
+  import { fly, fade } from 'svelte/transition';
+  import UpdateButton from '../shared/UpdateButton.svelte';
+  import CancelButton from '../shared/CancelButton.svelte';
+  import SuccessNotifier from '../shared/SuccessNotifier.svelte';
+  import ErrorNotifier from '../shared/ErrorNotifier.svelte';
+  import ChangeGalleryPicture from './ChangeGalleryPicture.svelte';
 
   export let photo;
-  export let index;
-  export let fetching;
+  export let index: number;
+  export let fetching: boolean;
 
   const disptach = createEventDispatcher();
 
@@ -18,17 +17,17 @@
     const file = target.files[0];
 
     if (file) {
-      disptach("update", { file, photoId });
+      disptach('update', { file, photoId });
     }
   };
 
-  const handleResponseTagStateUI = state => {
+  const handleResponseTagStateUI = (state) => {
     if (state && Object.keys(state).length > 0) {
-      if (!state.accept && !state.decline) return "bg-indigo-700";
-      else if (state.accept) return "bg-green-400";
-      else if (state.decline) return "bg-red-400";
+      if (!state.accept && !state.decline) return 'bg-indigo-700';
+      else if (state.accept) return 'bg-green-400';
+      else if (state.decline) return 'bg-red-400';
     } else {
-      return "bg-indigo-700";
+      return 'bg-indigo-700';
     }
   };
 </script>
@@ -41,16 +40,14 @@
     errors={photo.errors}
     errorKey="image"
     on:clearErrors={() => disptach('clearErrors')} />
-  <div class="mt-2 flex w-full">
-    <div class="w-1/3 h-64 rounded-lg overflow-hidden shadow-md">
+  <div class="mt-2 sm:flex">
+    <div class="w-full h-64 rounded-lg overflow-hidden shadow-md sm:w-1/3">
       <img
         src={photo.image}
         class="w-full h-full object-cover"
         alt="model gallery {index}" />
     </div>
-    <div
-      class="w-4/6 h-auto ml-4 py-2 flex flex-col justify-between text-sm
-      sm:text-base">
+    <div class="w-full h-auto py-2 text-sm sm:text-base sm:w-4/6 sm:ml-4">
       <p class="text-gray-600">
         {#if photo.message}
           {photo.message}
@@ -70,20 +67,14 @@
         Pending
       {:else if photo.accept}Approved{:else if photo.decline}Declined{/if}
     </span>
-    <div class="">
+    <div class="flex">
       <CancelButton
-        type="button"
         text="Remove"
         {fetching}
         on:click={() => disptach('delete', photo.id)} />
-      <button
-        on:click={() => document.getElementById(`photo-${index}`).click()}
-        disabled={fetching}
-        class="ml-2 px-8 py-3 text-xs rounded-md tracking-wider bg-black
-        text-white hover:bg-gray-900 transition-transform duration-200
-        ease-in-out transform hover:scale-110 sm:w-auto sm:text-sm md:text-base {fetching ? 'bg-gray-700 cursor-not-allowed' : ''}">
-        Update
-      </button>
+      <UpdateButton
+        {fetching}
+        on:click={() => document.getElementById(`photo-${index}`).click()} />
       <input
         type="file"
         id="photo-{index}"

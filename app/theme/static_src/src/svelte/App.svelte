@@ -1,19 +1,19 @@
-<script>
-  import { onMount } from "svelte";
-  import { fly } from "svelte/transition";
-  import { fade } from "svelte/transition";
-  import UserStore from "./store/user";
-  import Navbar from "./components/layout/Navbar";
-  import Sidebar from "./components/layout/Sidebar";
-  import General from "./components/General/General";
-  import Measures from "./components/Measures/Measures";
-  import Photos from "./components/Photos/Photos";
-  import Settings from "./components/Settings/Settings";
-  import Spinner from "./components/shared/Spinner";
+<script lang="ts">
+  import { onMount } from 'svelte';
+  import { fly } from 'svelte/transition';
+  import { fade } from 'svelte/transition';
+  import { UserStore } from './store/index';
+  import Navbar from './components/layout/Navbar.svelte';
+  import Sidebar from './components/layout/Sidebar.svelte';
+  import General from './components/General/General.svelte';
+  import Measures from './components/Measures/Measures.svelte';
+  import Photos from './components/Photos/Photos.svelte';
+  import Settings from './components/Settings/Settings.svelte';
+  import Spinner from './components/shared/Spinner.svelte';
 
   let promise = UserStore.populate();
 
-  let tab = parseInt(localStorage.getItem("current_tab"));
+  let tab = parseInt(localStorage.getItem('current_tab'), 10) || 0;
 
   // Subscribe to the store
   $: userData = $UserStore;
@@ -25,7 +25,7 @@
   const changeTab = ({ detail }) => {
     tab = detail;
     // Persist the current tab
-    localStorage.setItem("current_tab", JSON.stringify(detail));
+    localStorage.setItem('current_tab', JSON.stringify(detail));
   };
 </script>
 

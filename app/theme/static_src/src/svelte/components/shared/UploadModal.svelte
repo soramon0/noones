@@ -1,27 +1,25 @@
-<script>
-  import { scale, fade, fly } from "svelte/transition";
-  import { createEventDispatcher } from "svelte";
-  import photoStore from "../../store/photo";
-  import UpdatesStore from "../../store/updates";
-  import UIStore from "../../store/ui";
-  import Breadcrumb from "./Breadcrumb";
-  import SaveButton from "./SaveButton";
-  import CancelButton from "./CancelButton";
-  import SuccessNotifier from "./SuccessNotifier";
-  import ErrorNotifier from "./ErrorNotifier";
+<script lang="ts">
+  import { scale, fade, fly } from 'svelte/transition';
+  import { createEventDispatcher } from 'svelte';
+  import { UIStore, UpdatesStore, PhotoStore } from '../../store/index';
+  import Breadcrumb from './Breadcrumb.svelte';
+  import SaveButton from './SaveButton.svelte';
+  import CancelButton from './CancelButton.svelte';
+  import SuccessNotifier from './SuccessNotifier.svelte';
+  import ErrorNotifier from './ErrorNotifier.svelte';
 
-  export let title;
-  export let photoData;
-  export let uiData;
-  export let multiple = false;
-  export let errorKey;
+  export let title: string;
+  export let multiple: boolean = false;
+  export let errorKey: string;
 
   $: updatesData = $UpdatesStore;
+  $: photoData = $PhotoStore;
+  $: UIData = $UIStore;
 
   const dispatch = createEventDispatcher();
 
   const toggleShow = () => {
-    dispatch("show");
+    dispatch('show');
   };
 
   const onFileChange = ({ target }) => {
@@ -30,12 +28,12 @@
 
     // if multiple is false and we have a file dispatch file
     if (file && !multiple) {
-      dispatch("file", file);
+      dispatch('file', file);
     }
 
     // if multiple is true and we have at laest one file dispatch files
     if (file && multiple) {
-      dispatch("file", files);
+      dispatch('file', files);
     }
   };
 </script>
@@ -57,7 +55,7 @@
   <div
     class="border-4 border-indigo-400 overflow-hidden transform
     transition-transform duration-500 ease-out"
-    style="transform: translateX({uiData.fileUploadPercentage === 0 ? -100 : 0}%)" />
+    style="transform: translateX({UIData.fileUploadPercentage === 0 ? -100 : 0}%)" />
 
   <div class="text-center py-4 border-b-2 border-gray-200">
     <p class="font-semibold sm:text-2xl">{title}</p>
@@ -72,7 +70,7 @@
   <div
     class="p-4 flex justify-center items-center bg-white border-b-2
     border-gray-200 ">
-    <CancelButton on:click={toggleShow} />
+    <CancelButton on:click={toggleShow} fetching={UIData.fetching} />
 
     <input
       type="file"
@@ -83,6 +81,7 @@
       {multiple} />
 
     <SaveButton
+      fetching={UIData.fetching}
       text="Upload New Photo"
       on:click={() => document.getElementById('uploadFile').click()} />
   </div>
@@ -111,7 +110,7 @@
           class="w-56 h-24 p-4 m-auto flex justify-evenly items-center fixed
           inset-0 bg-white z-40 rounded-lg shadow-md">
           <CancelButton on:click={toggleConfirmPictureUpload} />
-          <SaveButton />
+          <SaveButton fetching={UIData.fetching} />
         </div>
       {/if} -->
 

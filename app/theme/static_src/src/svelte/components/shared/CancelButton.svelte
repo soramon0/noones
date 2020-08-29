@@ -1,6 +1,6 @@
-<script>
-  export let text = "Cancel";
-  export let fetching;
+<script lang="ts">
+  export let text = 'Cancel';
+  export let fetching: boolean;
 </script>
 
 <button

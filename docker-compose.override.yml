@@ -24,16 +24,19 @@ services:
       - source: email_pass
     command: >
       sh -c "python manage.py wait_for_db &&
-            python manage.py migrate &&
             python manage.py runserver 0.0.0.0:8000"
 
-  client_build:
+  client:
     image: node:14.3
-    container_name: noones_client_build
+    container_name: noones_client
     working_dir: /opt/node_app/static_src
+    ports:
+      # port for live reloading
+      - "35729:35729"
     volumes:
       - ./app/theme/static:/opt/node_app/static
       - ./app/theme/static_src:/opt/node_app/static_src
+      - ./app/theme/templates:/opt/node_app/templates
       # this is a workaround to prevent host node_modules from accidently getting mounted in container
       # in case you want to use node/npm both outside container for test/lint etc. and also inside container
       # this will overwrite the default node_modules dir in container so it won't conflict with our
@@ -41,8 +44,9 @@ services:
       #      - notused:/opt/node_app/static_src/node_modules
     command: >
       sh -c "npm install &&
+            npm run build-clean &&
             npm run build-postcss &&
-            npm run watch:js"
+            npm run dev"
 
   db:
     container_name: noones_db

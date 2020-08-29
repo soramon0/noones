@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 
 <header class="p-4 h-16 fixed inset-0 z-30 bg-white flex justify-between items-center shadow-md">
   <div class="h-12">
@@ -21,36 +22,36 @@
   {% comment %} Desktop navigation {% endcomment %}
   <nav class="lg:flex hidden uppercase space-x-1">
     {% if user.is_authenticated %}
-      <a href="{% url 'models' %}" class="text-sm text-gray-800 font-semibold px-2 ">
-        Nos models
+      <a href="{% url 'models' %}" class="text-xs text-gray-700 font-medium px-2">
+        {% translate "Our models" %}
       </a>
-      <a href="{% url 'contact' %}" class="text-sm text-gray-800 font-semibold px-2">
-        Contact
+      <a href="{% url 'contact' %}" class="text-xs text-gray-700 font-medium px-2">
+        {% translate "Contact" %}
       </a>
-      <a href="{% url 'profile' %}" class=" text-sm text-gray-800 font-semibold px-2">
-        Dashboard
+      <a href="{% url 'profile' %}" class=" text-xs text-gray-700 font-medium px-2">
+        {% translate "Dashboard" %}
       </a>
-      <a href="{% url 'signout' %}" class="text-sm text-gray-800 font-semibold px-2">
-        Sign out
+      <a href="{% url 'signout' %}" class="text-xs text-gray-700 font-medium px-2">
+        {% translate "Sign out" %}
       </a>
     {% else %}
-      <a href="{% url 'a-propos' %}" class="text-sm text-gray-800 font-semibold px-2">
-        A propos
+      <a href="{% url 'a-propos' %}" class="text-xs text-gray-700 font-medium px-2">
+        {% translate "About" %}
       </a>
-      <a href="{% url 'vision' %}" class=" text-sm text-gray-800 font-semibold px-2">
-        Vision &amp; mission
+      <a href="{% url 'vision' %}" class=" text-xs text-gray-700 font-medium  px-2">
+        {% translate "Vision and mission" %}
       </a>
-      <a href="{% url 'models' %}" class=" text-sm text-gray-800 font-semibold px-2 ">
-        Nos models
+      <a href="{% url 'models' %}" class=" text-xs text-gray-700 font-medium px-2">
+        {% translate "Our models" %}
       </a>
-      <a href="{% url 'signup' %}" class=" text-sm text-gray-800 font-semibold px-2 ">
-        Devenir notre model
+      <a href="{% url 'signup' %}" class=" text-xs text-gray-700 font-medium px-2">
+        {% translate "Become our model" %} 
       </a>
-      <a href="{% url 'signin' %}" class="text-sm text-gray-800 font-semibold px-2">
-        Sign In
+      <a href="{% url 'signin' %}" class="text-xs text-gray-700 font-medium px-2">
+        {% translate "Sign In" %}
       </a>
-      <a href="{% url 'contact' %}" class="text-sm text-gray-800 font-semibold px-2">
-        Contact
+      <a href="{% url 'contact' %}" class="text-xs text-gray-700 font-medium px-2">
+        {% translate "Contact" %}
       </a>
     {% endif %}
   </nav>
@@ -62,63 +63,57 @@
     </button>
     {% if user.is_authenticated %}
       <div class="pt-6">
-        <a href="{% url 'models' %}" class="text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900">
-          Nos models
+        <a href="{% url 'models' %}" class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900">
+          {% translate "Our models" %}
         </a>
-        <a href="{% url 'contact' %}" class="text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900">
-          Contact
+        <a href="{% url 'contact' %}" class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900">
+          {% translate "Contact" %}
         </a>
       </div>
       <div class="mt-2 pt-2 border-t border-gray-600">
-        <a href="{% url 'profile' %}" class="text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900">
-          Profile
+        <a href="{% url 'profile' %}" class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900">
+          {% translate "Dashboard" %}
         </a>
-        <a href="{% url 'signout' %}" class="text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900">
-          Sign out
+        <a href="{% url 'signout' %}" class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900">
+          {% translate "Sign out" %}
         </a>
       </div>
       <div class="mt-2 border-t border-gray-600">
-        <a href="/blog" class="text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">Blog</a>
-        <a href="/faq" class="text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">FAQ</a>
-        <a href="/légale" class="text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">Mention Légale</a>
+        <a href="/blog" class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">{% translate "Blog" %}Blog</a>
+        <a href="/faq" class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">{% translate "FAQ" %}FAQ</a>
+        <a href="/légale" class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">{% translate "Policy" %}</a>
       </div>
     {% else %}
       <div class="pt-6">
-        <a
-          class="text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900"
-          href="{% url 'a-propos' %}"
-          >A propos</a
-        >
-        <a
-          class="text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900"
-          href="{% url 'vision' %}"
-          >Vision &amp; mission</a
-        >
-        <a
-          class="text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900"
-          href="{% url 'models' %}"
-          >Nos models</a
-        >
-      </div>
-      <div class="mt-2 border-t border-gray-600">
-        <a href="{% url 'signup' %}" class="text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">
-          Devenir notre model
+        <a class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900" href="{% url 'a-propos' %}">
+          {% translate "About" %}
         </a>
-        <a href="{% url 'signin' %}" class="text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900">
-          Sign In
+        <a class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900" href="{% url 'vision' %}" >
+          {% translate "Vision and mission" %}
         </a>
-        <a href="{% url 'contact' %}" class="text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900">
-          Contact
+        <a class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900" href="{% url 'models' %}" >
+          {% translate "Our models" %}
         </a>
       </div>
       <div class="mt-2 border-t border-gray-600">
-        <a href="/blog" class="text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">Blog</a>
-        <a href="/faq" class="text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">FAQ</a>
-        <a href="/légale" class="text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">Mention Légale</a>
+        <a href="{% url 'signup' %}" class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">
+          {% translate "Become our model" %} 
+        </a>
+        <a href="{% url 'signin' %}" class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900">
+          {% translate "Sign In" %}
+        </a>
+        <a href="{% url 'contact' %}" class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900">
+          {% translate "Contact" %}
+        </a>
+      </div>
+      <div class="mt-2 border-t border-gray-600">
+        <a href="/blog" class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">{% translate "Blog" %}</a>
+        <a href="/faq" class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">{% translate "FAQ" %}</a>
+        <a href="/légale" class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">{% translate "Policy" %}</a>
       </div>
     {% endif %}
-    <p class="text-center mt-auto py-4 text-sm text-white sm:text-base">
-      Powered by <span class="uppercase font-semibold">NO ONE'S COMPANY</span>
+    <p class="text-center mt-auto py-4 text-xs text-white sm:text-base">
+      {% trans "Powered by" %} <span class="uppercase font-medium">NO ONE'S COMPANY</span>
     </p>
   </nav>
 </header>

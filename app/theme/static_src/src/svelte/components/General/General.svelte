@@ -1,35 +1,35 @@
-<script>
-  import { onMount } from "svelte";
-  import { fade, fly } from "svelte/transition";
-  import UserStore from "../../store/user";
-  import UIStore from "../../store/ui";
-  import UpdatesStore from "../../store/updates";
-  import CancelButton from "../shared/CancelButton";
-  import Card from "../shared/Card";
-  import FormInput from "../shared/FormInput";
-  import SuccessNotifier from "../shared/SuccessNotifier";
-  import ErrorNotifier from "../shared/ErrorNotifier";
-  import UpdateButton from "../shared/UpdateButton";
-  import TabView from "../shared/TabView";
+<script lang="ts">
+  import { onMount } from 'svelte';
+  import { fade, fly } from 'svelte/transition';
+  import { UserStore, UIStore, UpdatesStore } from '../../store/index';
+  import type { IProfile } from '../../types/models';
+  import CancelButton from '../shared/CancelButton.svelte';
+  import Card from '../shared/Card.svelte';
+  import FormInput from '../shared/FormInput.svelte';
+  import SuccessNotifier from '../shared/SuccessNotifier.svelte';
+  import ErrorNotifier from '../shared/ErrorNotifier.svelte';
+  import UpdateButton from '../shared/UpdateButton.svelte';
+  import TabView from '../shared/TabView.svelte';
 
-  export let model;
+  export let model: IProfile;
   export let errors;
-  let tabs = [{ name: "Base" }, { name: "Updates" }];
+  let tabs = [{ name: 'Base' }, { name: 'Updates' }];
   let tabName = tabs[0].name;
 
   $: UIData = $UIStore;
   $: updatesData = $UpdatesStore;
-  $: isUpdateEmpty = Object.keys(updatesData.model).length;
+  $: updateNotEmpty = Object.keys(updatesData.model).length;
 
   const scrollUpToSuccessMessage = () => {
     // Show a success message
     window.scrollTo(0, 0);
-    if (UIData.success) {
-      // Hide the success message after 2 seconds
-      setTimeout(() => {
-        UIStore.setFeedbackModal(false);
-      }, 2000);
-    }
+    // TODO(karim): find what condition implies success
+    // if (UIData.success) {
+    //   // Hide the success message after 2 seconds
+    //   setTimeout(() => {
+    //     UIStore.setFeedbackModal(false);
+    //   }, 2000);
+    // }
   };
 
   const onValueChanged = ({ detail }) => {
@@ -40,35 +40,35 @@
     updatesData.model[detail.name] = detail.value;
   };
 
-  const onlyAdd = (...fields) => {
+  const onlyAdd = (...fields: string[]) => {
     const payload = { id: model.id };
 
-    fields.forEach(field => {
-      if (model[field]) payload[field] = model[field];
+    fields.forEach((field) => {
+      if (model[field] != undefined) payload[field] = model[field];
     });
 
     return payload;
   };
 
-  const handleSubmit = async payloadType => {
+  const handleSubmit = async (payloadType: string) => {
     let payload = {};
 
     switch (payloadType.toLowerCase()) {
-      case "profile":
+      case 'profile':
         payload = onlyAdd(
-          "first_name",
-          "last_name",
-          "phone",
-          "birth_date",
-          "sexe",
-          "cin"
+          'first_name',
+          'last_name',
+          'phone',
+          'birth_date',
+          'gender',
+          'nin'
         );
         break;
-      case "location":
-        payload = onlyAdd("country", "city", "addresse", "zipcode");
+      case 'location':
+        payload = onlyAdd('country', 'city', 'address', 'zipcode');
         break;
-      case "online":
-        payload = onlyAdd("facebook", "instagram");
+      case 'online':
+        payload = onlyAdd('facebook', 'instagram');
         break;
       default:
         payload = model;
@@ -77,44 +77,43 @@
     await UserStore.updateModel(payload);
 
     // Show a success message
-    window.scrollTo(0, 0);
-    if (UIData.success) {
-      // Hide the success message after 2 seconds
-      setTimeout(() => {
-        uiStore.setFeedbackModal(false);
-      }, 2000);
-    }
+    scrollUpToSuccessMessage();
+    // TODO(karim): find what condition implies success
+    // if (UIData.success) {
+    //   // Hide the success message after 2 seconds
+    //   setTimeout(() => {
+    //     UIStore.setFeedbackModal(false);
+    //   }, 2000);
+    // }
   };
 
   const createBioUpdate = async () => {
-    await UpdatesStore.createModelUpdate({ bio: model.bio });
+    await UpdatesStore.createProfileUpdate(model.bio);
 
     scrollUpToSuccessMessage();
   };
 
   const modifyUpdateRequest = async () => {
-    await UpdatesStore.modifyModelUpdate(model.id, {
-      ...updatesData.model,
-      model: model.id
-    });
+    const { model: modelUpdate } = updatesData;
+    await UpdatesStore.modifyProfileUpdate(modelUpdate.id, modelUpdate);
 
     scrollUpToSuccessMessage();
   };
 
   const removeUpdateRequest = async () => {
-    await UpdatesStore.deleteModelUpdate(model.id);
+    await UpdatesStore.deleteProfileUpdate(updatesData.model.id);
 
     scrollUpToSuccessMessage();
   };
 
   onMount(() => {
     // Get user updates
-    if (!isUpdateEmpty) {
-      UpdatesStore.getModelUpdate();
+    if (!updateNotEmpty) {
+      UpdatesStore.getProfileUpdate();
     }
   });
 
-  $: console.log(updatesData, isUpdateEmpty);
+  $: console.log(updatesData);
 </script>
 
 <TabView {tabs} {tabName} on:change={({ detail }) => (tabName = detail)} />
@@ -154,18 +153,18 @@
               errors={errors['birth_date']}
               on:valueChanged={onValueChanged} />
             <FormInput
-              value={model.sexe}
+              value={model.gender}
               type="select"
-              selectOptions={['f', 'h']}
-              name="sexe"
+              selectOptions={['f', 'm']}
+              name="gender"
               label="Sexe"
-              errors={errors['sexe']}
+              errors={errors['gender']}
               on:valueChanged={onValueChanged} />
             <FormInput
-              value={model.cin}
-              name="cin"
+              value={model.nin}
+              name="nin"
               label="CIN"
-              errors={errors['cin']}
+              errors={errors['nin']}
               on:valueChanged={onValueChanged} />
           </div>
         </div>
@@ -176,9 +175,9 @@
     </Card>
 
     <ErrorNotifier
-      errors={updatesData.modelErrors}
+      errors={updatesData.errors}
       errorKey="model"
-      on:clearErrors={UpdatesStore.clearModelErrors} />
+      on:clearErrors={() => UpdatesStore.clearErrors('model')} />
     <Card
       title="About Me"
       description="This section must be filled in order to make your profile
@@ -189,7 +188,7 @@
           type="textarea"
           name="bio"
           label="Bio"
-          errors={updatesData.modelErrors['bio']}
+          errors={updatesData.errors.bio}
           on:valueChanged={onValueChanged} />
         <div class="text-right mt-2 sm:mt-4">
           <UpdateButton fetching={UIData.fetching} />
@@ -208,10 +207,10 @@
               errors={errors['country']}
               on:valueChanged={onValueChanged} />
             <FormInput
-              value={model.addresse}
-              name="addresse"
+              value={model.address}
+              name="address"
               label="Adresse"
-              errors={errors['addresse']}
+              errors={errors['address']}
               on:valueChanged={onValueChanged} />
           </div>
           <div class="w-full mt-4 sm:mt-0 sm:ml-4">
@@ -264,11 +263,11 @@
   </div>
 {:else if tabName === tabs[1].name}
   <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
-    {#if isUpdateEmpty}
+    {#if updateNotEmpty}
       <ErrorNotifier
         errors={updatesData.model.errors}
         errorKey="model"
-        on:clearErrors={UpdatesStore.clearModelUpdateErrors} />
+        on:clearErrors={UpdatesStore.clearProfileUpdateErrors} />
       {#if updatesData.model.message.length}
         <Card
           classes={updatesData.model.accept ? 'border-green-300' : 'border-red-300'}>
@@ -283,7 +282,7 @@
             type="textarea"
             name="bio"
             label="Bio"
-            errors={updatesData.model.errors['bio']}
+            errors={updatesData.model?.errors['bio']}
             on:valueChanged={onUpdateValueChanged} />
 
           <div class="flex justify-end items-center mt-2 space-x-4">

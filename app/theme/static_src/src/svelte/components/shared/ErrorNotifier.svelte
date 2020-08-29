@@ -1,15 +1,15 @@
-<script>
-  import { createEventDispatcher } from "svelte";
-  import { fade, fly } from "svelte/transition";
+<script lang="ts">
+  import { createEventDispatcher } from 'svelte';
+  import { fade, fly } from 'svelte/transition';
 
-  export let errors = [];
-  export let errorKey = null;
+  export let errors = {};
+  export let errorKey: string | null = null;
 
   const dispatch = createEventDispatcher();
 
   const hideErrorNotifier = () => {
-    errors = [];
-    dispatch("clearErrors");
+    errors = {};
+    dispatch('clearErrors');
   };
 </script>
 

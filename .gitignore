@@ -13,6 +13,8 @@ email_user.txt
 .env.prod
 app/.coveage
 app/htmlconf/*
+app/temp/*
+node_modules
 # Created by https://www.gitignore.io/api/django
 # Edit at https://www.gitignore.io/?templates=django
 

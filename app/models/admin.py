@@ -1,65 +1,75 @@
 from django.contrib import admin
 
 from .models import (
-    Model,
+    Profile,
     ProfilePicture,
     CoverPicture,
     History,
     Mensuration,
-    Photo,
-    Contact
+    Gallery,
+    Contact,
 )
 
 
 class ModelAdmin(admin.ModelAdmin):
-    list_display = ('id', 'first_name', 'city', 'cin', 'user')
-    list_display_links = ('id', 'first_name')
+    list_display = ("id", "first_name", "city", "nin", "user")
+    list_display_links = ("id", "first_name")
     list_per_page = 24
 
 
 class ProfilePictureAdmin(admin.ModelAdmin):
-    list_display = ('id', 'model', 'image', 'created_at')
-    list_display_links = ('id',)
-    list_filter = ('inUse',)
+    list_display = ("id", "profile", "image", "created_at")
+    list_display_links = ("id",)
+    list_filter = ("inUse",)
     list_per_page = 324
 
 
 class CoverPictureAdmin(admin.ModelAdmin):
-    list_display = ('id', 'model', 'image', 'created_at')
-    list_display_links = ('id',)
-    list_filter = ('inUse',)
+    list_display = ("id", "profile", "image", "created_at")
+    list_display_links = ("id",)
+    list_filter = ("inUse",)
     list_per_page = 32
 
 
 class HistoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user')
-    list_display_links = ('id',)
+    list_display = ("id", "user")
+    list_display_links = ("id",)
     list_per_page = 24
 
 
 class MensurationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'taille', 'cheveux', 'permitted', 'user')
-    list_display_links = ('id', 'taille', 'permitted')
+    list_display = ("id", "height", "permitted", "user")
+    list_display_links = ("id",)
     list_per_page = 24
 
 
-class PhotoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'model', 'image')
-    list_display_links = ('id',)
-    list_filter = ('inUse',)
+class GalleryAdmin(admin.ModelAdmin):
+    list_display = ("id", "profile", "image")
+    list_display_links = ("id",)
+    list_filter = ("inUse",)
     list_per_page = 32
 
 
 class ContactAdmin(admin.ModelAdmin):
-    list_display = ('id', 'model_full_name', 'model_email', 'email', 'phone')
-    list_display_links = ('id', 'model_full_name')
+    list_display = (
+        "id",
+        "model_full_name",
+        "model_email",
+        "email",
+        "phone",
+        "created_at",
+    )
+    list_display_links = ("id", "model_full_name")
+    search_fields = ("model_email", "model_full_name", "full_name", "email")
+    list_filter = ("created_at",)
+    date_hierarchy = "created_at"
     list_per_page = 24
 
 
-admin.site.register(Model, ModelAdmin)
+admin.site.register(Profile, ModelAdmin)
 admin.site.register(ProfilePicture, ProfilePictureAdmin)
 admin.site.register(CoverPicture, CoverPictureAdmin)
 admin.site.register(History, HistoryAdmin)
 admin.site.register(Mensuration, MensurationAdmin)
-admin.site.register(Photo, PhotoAdmin)
+admin.site.register(Gallery, GalleryAdmin)
 admin.site.register(Contact, ContactAdmin)

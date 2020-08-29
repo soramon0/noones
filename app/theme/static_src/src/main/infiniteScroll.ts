@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const options = {
     root: null,
-    rootMargins: '200px 0px 0px 0px',
+    rootMargin: '200px 0px 0px 0px',
     threshold: 0.5,
   };
 
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const cards = Array.from(cardContainer.children);
   cards.forEach((card) => {
     lazyLoad(card.children[0].children[0], {
-      rootMargins: '300px 0px 0px 0px',
+      rootMargin: '300px 0px 0px 0px',
     });
   });
 
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (data.next) {
       const url = new URL(data.next);
       const offset = url.searchParams.get('offset');
-      next = offset;
+      next = parseInt(offset, 10);
     } else {
       hasMore = false;
     }

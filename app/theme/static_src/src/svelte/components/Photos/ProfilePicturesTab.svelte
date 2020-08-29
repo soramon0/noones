@@ -1,23 +1,21 @@
-<script>
-  import { onMount, onDestroy } from "svelte";
-  import { fade, scale } from "svelte/transition";
-  import PhotoStore from "../../store/photo";
-  import UIStore from "../../store/ui";
-  import UpdatesStore from "../../store/updates";
-  import ErrorNotifier from "../shared/ErrorNotifier";
-  import PopupErrorNotifier from "../shared/PopupErrorNotifier";
-  import PhotoUpdateCard from "./PhotoUpdateCard";
-  import PhotoCard from "./PhotoCard";
-  import ToggleButton from "../shared/ToggleButton";
+<script lang="ts">
+  import { onMount, onDestroy } from 'svelte';
+  import { fade, scale } from 'svelte/transition';
+  import { UIStore, PhotoStore, UpdatesStore } from '../../store/index';
+  import ErrorNotifier from '../shared/ErrorNotifier.svelte';
+  import PopupErrorNotifier from '../shared/PopupErrorNotifier.svelte';
+  import PhotoUpdateCard from './PhotoUpdateCard.svelte';
+  import PhotoCard from './PhotoCard.svelte';
+  import ToggleButton from '../shared/ToggleButton.svelte';
 
   $: photoData = $PhotoStore;
-  $: uiData = $UIStore;
+  $: UIData = $UIStore;
   $: updatesData = $UpdatesStore;
 
   let showUpdates = false;
-  let io, target;
+  let io: IntersectionObserver, target: Element;
 
-  async function handleIntersection(enteries) {
+  async function handleIntersection(enteries: IntersectionObserverEntry[]) {
     if (enteries[0].isIntersecting) {
       if (photoData.profile.next) {
         await PhotoStore.getProfilePictures(photoData.profile.next);
@@ -26,12 +24,16 @@
   }
 
   onMount(async () => {
+    if (!photoData.profile.data.length) {
+      await PhotoStore.getProfilePictures();
+    }
+
     const options = {
       root: null,
-      rootMargins: "200px 0px 0px 0px",
-      threshold: 0.5
+      rootMargin: '200px 0px 0px 0px',
+      threshold: 0.5,
     };
-    target = document.querySelector(".fetch");
+    target = document.querySelector('.fetch');
     io = new IntersectionObserver(handleIntersection, options);
     io.observe(target);
   });
@@ -39,8 +41,6 @@
   onDestroy(() => {
     io.unobserve(target);
   });
-
-  $: console.log(photoData);
 </script>
 
 <div class="mt-4 mb-2 py-4 flex justify-between">
@@ -67,6 +67,7 @@
     {#each photoData.profile.data as photo, i}
       <PhotoCard
         {photo}
+        fetching={UIData.fetching}
         on:mark={({ detail }) => PhotoStore.markProfilePicture(detail, i)}
         on:delete={({ detail }) => PhotoStore.deleteProfilePicture(detail)} />
     {:else}
@@ -79,7 +80,7 @@
     <PhotoUpdateCard
       {photo}
       {index}
-      fetching={uiData.fetching}
+      fetching={UIData.fetching}
       on:update={({ detail: { file, photoId } }) => UpdatesStore.modifyProfilePictureUpdate(file, photoId)}
       on:delete={({ detail }) => UpdatesStore.deleteProfilePictureUpdate(detail)}
       on:clearErrors={UpdatesStore.clearProfilePictureErrors.bind(this, index)} />

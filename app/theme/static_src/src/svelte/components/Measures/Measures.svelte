@@ -1,18 +1,19 @@
-<script>
-  import { onMount } from "svelte";
-  import { fade, fly } from "svelte/transition";
-  import UIStore from "../../store/ui";
-  import UpdatesStore from "../../store/updates";
-  import Card from "../shared/Card";
-  import FormInput from "../shared/FormInput";
-  import UpdateButton from "../shared/UpdateButton";
-  import CancelButton from "../shared/CancelButton";
-  import SuccessNotifier from "../shared/SuccessNotifier";
-  import ErrorNotifier from "../shared/ErrorNotifier";
-  import TabView from "../shared/TabView";
+<script lang="ts">
+  import { onMount } from 'svelte';
+  import { fade, fly } from 'svelte/transition';
+  import { UIStore, UpdatesStore } from '../../store/index';
+  import type { IMeasures } from '../../types/models';
+  import Card from '../shared/Card.svelte';
+  import FormInput from '../shared/FormInput.svelte';
+  import UpdateButton from '../shared/UpdateButton.svelte';
+  import CancelButton from '../shared/CancelButton.svelte';
+  import SuccessNotifier from '../shared/SuccessNotifier.svelte';
+  import ErrorNotifier from '../shared/ErrorNotifier.svelte';
+  import TabView from '../shared/TabView.svelte';
 
-  export let measures;
-  let tabs = [{ name: "Base" }, { name: "Updates" }];
+  export let measures: IMeasures;
+
+  let tabs = [{ name: 'Base' }, { name: 'Updates' }];
   let tabName = tabs[0].name;
 
   $: UIData = $UIStore;
@@ -22,12 +23,13 @@
   const scrollUpToSuccessMessage = () => {
     // Show a success message
     window.scrollTo(0, 0);
-    if (UIData.success) {
-      // Hide the success message after 2 seconds
-      setTimeout(() => {
-        UIStore.setFeedbackModal(false);
-      }, 2000);
-    }
+    // TODO(karim): find what condition implies succes
+    // if (UIData.success) {
+    //   // Hide the success message after 2 seconds
+    //   setTimeout(() => {
+    //     UIStore.setFeedbackModal(false);
+    //   }, 2000);
+    // }
   };
 
   const onValueChanged = ({ detail }) => {
@@ -39,25 +41,20 @@
   };
 
   const createUpdateRequest = async () => {
-    await UpdatesStore.createMeasuresUpdate({
-      ...measures,
-      measure: measures.id
-    });
+    await UpdatesStore.createMeasuresUpdate(measures);
 
     scrollUpToSuccessMessage();
   };
 
   const modifyUpdateRequest = async () => {
-    await UpdatesStore.modifyMeasuresUpdate(measures.id, {
-      ...updatesData.measures,
-      measure: measures.id
-    });
+    const { measures: measuresUpdate } = updatesData;
+    await UpdatesStore.modifyMeasuresUpdate(measuresUpdate.id, measuresUpdate);
 
     scrollUpToSuccessMessage();
   };
 
   const removeUpdateRequest = async () => {
-    await UpdatesStore.deleteMeasuresUpdate(measures.id);
+    await UpdatesStore.deleteMeasuresUpdate(updatesData.measures.id);
 
     scrollUpToSuccessMessage();
   };
@@ -68,6 +65,8 @@
       UpdatesStore.getMeasuresUpdate();
     }
   });
+
+  $: console.log(updatesData);
 </script>
 
 <TabView {tabs} {tabName} on:change={({ detail }) => (tabName = detail)} />
@@ -77,75 +76,75 @@
 {#if tabName === tabs[0].name}
   <div in:fly={{ x: -200, duration: 400 }} out:fade={{ duration: 100 }}>
     <ErrorNotifier
-      errors={updatesData.measuresErrors}
-      errorKey="measure"
-      on:clearErrors={UpdatesStore.clearMeasuresErrors} />
+      errors={updatesData.errors}
+      errorKey="measures"
+      on:clearErrors={() => UpdatesStore.clearErrors('measures')} />
     <Card classes="mb-4">
       <form on:submit|preventDefault={createUpdateRequest}>
         <div class="sm:flex sm:justify-center">
           <div class="w-full">
             <FormInput
-              value={measures.buste}
+              value={measures.bust}
               type="number"
-              name="buste"
+              name="bust"
               label="Buste"
-              errors={updatesData.measuresErrors['buste']}
+              errors={updatesData.errors['bust']}
               on:valueChanged={onValueChanged} />
             <FormInput
-              value={measures.taillenombrill}
+              value={measures.waist}
               type="number"
-              name="taillenombrill"
+              name="waist"
               label="Taille nombrill"
-              errors={updatesData.measuresErrors['taillenombrill']}
+              errors={updatesData.errors['waist']}
               on:valueChanged={onValueChanged} />
             <FormInput
-              value={measures.taille}
+              value={measures.height}
               type="number"
-              name="taille"
+              name="height"
               label="Taille"
-              errors={updatesData.measuresErrors['taille']}
+              errors={updatesData.errors['height']}
               on:valueChanged={onValueChanged} />
             <FormInput
-              value={measures.pointure}
+              value={measures.shoe_size}
               type="number"
-              name="pointure"
+              name="shoe_size"
               label="Pointure"
-              errors={updatesData.measuresErrors['pointure']}
+              errors={updatesData.errors['shoe_size']}
               on:valueChanged={onValueChanged} />
             <FormInput
-              value={measures.epaules}
+              value={measures.shoulders}
               type="number"
-              name="epaules"
+              name="shoulders"
               label="Epaules"
-              errors={updatesData.measuresErrors['epaules']}
+              errors={updatesData.errors['shoulders']}
               on:valueChanged={onValueChanged} />
           </div>
           <div class="w-full mt-4 sm:mt-0 sm:ml-4">
             <FormInput
-              value={measures.hanches}
+              value={measures.hips}
               type="number"
-              name="hanches"
+              name="hips"
               label="Hanches"
-              errors={updatesData.measuresErrors['hanches']}
+              errors={updatesData.errors['hips']}
               on:valueChanged={onValueChanged} />
             <FormInput
-              value={measures.poids}
+              value={measures.weight}
               type="number"
-              name="poids"
+              name="weight"
               label="Poids"
-              errors={updatesData.measuresErrors['poids']}
+              errors={updatesData.errors['weight']}
               on:valueChanged={onValueChanged} />
             <FormInput
-              value={measures.yeux}
-              name="yeux"
+              value={measures.eyes}
+              name="eyes"
               label="Yeux"
-              errors={updatesData.measuresErrors['yeux']}
+              errors={updatesData.errors['eyes']}
               on:valueChanged={onValueChanged} />
             <FormInput
-              value={measures.cheveux}
-              name="cheveux"
+              value={measures.hair}
+              name="hair"
               label="Cheveux"
-              errors={updatesData.measuresErrors['cheveux']}
+              errors={updatesData.errors['hair']}
               on:valueChanged={onValueChanged} />
           </div>
         </div>
@@ -160,7 +159,7 @@
     {#if isUpdateEmpty}
       <ErrorNotifier
         errors={updatesData.measures.errors}
-        errorKey="measure"
+        errorKey="measures"
         on:clearErrors={UpdatesStore.clearMeasuresUpdateErrors} />
       {#if updatesData.measures.message.length}
         <Card
@@ -176,67 +175,67 @@
           <div class="sm:flex sm:justify-center">
             <div class="w-full">
               <FormInput
-                value={updatesData.measures.buste}
+                value={updatesData.measures.bust}
                 type="number"
-                name="buste"
+                name="bust"
                 label="Buste"
-                errors={updatesData.measures.errors['buste']}
+                errors={updatesData.measures.errors['bust']}
                 on:valueChanged={onUpdateValueChanged} />
               <FormInput
-                value={updatesData.measures.taillenombrill}
+                value={updatesData.measures.waist}
                 type="number"
-                name="taillenombrill"
+                name="waist"
                 label="Taille nombrill"
-                errors={updatesData.measures.errors['taillenombrill']}
+                errors={updatesData.measures.errors['waist']}
                 on:valueChanged={onUpdateValueChanged} />
               <FormInput
-                value={updatesData.measures.taille}
+                value={updatesData.measures.height}
                 type="number"
-                name="taille"
+                name="height"
                 label="Taille"
-                errors={updatesData.measures.errors['taille']}
+                errors={updatesData.measures.errors['height']}
                 on:valueChanged={onUpdateValueChanged} />
               <FormInput
-                value={updatesData.measures.pointure}
+                value={updatesData.measures.shoe_size}
                 type="number"
-                name="pointure"
+                name="shoe_size"
                 label="Pointure"
-                errors={updatesData.measures.errors['pointure']}
+                errors={updatesData.measures.errors['shoe_size']}
                 on:valueChanged={onUpdateValueChanged} />
               <FormInput
-                value={updatesData.measures.epaules}
+                value={updatesData.measures.shoulders}
                 type="number"
-                name="epaules"
+                name="shoulders"
                 label="Epaules"
-                errors={updatesData.measures.errors['epaules']}
+                errors={updatesData.measures.errors['shoulders']}
                 on:valueChanged={onUpdateValueChanged} />
             </div>
             <div class="w-full mt-4 sm:mt-0 sm:ml-4">
               <FormInput
-                value={updatesData.measures.hanches}
+                value={updatesData.measures.hips}
                 type="number"
-                name="hanches"
+                name="hips"
                 label="Hanches"
-                errors={updatesData.measures.errors['hanches']}
+                errors={updatesData.measures.errors['hips']}
                 on:valueChanged={onUpdateValueChanged} />
               <FormInput
-                value={updatesData.measures.poids}
+                value={updatesData.measures.weight}
                 type="number"
-                name="poids"
+                name="weight"
                 label="Poids"
-                errors={updatesData.measures.errors['poids']}
+                errors={updatesData.measures.errors['weight']}
                 on:valueChanged={onUpdateValueChanged} />
               <FormInput
-                value={updatesData.measures.yeux}
-                name="yeux"
+                value={updatesData.measures.eyes}
+                name="eyes"
                 label="Yeux"
-                errors={updatesData.measures.errors['yeux']}
+                errors={updatesData.measures.errors['eyes']}
                 on:valueChanged={onUpdateValueChanged} />
               <FormInput
-                value={updatesData.measures.cheveux}
-                name="cheveux"
+                value={updatesData.measures.hair}
+                name="hair"
                 label="Cheveux"
-                errors={updatesData.measures.errors['cheveux']}
+                errors={updatesData.measures.errors['hair']}
                 on:valueChanged={onUpdateValueChanged} />
             </div>
           </div>

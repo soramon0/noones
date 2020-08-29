@@ -29,7 +29,8 @@ function updateUIWithErrors(errors) {
     // unhide the error container
     errorContainer.classList.remove('hidden');
 
-    // // get error field from errors object by key
+    // get error field from errors object by key
+    // @ts-ignore
     const inputName = errorContainer.dataset.inputName;
     const errorMessages = errors[inputName];
 
@@ -38,7 +39,7 @@ function updateUIWithErrors(errors) {
     if (errorMessages) {
       errorMessages.forEach((msg) => {
         const message = document.createElement('p');
-        message.classList = 'text-sm my-1 text-red-400';
+        message.classList.add('text-sm', 'my-1', 'text-red-400');
         message.textContent = msg;
 
         errorContainer.appendChild(message);
@@ -49,7 +50,7 @@ function updateUIWithErrors(errors) {
 
 function disableSendingButton(sending) {
   if (sending) {
-    sendContactButton.setAttribute('disabled', true);
+    sendContactButton.setAttribute('disabled', 'true');
     sendContactButton.textContent = 'sending';
   } else {
     sendContactButton.removeAttribute('disabled');
@@ -80,10 +81,15 @@ async function sendContactRequest(e) {
   disableSendingButton(true);
 
   const payload = {
+    // @ts-ignore
     model_id: document.getElementById('id_model_id').value,
+    // @ts-ignore
     model_full_name: document.getElementById('id_model_full_name').value,
+    // @ts-ignore
     email: document.getElementById('id_email').value,
+    // @ts-ignore
     phone: document.getElementById('id_phone').value,
+    // @ts-ignore
     full_name: document.getElementById('id_full_name').value,
   };
 
