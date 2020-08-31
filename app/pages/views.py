@@ -14,7 +14,7 @@ def index(request):
     models = ProfilePicture.objects.filter(inUse=True, user__is_public=True).only(
         "profile", "user", "image"
     )[:12]
-    
+
     context = {"carousel": carousel, "data": models, "form": SearchForm()}
     return render(request, "pages/index.html", context)
 

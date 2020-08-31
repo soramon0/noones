@@ -1,119 +1,199 @@
-{% load static %}
-{% load i18n %}
+{% load static %} {% load i18n %}
 
-<header class="p-4 h-16 fixed inset-0 z-30 bg-white flex justify-between items-center shadow-md">
-  <div class="h-12">
-    <a href="{% url 'index' %}">
-      <img class="h-full" alt="logo" src="{% static 'icons/logo-noc.png' %}" />
-    </a>
-  </div>
-  <button id="hamburger" class="w-12 h-12 rounded-full flex items-center justify-center focus:bg-gray-400 focus:outline-none hover:bg-gray-400 lg:hidden">
-    <svg class="fill-current text-gray-600 h-6 w-6" viewBox="0 0 20 20">
-      <path
-        d="M1.321,3.417h17.024C18.707,3.417,19,3.124,19,2.762c0-0.362-0.293-0.655-0.654-0.655H1.321
+<header
+	class="p-4 h-16 fixed inset-0 z-30 bg-white flex justify-between items-center shadow-md"
+>
+	<div class="h-12">
+		<a href="{% url 'index' %}">
+			<img class="h-full" alt="logo" src="{% static 'icons/logo-noc.png' %}" />
+		</a>
+	</div>
+	<button
+		id="hamburger"
+		class="w-12 h-12 rounded-full flex items-center justify-center focus:bg-gray-400 focus:outline-none hover:bg-gray-400 lg:hidden"
+	>
+		<svg class="fill-current text-gray-600 h-6 w-6" viewBox="0 0 20 20">
+			<path
+				d="M1.321,3.417h17.024C18.707,3.417,19,3.124,19,2.762c0-0.362-0.293-0.655-0.654-0.655H1.321
           c-0.362,0-0.655,0.293-0.655,0.655C0.667,3.124,0.959,3.417,1.321,3.417z M18.346,15.857H8.523c-0.361,0-0.655,0.293-0.655,0.654
           c0,0.362,0.293,0.655,0.655,0.655h9.822c0.361,0,0.654-0.293,0.654-0.655C19,16.15,18.707,15.857,18.346,15.857z M18.346,11.274
           H1.321c-0.362,0-0.655,0.292-0.655,0.654s0.292,0.654,0.655,0.654h17.024c0.361,0,0.654-0.292,0.654-0.654
           S18.707,11.274,18.346,11.274z M18.346,6.69H6.56c-0.362,0-0.655,0.293-0.655,0.655C5.904,7.708,6.198,8,6.56,8h11.786
           C18.707,8,19,7.708,19,7.345C19,6.983,18.707,6.69,18.346,6.69z"
-      ></path>
-    </svg>
-  </button>
-  {% comment %} Desktop navigation {% endcomment %}
-  <nav class="lg:flex hidden uppercase space-x-1">
-    {% if user.is_authenticated %}
-      <a href="{% url 'models' %}" class="text-xs text-gray-700 font-medium px-2">
-        {% translate "Our models" %}
-      </a>
-      <a href="{% url 'contact' %}" class="text-xs text-gray-700 font-medium px-2">
-        {% translate "Contact" %}
-      </a>
-      <a href="{% url 'profile' %}" class=" text-xs text-gray-700 font-medium px-2">
-        {% translate "Dashboard" %}
-      </a>
-      <a href="{% url 'signout' %}" class="text-xs text-gray-700 font-medium px-2">
-        {% translate "Sign out" %}
-      </a>
-    {% else %}
-      <a href="{% url 'a-propos' %}" class="text-xs text-gray-700 font-medium px-2">
-        {% translate "About" %}
-      </a>
-      <a href="{% url 'vision' %}" class=" text-xs text-gray-700 font-medium  px-2">
-        {% translate "Vision and mission" %}
-      </a>
-      <a href="{% url 'models' %}" class=" text-xs text-gray-700 font-medium px-2">
-        {% translate "Our models" %}
-      </a>
-      <a href="{% url 'signup' %}" class=" text-xs text-gray-700 font-medium px-2">
-        {% translate "Become our model" %} 
-      </a>
-      <a href="{% url 'signin' %}" class="text-xs text-gray-700 font-medium px-2">
-        {% translate "Sign In" %}
-      </a>
-      <a href="{% url 'contact' %}" class="text-xs text-gray-700 font-medium px-2">
-        {% translate "Contact" %}
-      </a>
-    {% endif %}
-  </nav>
+			></path>
+		</svg>
+	</button>
+	{% comment %} Desktop navigation {% endcomment %}
+	<nav class="lg:flex hidden uppercase space-x-1">
+		{% if user.is_authenticated %}
+		<a href="{% url 'models' %}" class="text-xs text-gray-700 font-medium px-2">
+			{% translate "Our models" %}
+		</a>
+		<a
+			href="{% url 'contact' %}"
+			class="text-xs text-gray-700 font-medium px-2"
+		>
+			{% translate "Contact" %}
+		</a>
+		<a
+			href="{% url 'profile' %}"
+			class="text-xs text-gray-700 font-medium px-2"
+		>
+			{% translate "Dashboard" %}
+		</a>
+		<a
+			href="{% url 'signout' %}"
+			class="text-xs text-gray-700 font-medium px-2"
+		>
+			{% translate "Sign out" %}
+		</a>
+		{% else %}
+		<a
+			href="{% url 'a-propos' %}"
+			class="text-xs text-gray-700 font-medium px-2"
+		>
+			{% translate "About" %}
+		</a>
+		<a href="{% url 'vision' %}" class="text-xs text-gray-700 font-medium px-2">
+			{% translate "Vision and mission" %}
+		</a>
+		<a href="{% url 'models' %}" class="text-xs text-gray-700 font-medium px-2">
+			{% translate "Our models" %}
+		</a>
+		<a href="{% url 'signup' %}" class="text-xs text-gray-700 font-medium px-2">
+			{% translate "Become our model" %}
+		</a>
+		<a href="{% url 'signin' %}" class="text-xs text-gray-700 font-medium px-2">
+			{% translate "Sign In" %}
+		</a>
+		<a
+			href="{% url 'contact' %}"
+			class="text-xs text-gray-700 font-medium px-2"
+		>
+			{% translate "Contact" %}
+		</a>
+		{% endif %}
+	</nav>
 
-  {% comment %} Side Drawer {% endcomment %}
-  <nav id="sidedrawer" class="flex flex-col w-8/12 bg-gray-800 fixed inset-y-0 right-0 z-30 sm:w-1/2 md:w-2/5 lg:hidden">
-    <button  id="sidedrawer-close" class="absolute top-0 right-0 px-4 py-2 cursor-pointer bg-gray-500 rounded-full mr-2 mt-2 hover:text-white hover:bg-gray-900">
-      <span class="uppercase text-base">x</span>
-    </button>
-    {% if user.is_authenticated %}
-      <div class="pt-6">
-        <a href="{% url 'models' %}" class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900">
-          {% translate "Our models" %}
-        </a>
-        <a href="{% url 'contact' %}" class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900">
-          {% translate "Contact" %}
-        </a>
-      </div>
-      <div class="mt-2 pt-2 border-t border-gray-600">
-        <a href="{% url 'profile' %}" class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900">
-          {% translate "Dashboard" %}
-        </a>
-        <a href="{% url 'signout' %}" class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900">
-          {% translate "Sign out" %}
-        </a>
-      </div>
-      <div class="mt-2 border-t border-gray-600">
-        <a href="/blog" class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">{% translate "Blog" %}Blog</a>
-        <a href="/faq" class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">{% translate "FAQ" %}FAQ</a>
-        <a href="/légale" class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">{% translate "Policy" %}</a>
-      </div>
-    {% else %}
-      <div class="pt-6">
-        <a class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900" href="{% url 'a-propos' %}">
-          {% translate "About" %}
-        </a>
-        <a class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900" href="{% url 'vision' %}" >
-          {% translate "Vision and mission" %}
-        </a>
-        <a class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900" href="{% url 'models' %}" >
-          {% translate "Our models" %}
-        </a>
-      </div>
-      <div class="mt-2 border-t border-gray-600">
-        <a href="{% url 'signup' %}" class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">
-          {% translate "Become our model" %} 
-        </a>
-        <a href="{% url 'signin' %}" class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900">
-          {% translate "Sign In" %}
-        </a>
-        <a href="{% url 'contact' %}" class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900">
-          {% translate "Contact" %}
-        </a>
-      </div>
-      <div class="mt-2 border-t border-gray-600">
-        <a href="/blog" class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">{% translate "Blog" %}</a>
-        <a href="/faq" class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">{% translate "FAQ" %}</a>
-        <a href="/légale" class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900">{% translate "Policy" %}</a>
-      </div>
-    {% endif %}
-    <p class="text-center mt-auto py-4 text-xs text-white sm:text-base">
-      {% trans "Powered by" %} <span class="uppercase font-medium">NO ONE'S COMPANY</span>
-    </p>
-  </nav>
+	{% comment %} Side Drawer {% endcomment %}
+	<nav
+		id="sidedrawer"
+		class="flex flex-col w-8/12 bg-gray-800 fixed inset-y-0 right-0 z-30 sm:w-1/2 md:w-2/5 lg:hidden"
+	>
+		<button
+			id="sidedrawer-close"
+			class="absolute top-0 right-0 px-4 py-2 cursor-pointer bg-gray-500 rounded-full mr-2 mt-2 hover:text-white hover:bg-gray-900"
+		>
+			<span class="uppercase text-base">x</span>
+		</button>
+		{% if user.is_authenticated %}
+		<div class="pt-6">
+			<a
+				href="{% url 'models' %}"
+				class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900"
+			>
+				{% translate "Our models" %}
+			</a>
+			<a
+				href="{% url 'contact' %}"
+				class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900"
+			>
+				{% translate "Contact" %}
+			</a>
+		</div>
+		<div class="mt-2 pt-2 border-t border-gray-600">
+			<a
+				href="{% url 'profile' %}"
+				class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900"
+			>
+				{% translate "Dashboard" %}
+			</a>
+			<a
+				href="{% url 'signout' %}"
+				class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900"
+			>
+				{% translate "Sign out" %}
+			</a>
+		</div>
+		<div class="mt-2 border-t border-gray-600">
+			<a
+				href="/blog"
+				class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900"
+				>{% translate "Blog" %}Blog</a
+			>
+			<a
+				href="/faq"
+				class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900"
+				>{% translate "FAQ" %}FAQ</a
+			>
+			<a
+				href="/légale"
+				class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900"
+				>{% translate "Policy" %}</a
+			>
+		</div>
+		{% else %}
+		<div class="pt-6">
+			<a
+				class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900"
+				href="{% url 'a-propos' %}"
+			>
+				{% translate "About" %}
+			</a>
+			<a
+				class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900"
+				href="{% url 'vision' %}"
+			>
+				{% translate "Vision and mission" %}
+			</a>
+			<a
+				class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900"
+				href="{% url 'models' %}"
+			>
+				{% translate "Our models" %}
+			</a>
+		</div>
+		<div class="mt-2 border-t border-gray-600">
+			<a
+				href="{% url 'signup' %}"
+				class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900"
+			>
+				{% translate "Become our model" %}
+			</a>
+			<a
+				href="{% url 'signin' %}"
+				class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900"
+			>
+				{% translate "Sign In" %}
+			</a>
+			<a
+				href="{% url 'contact' %}"
+				class="text-xs text-gray-400 block mb-2 px-4 py-3 hover:bg-gray-900"
+			>
+				{% translate "Contact" %}
+			</a>
+		</div>
+		<div class="mt-2 border-t border-gray-600">
+			<a
+				href="/blog"
+				class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900"
+				>{% translate "Blog" %}</a
+			>
+			<a
+				href="/faq"
+				class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900"
+				>{% translate "FAQ" %}</a
+			>
+			<a
+				href="/légale"
+				class="text-xs text-gray-400 block my-2 px-4 py-3 hover:bg-gray-900"
+				>{% translate "Policy" %}</a
+			>
+		</div>
+		{% endif %}
+		<p class="text-center mt-auto py-4 text-xs text-white sm:text-base">
+			{% trans "Powered by" %}
+			<span class="uppercase font-medium">NO ONE'S COMPANY</span>
+		</p>
+	</nav>
 </header>

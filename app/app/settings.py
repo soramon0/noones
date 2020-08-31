@@ -11,18 +11,27 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+
 from django.utils.translation import gettext_lazy as _
+import environ
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+
+environ.Env.read_env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-DEBUG = int(os.environ.get("DEBUG", default=0))
+DEBUG = env('DEBUG')
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = env('SECRET_KEY')
 
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(' ')
 
 if not DEBUG:
     # Setting up sentry in production
@@ -34,19 +43,6 @@ if not DEBUG:
         integrations=[DjangoIntegration()],
         send_default_pii=True,
     )
-
-    # Reading docker-compose secret files for production
-    with open("/run/secrets/SECRET_KEY", "r") as f:
-        os.environ["SECRET_KEY"] = f.readline()
-
-    with open("/run/secrets/DJANGO_ALLOWED_HOSTS", "r") as f:
-        os.environ["DJANGO_ALLOWED_HOSTS"] = f.readline()
-
-    with open("/run/secrets/POSTGRES_PASSWORD", "r") as f:
-        os.environ["POSTGRES_PASSWORD"] = f.readline()
-
-    with open("/run/secrets/POSTGRES_USER", "r") as f:
-        os.environ["POSTGRES_USER"] = f.readline()
 
 # Application definition
 INSTALLED_APPS = [
@@ -105,15 +101,8 @@ WSGI_APPLICATION = "app.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("POSTGRES_NAME"),
-        "USER": os.environ.get("POSTGRES_USER"),
-        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
-        "HOST": os.environ.get("POSTGRES_HOST"),
-    }
+    "default": env.db(),
 }
 
 
@@ -168,12 +157,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "app/static")]
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
-# EMAIL
-with open("/run/secrets/email_user", "r") as f:
-    os.environ["EMAIL_USER"] = f.readline()
-with open("/run/secrets/email_pass", "r") as f:
-    os.environ["EMAIL_PASS"] = f.readline()
-
+# EMAIL CONFIG
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
     EMAIL_FILE_PATH = os.path.join(BASE_DIR, "temp/emails")
@@ -182,9 +166,10 @@ else:
     EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get("EMAIL_USER")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASS")
+EMAIL_HOST_USER = env('EMAIL_USER')
+EMAIL_HOST_PASSWORD = env("EMAIL_PASS")
 
+# REST FRAMEWORK CONFIG
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
@@ -196,9 +181,8 @@ REST_FRAMEWORK = {
 }
 
 # CELERY CONFIG
-CELERY_BROKER_URL = "redis:6379"
-CELERY_RESULT_BACKEND = "redis:6379"
-CELERY_TRASNPORT = "redis"
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND')
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"

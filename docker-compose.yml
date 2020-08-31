@@ -1,30 +1,32 @@
 version: "3.1"
 
 services:
-  web:
+  db:
+    container_name: noones_db
+    image: postgres:12.3-alpine
     networks:
       - backend
-    volumes:
-      - app_media:/home/sora/app/media
-    depends_on:
-      - db
-  db:
-    image: postgres:12.3-alpine
+    environment:
+      POSTGRES_PASSWORD: sora_password
+      POSTGRES_USER: sora
+      POSTGRES_DB: dev_db
     volumes:
       - app_db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  redis:
+    container_name: noones_redis
+    image: redis:6.0.6
     networks:
       - backend
-  redis:
-    image: redis:6.0.6
     volumes:
       - app_redis:/data
-    networks:
-      - backend
+    ports:
+      - "6379:6379"
 
 networks:
   backend:
 
 volumes:
-  app_media:
   app_db:
   app_redis:
