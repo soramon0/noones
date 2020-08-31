@@ -14,6 +14,12 @@ services:
       - app_db:/var/lib/postgresql/data
     networks:
       - backend
+  redis:
+    image: redis:6.0.6
+    volumes:
+      - app_redis:/data
+    networks:
+      - backend
 
 networks:
   backend:
@@ -21,3 +27,4 @@ networks:
 volumes:
   app_media:
   app_db:
+  app_redis:

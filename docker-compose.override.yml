@@ -19,13 +19,13 @@ services:
       SECRET_KEY: super_secret_key
       DEBUG: 1
       DJANGO_ALLOWED_HOSTS: "*"
+      CELERY_BROKER_URL: redis
     secrets:
       - source: email_user
       - source: email_pass
     command: >
       sh -c "python manage.py wait_for_db &&
             python manage.py runserver 0.0.0.0:8000"
-
   client:
     image: node:14.3
     container_name: noones_client
@@ -47,7 +47,6 @@ services:
             npm run build-clean &&
             npm run build-postcss &&
             npm run dev"
-
   db:
     container_name: noones_db
     ports:
@@ -56,6 +55,8 @@ services:
       POSTGRES_PASSWORD: sora_password
       POSTGRES_USER: sora
       POSTGRES_DB: dev_db
+  redis:
+    container_name: noones_redis
 
 volumes:
   notused:

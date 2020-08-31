@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
+    "celery",
     "accounts.apps.AccountsConfig",
     "models.apps.ModelsConfig",
     "updates.apps.UpdatesConfig",
@@ -123,9 +124,15 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
 ]
 
 
@@ -187,3 +194,12 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 20,
     "MAX_LIMIT": 20,
 }
+
+# CELERY CONFIG
+CELERY_BROKER_URL = "redis:6379"
+CELERY_RESULT_BACKEND = "redis:6379"
+CELERY_TRASNPORT = "redis"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+# CELERY_TIMEZONE = 'UTC/GMT+1'
