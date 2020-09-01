@@ -126,7 +126,8 @@ def signup(request):
 
         confirmation_email_send(request=request, user=user)
 
-        messages.success(request, "Please Confirm your email to complete registration.")
+        messages.success(
+            request, "Please Confirm your email to complete registration.")
 
         return redirect("signin")
 

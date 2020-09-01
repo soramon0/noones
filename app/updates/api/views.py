@@ -54,6 +54,8 @@ from updates.services import (
     reset_gallery_update,
 )
 
+from updates.tasks import email_send
+
 
 class ProfileUpdateViewSet(ApiErrorsMixin, viewsets.ViewSet):
     permission_classes = (IsAuthenticated,)
@@ -88,7 +90,8 @@ class ProfileUpdateViewSet(ApiErrorsMixin, viewsets.ViewSet):
         serializer = InputProfileUpdateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        profile_update = modify_profile_update(update=instance, **serializer.data)
+        profile_update = modify_profile_update(
+            update=instance, **serializer.data)
         serializer = OutputProfileUpdateSerializer(profile_update)
 
         return Response(serializer.data)
@@ -98,13 +101,14 @@ class ProfileUpdateViewSet(ApiErrorsMixin, viewsets.ViewSet):
 
         # Send Email to admin
         # TODO(karim): Update this email
-        send_mail(
-            f"User {request.user.email} deleted his update",
-            "Delete request for measures update",
-            request.user.email,
-            [settings.EMAIL_HOST_USER],
-            fail_silently=False,
-        )
+        email_send.delay(request.user.email)
+        # send_mail(
+        #     f"User {request.user.email} deleted his update",
+        #     "Delete request for measures update",
+        #     request.user.email,
+        #     [settings.EMAIL_HOST_USER],
+        #     fail_silently=False,
+        # )
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -151,7 +155,8 @@ class MeasuresUpdateViewSet(ApiErrorsMixin, viewsets.ViewSet):
         serializer = InputMeasuresUpdateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        measures_update = modify_measures_update(update=instance, **serializer.data)
+        measures_update = modify_measures_update(
+            update=instance, **serializer.data)
         serializer = OutputMeasuresUpdateSerializer(measures_update)
 
         return Response(serializer.data)
@@ -317,7 +322,8 @@ class ProfilePictureUpdateViewSet(ApiErrorsMixin, viewsets.ViewSet):
         return Response(serializer.data)
 
     def destroy(self, request, pk=None):
-        instance = delete_profile_picture_update(fetched_by=request.user, pk=pk)
+        instance = delete_profile_picture_update(
+            fetched_by=request.user, pk=pk)
 
         # Send Email to admin
         # TODO(karim): Update this email

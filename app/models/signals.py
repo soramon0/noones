@@ -7,14 +7,17 @@ from core.utils import delete_file
 
 @receiver(post_delete, sender=Gallery)
 def delete_old_gallery_photo(sender, instance, using, **kwargs):
+    # TODO(karim): check if any updates uses this image
     delete_file(instance.image)
 
 
 @receiver(post_delete, sender=ProfilePicture)
 def delete_old_profile_picture(sender, instance, using, **kwargs):
+    # TODO(karim): check if any updates uses this image
     delete_file(instance.image)
 
 
 @receiver(post_delete, sender=CoverPicture)
 def delete_old_cover_picture(sender, instance, using, **kwargs):
+    # TODO(karim): check if any updates uses this image
     delete_file(instance.image)

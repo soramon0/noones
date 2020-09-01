@@ -54,7 +54,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
-    "celery",
     "accounts.apps.AccountsConfig",
     "models.apps.ModelsConfig",
     "updates.apps.UpdatesConfig",
@@ -186,4 +185,4 @@ CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND')
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
-# CELERY_TIMEZONE = 'UTC/GMT+1'
+CELERY_TIMEZONE = 'UTC'

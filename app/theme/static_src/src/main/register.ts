@@ -7,11 +7,11 @@ function HandleSectionMovment(current, target) {
 	current.classList.remove('current');
 	current.classList.add('opacity-0');
 	current.classList.add('invisible');
-	// current.classList.add('absolute');
+	current.classList.add('absolute');
 
 	target.classList.remove('opacity-0');
 	target.classList.remove('invisible');
-	// target.classList.remove('absolute');
+	target.classList.remove('absolute');
 	target.classList.add('current');
 }
 

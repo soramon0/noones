@@ -19,6 +19,7 @@ from updates.models import (
     ProfilePictureUpdate,
     CoverPictureUpdate,
 )
+from updates.tasks import image_resize_task
 
 
 @receiver(post_save, sender=ProfileUpdate)
@@ -35,7 +36,8 @@ def apply_model_update(sender, instance, created, raw, using, update_fields, **k
         )
     else:
         if instance.accept and not instance.decline:
-            Profile.objects.filter(pk=instance.profile.id).update(bio=instance.bio)
+            Profile.objects.filter(
+                pk=instance.profile.id).update(bio=instance.bio)
 
 
 @receiver(post_save, sender=MeasuresUpdate)
@@ -65,7 +67,9 @@ def apply_measures_update(
 def apply_gallery_update(
     sender, instance, created, raw, using, update_fields, **kwargs
 ):
-    if not created:
+    if created:
+        image_resize_task.delay(instance.image.path, 1280, 720)
+    else:
         if instance.accept and not instance.decline:
             if not instance.related_photo:
                 photo = Gallery.objects.create(
@@ -77,7 +81,8 @@ def apply_gallery_update(
 
                 # save the realted photo on this instance using a update query
                 # so that we do not trigger this signal again
-                GalleryUpdate.objects.filter(id=instance.id).update(related_photo=photo)
+                GalleryUpdate.objects.filter(
+                    id=instance.id).update(related_photo=photo)
             else:
                 # update the one we have by deleting the old picture
                 # and pointing the one we have to the new picture
@@ -109,11 +114,16 @@ def delete_old_gallery_photo_update(sender, instance, using, **kwargs):
 def apply_profile_picture_update(
     sender, instance, created, raw, using, update_fields, **kwargs
 ):
-    if not created:
+    if created:
+        image_resize_task.delay(instance.image.path, 720, 900, by_wdith=True)
+    else:
         if instance.accept and not instance.decline:
             user = instance.user
             try:
-                ProfilePicture.objects.filter(user=user, inUse=True).update(inUse=False)
+                # if user already has a profile picture
+                # set it's inUse value to false
+                ProfilePicture.objects.filter(
+                    user=user, inUse=True).update(inUse=False)
             except ProfilePicture.DoesNotExit:
                 pass
 
@@ -124,7 +134,8 @@ def apply_profile_picture_update(
 
 @receiver(post_delete, sender=ProfilePictureUpdate)
 def delete_old_profile_picture_update(sender, instance, using, **kwargs):
-    query = ProfilePicture.objects.filter(user=instance.user, image=instance.image)
+    query = ProfilePicture.objects.filter(
+        user=instance.user, image=instance.image)
     if not query.exists():
         delete_file(instance.image)
 
@@ -133,11 +144,14 @@ def delete_old_profile_picture_update(sender, instance, using, **kwargs):
 def apply_cover_picture_update(
     sender, instance, created, raw, using, update_fields, **kwargs
 ):
-    if not created:
+    if created:
+        image_resize_task.delay(instance.image.path, 1280, 720)
+    else:
         if instance.accept and not instance.decline:
             user = instance.user
             try:
-                CoverPicture.objects.filter(user=user, inUse=True).update(inUse=False)
+                CoverPicture.objects.filter(
+                    user=user, inUse=True).update(inUse=False)
             except ProfilePicture.DoesNotExit:
                 pass
 
@@ -148,6 +162,7 @@ def apply_cover_picture_update(
 
 @receiver(post_delete, sender=CoverPictureUpdate)
 def delete_old_cover_picture_update(sender, instance, using, **kwargs):
-    query = CoverPicture.objects.filter(user=instance.user, image=instance.image)
+    query = CoverPicture.objects.filter(
+        user=instance.user, image=instance.image)
     if not query.exists():
         delete_file(instance.image)

@@ -7,6 +7,7 @@ from updates.models import (
     ProfilePictureUpdate,
     CoverPictureUpdate,
 )
+from updates.actions import accept_update
 
 
 class ProfileUpdateAdmin(admin.ModelAdmin):
@@ -16,6 +17,7 @@ class ProfileUpdateAdmin(admin.ModelAdmin):
     date_hierarchy = "created_at"
     search_fields = ("user__email",)
     list_per_page = 24
+    actions = (accept_update,)
 
 
 class MeasuresUpdateAdmin(admin.ModelAdmin):
@@ -25,6 +27,7 @@ class MeasuresUpdateAdmin(admin.ModelAdmin):
     date_hierarchy = "created_at"
     search_fields = ("user__email",)
     list_per_page = 24
+    actions = (accept_update,)
 
 
 class ProfilePictureUpdateAdmin(admin.ModelAdmin):
@@ -33,6 +36,7 @@ class ProfilePictureUpdateAdmin(admin.ModelAdmin):
     list_filter = ("created_at", "accept", "decline")
     date_hierarchy = "created_at"
     list_per_page = 24
+    actions = (accept_update,)
 
 
 class CoverPictureUpdateAdmin(admin.ModelAdmin):
@@ -41,6 +45,7 @@ class CoverPictureUpdateAdmin(admin.ModelAdmin):
     list_filter = ("created_at", "accept", "decline")
     date_hierarchy = "created_at"
     list_per_page = 24
+    actions = (accept_update,)
 
 
 class GalleryUpdateAdmin(admin.ModelAdmin):
@@ -50,6 +55,7 @@ class GalleryUpdateAdmin(admin.ModelAdmin):
     list_filter = ("created_at", "accept", "decline")
     date_hierarchy = "created_at"
     list_per_page = 24
+    actions = (accept_update,)
 
 
 admin.site.register(ProfileUpdate, ProfileUpdateAdmin)

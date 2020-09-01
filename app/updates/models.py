@@ -43,7 +43,8 @@ class ProfileUpdate(models.Model, UpdateChecks):
     # This database table is going to hold the model update data
     # temporarily until the admin deletes it
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
     bio = models.CharField(max_length=500)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -68,7 +69,8 @@ class ProfileUpdate(models.Model, UpdateChecks):
 class MeasuresUpdate(AbstractMensuration, UpdateChecks):
     # This database table is going to hold the measures update data
     # temporarily until the admin deletes it
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     measures = models.OneToOneField(Mensuration, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     accept = models.BooleanField(null=True, blank=True)
@@ -92,7 +94,8 @@ class MeasuresUpdate(AbstractMensuration, UpdateChecks):
 class GalleryUpdate(models.Model, UpdateChecks):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     image = models.ImageField(upload_to="photos/%Y/%m/%d")
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
     related_photo = models.OneToOneField(
         Gallery, null=True, blank=True, on_delete=models.CASCADE
     )
@@ -121,7 +124,8 @@ class GalleryUpdate(models.Model, UpdateChecks):
 class ProfilePictureUpdate(models.Model, UpdateChecks):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     image = models.ImageField(upload_to="photos/%Y/%m/%d")
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     accept = models.BooleanField(null=True, blank=True)
     decline = models.BooleanField(null=True, blank=True)
@@ -137,7 +141,8 @@ class ProfilePictureUpdate(models.Model, UpdateChecks):
 class CoverPictureUpdate(models.Model, UpdateChecks):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     image = models.ImageField(upload_to="photos/%Y/%m/%d")
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     accept = models.BooleanField(null=True, blank=True)
     decline = models.BooleanField(null=True, blank=True)
