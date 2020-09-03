@@ -54,7 +54,7 @@ from updates.services import (
     reset_gallery_update,
 )
 
-from updates.tasks import email_send
+from updates.tasks import email_send_task
 
 
 class ProfileUpdateViewSet(ApiErrorsMixin, viewsets.ViewSet):
@@ -101,7 +101,7 @@ class ProfileUpdateViewSet(ApiErrorsMixin, viewsets.ViewSet):
 
         # Send Email to admin
         # TODO(karim): Update this email
-        email_send.delay(request.user.email)
+        email_send_task.delay(request.user.email)
         # send_mail(
         #     f"User {request.user.email} deleted his update",
         #     "Delete request for measures update",

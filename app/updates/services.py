@@ -1,4 +1,5 @@
 import uuid
+from datetime import timedelta
 
 from django.utils import timezone
 from rest_framework.exceptions import NotFound
@@ -28,6 +29,16 @@ def delete_profile_update(*, fetched_by: User, pk: uuid.UUID):
     count, _ = ProfileUpdate.objects.filter(user=fetched_by, pk=pk).delete()
     if count == 0:
         raise NotFound()
+
+
+def delete_all_profile_updates() -> tuple:
+    '''
+        delete all profile updates that are one day old or more
+    '''
+    yesterday = timezone.now() - timedelta(days=1)
+
+    return ProfileUpdate.objects.filter(
+        accept=True, created_at__date__lte=yesterday).delete()
 
 
 def modify_profile_update(*, update: ProfileUpdate, bio: str) -> ProfileUpdate:
@@ -74,6 +85,16 @@ def delete_measures_update(*, fetched_by: User, pk: uuid.UUID):
         raise NotFound()
 
 
+def delete_all_measures_updates() -> tuple:
+    '''
+        delete all measures updates that are one day old or more
+    '''
+    yesterday = timezone.now() - timedelta(days=1)
+
+    return MeasuresUpdate.objects.filter(
+        accept=True, created_at__date__lte=yesterday).delete()
+
+
 def modify_measures_update(
     *,
     update: ProfileUpdate,
@@ -117,6 +138,16 @@ def delete_gallery_update(*, fetched_by: User, pk: uuid.UUID):
         raise NotFound()
 
 
+def delete_all_gallery_updates() -> tuple:
+    '''
+        delete all gallery updates that are one day old or more
+    '''
+    yesterday = timezone.now() - timedelta(days=1)
+
+    return GalleryUpdate.objects.filter(
+        accept=True, created_at__date__lte=yesterday).delete()
+
+
 def modify_gallery_update(*, update: GalleryUpdate, image) -> GalleryUpdate:
     old_image = update.image
     update.message = ""
@@ -153,7 +184,8 @@ def create_profile_picture_update(*, owner: User, image) -> ProfilePictureUpdate
 
 
 def delete_profile_picture_update(*, fetched_by: User, pk: uuid.UUID):
-    count, _ = ProfilePictureUpdate.objects.filter(user=fetched_by, pk=pk).delete()
+    count, _ = ProfilePictureUpdate.objects.filter(
+        user=fetched_by, pk=pk).delete()
     if count == 0:
         raise NotFound()
 
@@ -171,14 +203,35 @@ def modify_profile_picturey_update(
     return update
 
 
+def delete_all_profile_picture_updates() -> tuple:
+    '''
+        delete all profile pictures updates that are one day old or more
+    '''
+    yesterday = timezone.now() - timedelta(days=1)
+
+    return ProfilePictureUpdate.objects.filter(
+        accept=True, created_at__date__lte=yesterday).delete()
+
+
 def create_cover_picture_update(*, owner: User, image) -> CoverPictureUpdate:
     return CoverPictureUpdate.objects.create(user=owner, image=image)
 
 
 def delete_cover_picture_update(*, fetched_by: User, pk: uuid.UUID):
-    count, _ = CoverPictureUpdate.objects.filter(user=fetched_by, pk=pk).delete()
+    count, _ = CoverPictureUpdate.objects.filter(
+        user=fetched_by, pk=pk).delete()
     if count == 0:
         raise NotFound()
+
+
+def delete_all_cover_picture_updates() -> tuple:
+    '''
+        delete all cover pictures updates that are one day old or more
+    '''
+    yesterday = timezone.now() - timedelta(days=1)
+
+    return CoverPictureUpdate.objects.filter(
+        accept=True, created_at__date__lte=yesterday).delete()
 
 
 def modify_cover_picturey_update(

@@ -14,6 +14,7 @@ import os
 
 from django.utils.translation import gettext_lazy as _
 import environ
+from celery.schedules import crontab
 
 env = environ.Env(
     # set casting, default value
@@ -62,10 +63,6 @@ INSTALLED_APPS = [
     "theme",
 ]
 
-if DEBUG:
-    INSTALLED_APPS.append("django_seed")
-
-
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -76,6 +73,17 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+INTERNAL_IPS = []
+
+if DEBUG:
+    INSTALLED_APPS.append("django_seed")
+
+    # use debug toolbar in dev mode
+    INSTALLED_APPS.append("debug_toolbar")
+    MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
+    INTERNAL_IPS.append('127.0.0.1')
+
 
 ROOT_URLCONF = "app.urls"
 
@@ -186,3 +194,9 @@ CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = 'UTC'
+CELERY_BEAT_SCHEDULE = {
+    'context': {
+        'task': 'updates.delete_updates',
+        'schedule': crontab(minute=0, hour=0)  # Execute daily at midnight.
+    }
+}

@@ -1,6 +1,6 @@
 import os
 from contextlib import contextmanager
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 
 
 @contextmanager
@@ -20,15 +20,22 @@ def delete_file(image):
 
 def image_resize(*, path: str, width: int, height, by_wdith=False):
     # initialize the dimensions of the image to be resized and
-    # grab the image size
     dim = None
-    img = Image.open(path)
+
+    try:
+        img = Image.open(path)
+    except FileNotFoundError:
+        return {'message': f'file was not found at path: {path}.'}
+    except UnidentifiedImageError:
+        return {'message', f'file was not identified at path: {path}'}
+
+    # grab the image size
     w, h = img.size
 
     # return if the img's width and height is smaller than
     # the desired width and height
     if w <= width and h <= height:
-        return
+        return {'message': f'image dimensions {w, h} were below desired dimensions {width, height}.'}
 
     # check to see if we should calculate ratio for width
     if by_wdith:
@@ -50,6 +57,8 @@ def image_resize(*, path: str, width: int, height, by_wdith=False):
     # resize the image
     img = img.resize(dim, Image.ANTIALIAS)
     img.save(path, format='JPEG', quality=100)
+
+    return {'message': f'image resized from {w,h} to {width, height}.'}
 
 
 def get_first_matching_attr(obj, *attrs, default=None):
