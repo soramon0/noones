@@ -115,7 +115,6 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -156,6 +155,75 @@ STATIC_URL = "/static/"
 # Custom User
 AUTH_USER_MODEL = "core.User"
 
+# settting up Logging
+CONSOLE_LOGGING_FORMAT = '{levelname}: {asctime} {module} {process:d} {thread:d} {pathname} {funcName} {lineno} {name}: {message}'
+CONSOLE_LOGGING_FILE = os.path.join(BASE_DIR, 'temp/django-wrds.log')
+CONSOLE_QUERY_LOGGING_FILE = os.path.join(BASE_DIR, 'temp/django-queries.log')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': CONSOLE_LOGGING_FORMAT,
+            'style': '{',
+        },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True
+        },
+        'file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': CONSOLE_LOGGING_FILE,
+            'mode': 'a',
+            'encoding': 'utf-8',
+            'formatter': 'verbose',
+            'backupCount': 5,
+            'maxBytes': 10485760,
+        },
+        'query_file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': CONSOLE_QUERY_LOGGING_FILE,
+            'mode': 'a',
+            'encoding': 'utf-8',
+            'backupCount': 5,
+            'maxBytes': 10485760,
+        },
+    },
+    'loggers': {
+        'root': {
+            'handlers': ['console', 'mail_admins', 'file'],
+            'level': env('ROOT_LOG_LEVEL')
+        },
+        'django': {
+            'handlers': ['console', 'mail_admins', 'file'],
+            'level': env('DJANGO_LOG_LEVEL'),
+            'propagte': False
+        },
+        'django.server': {
+            'propagte': True
+        },
+        'django.db.backends': {
+            'propagte': False,
+            'level': 'DEBUG',
+            'handlers': ['query_file']
+        }
+    }
+}
+
 # Static files
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "app/static")]
@@ -170,11 +238,11 @@ if DEBUG:
     EMAIL_FILE_PATH = os.path.join(BASE_DIR, "temp/emails")
 else:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env.int('EMAIL_PORT')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = env('EMAIL_USER')
-EMAIL_HOST_PASSWORD = env("EMAIL_PASS")
 
 # REST FRAMEWORK CONFIG
 REST_FRAMEWORK = {

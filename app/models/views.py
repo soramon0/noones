@@ -17,9 +17,12 @@ User = get_user_model()
 
 
 def list_models(request):
+    fields = ('image', 'profile__first_name', 'profile__last_name',
+              'profile__country', 'profile__city')
     models = (
         ProfilePicture.objects.filter(inUse=True, user__is_public=True)
-        .only("profile")
+        .select_related('profile')
+        .only(*fields)
         .order_by("-user__created_at")[:12]
     )
     context = {"data": models, "form": SearchForm()}
@@ -40,8 +43,6 @@ def detail_model(request, id):
     user = get_object_or_404(query, profile=id)
     model = user.profile
     photos = Gallery.objects.only("image").filter(user_id=user.id)[:8]
-
-    print(user.mensuration.height)
 
     context = {
         "model": model,
