@@ -10,16 +10,12 @@ SELECT_CLASS = {'class': 'form-select'}
 
 
 class ContactForm(forms.Form):
-    nom = forms.CharField(
-        min_length=3, max_length=100, widget=forms.TextInput(attrs=INPUT_CLASS))
-    email = forms.EmailField(
-        max_length=255, widget=forms.EmailInput(attrs=INPUT_CLASS))
-    phone = forms.CharField(
-        min_length=6, max_length=100, widget=forms.TextInput(attrs=INPUT_CLASS))
-    subject = forms.CharField(
-        min_length=3, max_length=100, widget=forms.TextInput(attrs=INPUT_CLASS))
-    message = forms.CharField(max_length=500, widget=forms.Textarea(
-        attrs=TEXTAREA_CLASS))
+    nom = forms.CharField(min_length=3, max_length=100)
+    email = forms.EmailField(max_length=255)
+    phone = forms.CharField(min_length=6, max_length=100)
+    subject = forms.CharField(min_length=3, max_length=100)
+    message = forms.CharField(widget=forms.Textarea(
+        attrs={'rows': '8', 'cols': '40'}))
 
 
 class SearchForm(forms.Form):

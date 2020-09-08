@@ -4,70 +4,102 @@
 @tailwind components;
 
 body {
-  font-family: 'Sora', sans-serif;
+	font-family: 'Sora', sans-serif;
 }
 
 .error {
-  @apply mx-2 mt-2 bg-gray-100 border-t-4 border-red-400 px-2 py-5 shadow-lg rounded-sm max-w-lg;
+	@apply mx-2 mt-2 bg-gray-100 border-t-4 border-red-400 px-2 py-5 shadow-lg rounded-sm max-w-lg;
 }
 
 .disc-list-item {
-  @apply flex text-sm;
+	@apply flex text-sm;
 }
 
 .list-disc {
-  @apply mt-2 w-2 h-2 rounded-full border-2 border-red-400 mr-2 flex-shrink-0 flex-grow-0;
+	@apply mt-2 w-2 h-2 rounded-full border-2 border-red-400 mr-2 flex-shrink-0 flex-grow-0;
 }
 
 .btn-black {
-  @apply w-full text-center bg-black text-white px-6 py-2 uppercase tracking-wide rounded;
+	@apply w-full text-center bg-black text-white px-6 py-2 uppercase tracking-wide rounded;
 }
 
 // Scroll Bar
 body::-webkit-scrollbar {
-  width: 0.25rem;
+	width: 0.25rem;
 }
 
 body::-webkit-scrollbar-track {
-  background-color: #1e1e24;
+	background-color: #1e1e24;
 }
 
 body::-webkit-scrollbar-thumb {
-  background-color: #6649b8;
+	background-color: #6649b8;
 }
 
 /* Sidenav */
 #sidedrawer {
-  transform: translateX(100%);
-  transition: transform 0.3s ease-out;
+	transform: translateX(100%);
+	transition: transform 0.3s ease-out;
 }
 
 #sidedrawer.open {
-  transform: translateX(0);
+	transform: translateX(0);
 }
 
 .carousel-button {
-  top: 50%;
-  transform: translateY(-50%);
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 .carousel-track {
-  transition: transform 250ms ease-in;
+	transition: transform 250ms ease-in;
 }
 
 .carousel-title {
-  top: 2%;
-  left: 20%;
+	top: 2%;
+	left: 20%;
 }
 
 .signup-text-container {
-  left: 45%;
-  top: 20%;
+	left: 45%;
+	top: 20%;
 }
 
 .drag-slider.drag-active {
-  cursor: grabbing;
-  cursor: -webkit-grabbing;
+	cursor: grabbing;
+	cursor: -webkit-grabbing;
+}
+
+.contact-form__group {
+	@apply relative;
+}
+.contact-form__group input,
+.contact-form__group textarea {
+	@apply w-full p-3 appearance-none bg-gray-100 text-gray-500 border-none leading-tight;
+}
+
+.contact-form__group label {
+	@apply text-gray-400 absolute transform transition-transform duration-500 ease-out;
+	left: 10px;
+	top: 10px;
+}
+
+.contact-form__group input:focus,
+.contact-form__group textarea:focus {
+	box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+	outline: none;
+}
+
+.contact-form__group input:active + label,
+.contact-form__group input:focus + label,
+.contact-form__group input:valid + label,
+.contact-form__group input:hover + label,
+.contact-form__group textarea:active + label,
+.contact-form__group textarea:focus + label,
+.contact-form__group textarea:hover + label,
+.contact-form__group textarea:valid + label {
+	transform: translateY(-38px);
+	left: 0;
 }
 
 @tailwind utilities;

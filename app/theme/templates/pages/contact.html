@@ -1,125 +1,183 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends 'base.html' %} {% load static %} {% block content %}
 
-{% block content %}
+<section
+	class="h-80 bg-no-repeat bg-cover flex items-center px-4"
+	style="background-image: url({% if header %} {{header.image.url}} {%else%} {% static 'images/home-bg.jpg' %} {% endif %})"
+>
+	<h1
+		class="text-2xl -mt-10 uppercase font-bold text-white sm:text-4xl sm:-mt-4 sm:pl-4"
+	>
+		Contactez-nous
+	</h1>
+</section>
 
+<section class="flex justify-center -mt-20">
+	<div
+		class="max-w-6xl w-11/12 py-4 px-6 bg-white shadow-md rounded-md md:w-8/12 md:px-10"
+	>
+		<div class="flex justify-between">
+			<h2 class="text-lg text-gray-900 font-bold sm:text-2xl">Get In Touch</h2>
+			<div class="w-24 flex justify-between items-center">
+				<a href="#">
+					<svg
+						class="w-6 h-6"
+						viewBox="0 0 24 24"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							fill-rule="evenodd"
+							clip-rule="evenodd"
+							d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM4 4V20H20V4H4ZM11.1331 12.0044H13V18H15V12.0044H16.9824V10.0044H15V9C15 8.44772 15.4477 8 16 8H17V6H16C14.3431 6 13 7.34315 13 9V10.0044H11.1331V12.0044Z"
+							fill="black"
+						/>
+					</svg>
+				</a>
+				<a href="#">
+					<svg
+						class="w-6 h-6"
+						viewBox="0 0 24 24"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							fill-rule="evenodd"
+							clip-rule="evenodd"
+							d="M16 2H8C4.68629 2 2 4.68629 2 8V16C2 19.3137 4.68629 22 8 22H16C19.3137 22 22 19.3137 22 16V8C22 4.68629 19.3137 2 16 2ZM4 8C4 5.79086 5.79086 4 8 4H16C18.2091 4 20 5.79086 20 8V16C20 18.2091 18.2091 20 16 20H8C5.79086 20 4 18.2091 4 16V8ZM12 17C9.23858 17 7 14.7614 7 12C7 9.23858 9.23858 7 12 7C14.7614 7 17 9.23858 17 12C17 14.7614 14.7614 17 12 17ZM12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15ZM18 7C18 7.55228 17.5523 8 17 8C16.4477 8 16 7.55228 16 7C16 6.44772 16.4477 6 17 6C17.5523 6 18 6.44772 18 7Z"
+							fill="black"
+						/>
+					</svg>
+				</a>
+				<a href="#">
+					<svg
+						class="w-6 h-6"
+						viewBox="0 0 24 24"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							fill-rule="evenodd"
+							clip-rule="evenodd"
+							d="M22.0247 18.1282C22.7081 16.9571 23 15.0689 23 11.9972C23 8.93778 22.7108 7.06048 22.0202 5.85803C21.3281 4.60936 20.5073 4.21303 18.8783 4.1179C17.7662 4.04252 15.0023 4 12.0027 4C8.99661 4 6.23145 4.04251 5.111 4.11849C3.49112 4.21326 2.67011 4.61047 1.97193 5.8626C1.29138 7.0609 1 8.94737 1 12.0084C1 15.052 1.29279 16.948 1.97791 18.1424C2.66701 19.3784 3.47493 19.7708 5.1086 19.8855C6.28276 19.9543 9.20442 20 12.0027 20C14.7946 20 17.7149 19.9542 18.8783 19.8863C20.527 19.7708 21.3348 19.3778 22.0247 18.1282ZM18.7524 6.11391C19.7714 6.17346 19.9603 6.26505 20.2833 6.84964C20.7535 7.664 21 9.25771 21 12.0084C21 14.7383 20.7522 16.3408 20.2855 17.141C19.9614 17.7274 19.7738 17.8187 18.7501 17.8904C17.6489 17.9547 14.757 18 12.0027 18C9.24213 18 6.34874 17.9547 5.23703 17.8897C4.22601 17.8186 4.03565 17.7262 3.71873 17.1578C3.24886 16.3385 3 14.727 3 11.9972C3 9.26899 3.24754 7.66639 3.7149 6.84342C4.03675 6.26627 4.22844 6.17353 5.23709 6.11449C6.30508 6.04211 9.04424 6 12.0027 6C14.9547 6 17.6926 6.04212 18.7524 6.11391ZM10 9L15 12L10 15V9Z"
+							fill="black"
+						/>
+					</svg>
+				</a>
+			</div>
+		</div>
 
-<img class="h-48 sm:h-64 w-full object-cover"
-  src="{% if header %} {{header.image.url}} {%else%} {% static 'images/home-bg.jpg' %} {% endif %}"
-  alt="background image">
+		{% include "partials/_alerts.html" %} {% csrf_token %}
+		<div class="mt-6 relative md:flex md:justify-between">
+			<form
+				class="space-y-8 md:w-1/2 md:pr-10"
+				action="{% url 'contact' %}"
+				method="post"
+			>
+				<!-- form start -->
+				{{ form.non_field_errors }}
+				<div class="contact-form__group">
+					{{ form.nom }}
+					<label for="{{ form.nom.id_for_label }}">Your Name</label>
+					{% include "partials/_form_errors.html" with key=form.nom %}
+				</div>
+				<div class="contact-form__group">
+					{{ form.email }}
+					<label for="{{ form.email.id_for_label }}">Your Email</label>
+					{% include "partials/_form_errors.html" with key=form.email %}
+				</div>
+				<div class="contact-form__group">
+					{{ form.phone }}
+					<label for="{{ form.phone.id_for_label }}">Phone Number</label>
+					{% include "partials/_form_errors.html" with key=form.phone %}
+				</div>
+				<div class="contact-form__group">
+					{{ form.subject }}
+					<label for="{{ form.subject.id_for_label }}">Subject</label>
+					{% include "partials/_form_errors.html" with key=form.subject %}
+				</div>
+				<div class="contact-form__group">
+					{{ form.message }}
+					<label for="{{ form.message.id_for_label }}">Message</label>
+					{% include "partials/_form_errors.html" with key=form.message %}
+				</div>
 
-<div class="px-4 py-6">
-  <h1 class="text-xl uppercase">Contactez-nous</h1>
-  <span class="block h-px w-8 mt-1 bg-red-500"></span>
-</div>
+				<button
+					class="w-full text-sm py-3 mt-4 rounded-sm text-white font-bold bg-purple-600"
+				>
+					Send Now
+				</button>
+			</form>
+			<div
+				class="hidden w-px h-72 absolute right-1/2 top-1/2 transform -translate-y-1/2 bg-gray-200 md:block"
+			></div>
+			<div
+				class="mt-4 flex flex-col md:w-1/2 md:mt-0 md:pl-10 md:justify-center"
+			>
+				<div class="space-y-4">
+					<div class="flex space-x-2">
+						<svg
+							class="w-6 h-6"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								fill-rule="evenodd"
+								clip-rule="evenodd"
+								d="M6 21.8042L12.0868 18H20C21.1046 18 22 17.1046 22 16V4C22 2.89543 21.1046 2 20 2H4C2.89543 2 2 2.89543 2 4V16C2 17.1046 2.89543 18 4 18H6V21.8042ZM11.5132 16L8 18.1958V16H4V4H20V16H11.5132ZM7 13V11H14V13H7ZM7 7V9H16V7H7Z"
+								fill="black"
+							/>
+						</svg>
+						<span class="text-gray-800">contact@noc.com</span>
+					</div>
+					<div class="flex space-x-2">
+						<svg
+							class="w-6 h-6"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								fill-rule="evenodd"
+								clip-rule="evenodd"
+								d="M2 5C2 6.65685 3.34315 8 5 8C6.65685 8 8 6.65685 8 5C8 3.34315 6.65685 2 5 2C3.34315 2 2 3.34315 2 5ZM6 5C6 5.55228 5.55228 6 5 6C4.44772 6 4 5.55228 4 5C4 4.44772 4.44772 4 5 4C5.55228 4 6 4.44772 6 5ZM12 8C10.3431 8 9 6.65685 9 5C9 3.34315 10.3431 2 12 2C13.6569 2 15 3.34315 15 5C15 6.65685 13.6569 8 12 8ZM13 5C13 5.55228 12.5523 6 12 6C11.4477 6 11 5.55228 11 5C11 4.44772 11.4477 4 12 4C12.5523 4 13 4.44772 13 5ZM19 8C17.3431 8 16 6.65685 16 5C16 3.34315 17.3431 2 19 2C20.6569 2 22 3.34315 22 5C22 6.65685 20.6569 8 19 8ZM20 5C20 5.55228 19.5523 6 19 6C18.4477 6 18 5.55228 18 5C18 4.44772 18.4477 4 19 4C19.5523 4 20 4.44772 20 5ZM5 15C3.34315 15 2 13.6569 2 12C2 10.3431 3.34315 9 5 9C6.65685 9 8 10.3431 8 12C8 13.6569 6.65685 15 5 15ZM6 12C6 12.5523 5.55228 13 5 13C4.44772 13 4 12.5523 4 12C4 11.4477 4.44772 11 5 11C5.55228 11 6 11.4477 6 12ZM12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12C15 13.6569 13.6569 15 12 15ZM13 12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12C11 11.4477 11.4477 11 12 11C12.5523 11 13 11.4477 13 12ZM19 15C17.3431 15 16 13.6569 16 12C16 10.3431 17.3431 9 19 9C20.6569 9 22 10.3431 22 12C22 13.6569 20.6569 15 19 15ZM20 12C20 12.5523 19.5523 13 19 13C18.4477 13 18 12.5523 18 12C18 11.4477 18.4477 11 19 11C19.5523 11 20 11.4477 20 12ZM12 22C10.3431 22 9 20.6569 9 19C9 17.3431 10.3431 16 12 16C13.6569 16 15 17.3431 15 19C15 20.6569 13.6569 22 12 22ZM13 19C13 19.5523 12.5523 20 12 20C11.4477 20 11 19.5523 11 19C11 18.4477 11.4477 18 12 18C12.5523 18 13 18.4477 13 19Z"
+								fill="black"
+							/>
+						</svg>
 
-<div class="md:flex">
-  <form class="bg-black p-4 mx-4 rounded-lg md:p-6 md:flex-1" action="{% url 'contact' %}" method="post">
-    {% include "partials/_alerts.html" %}
-    {% csrf_token %}
-    {{ form.non_field_errors }}
-    <div class="mb-4">
-      <label class="mb-2 ml-1 block text-white font-semibold" for="{{ form.nom.id_for_label }}">Nom:</label>
-      {{ form.nom }}
-      {% include "partials/_form_errors.html" with key=form.nom %}
-    </div>
-    <div class="mb-4">
-      <label class="mb-2 ml-1 block text-white font-semibold" for="{{ form.email.id_for_label }}">Email:</label>
-      {{ form.email }}
-      {% include "partials/_form_errors.html" with key=form.email %}
-    </div>
-    <div class="mb-4">
-      <label class="mb-2 ml-1 block text-white font-semibold" for="{{ form.phone.id_for_label }}">Phone:</label>
-      {{ form.phone }}
-      {% include "partials/_form_errors.html" with key=form.phone %}
-    </div>
-    <div class="mb-4">
-      <label class="mb-2 ml-1 block text-white font-semibold" for="{{ form.subject.id_for_label }}">Subject:</label>
-      {{ form.subject }}
-      {% include "partials/_form_errors.html" with key=form.subject %}
-    </div>
-    <div class="mb-4">
-      <label class="mb-2 ml-1 block text-white font-semibold" for="{{ form.message.id_for_label }}">Message:</label>
-      {{ form.message }}
-      {% include "partials/_form_errors.html" with key=form.message %}
-    </div>
-    <div class="text-right">
-      <button class="px-12 py-3 bg-white text-black rounded-lg uppercase font-semibold tracking-wide" type="submit">Envoyer</button>
-    </div>
-  </form>
-
-  <div class="mx-4 mt-6 md:mt-0 md:flex-1">
-    <h4 class="text-lg uppercase font-semibold">Contact info</h4>
-    <p class="mt-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus magnam ut ex iusto consequatur, deserunt suscipit deleniti atque asperiores! Adipisci facilis similique ex recusandae. Nobis dolorum corporis similique nostrum, sapiente ipsam reiciendis sunt eaque, in, itaque repellendus corrupti atque perspiciatis!</p>
-    <div class="flex items-center mt-6">
-      <svg class="p-1 h-6 w-6 fill-current bg-black text-white rounded-full" viewBox="0 0 20 20">
-        <path
-          d="M10,15.654c-0.417,0-0.754,0.338-0.754,0.754S9.583,17.162,10,17.162s0.754-0.338,0.754-0.754S10.417,15.654,10,15.654z M14.523,1.33H5.477c-0.833,0-1.508,0.675-1.508,1.508v14.324c0,0.833,0.675,1.508,1.508,1.508h9.047c0.833,0,1.508-0.675,1.508-1.508V2.838C16.031,2.005,15.356,1.33,14.523,1.33z M15.277,17.162c0,0.416-0.338,0.754-0.754,0.754H5.477c-0.417,0-0.754-0.338-0.754-0.754V2.838c0-0.417,0.337-0.754,0.754-0.754h9.047c0.416,0,0.754,0.337,0.754,0.754V17.162zM13.77,2.838H6.23c-0.417,0-0.754,0.337-0.754,0.754v10.555c0,0.416,0.337,0.754,0.754,0.754h7.539c0.416,0,0.754-0.338,0.754-0.754V3.592C14.523,3.175,14.186,2.838,13.77,2.838z M13.77,13.77c0,0.208-0.169,0.377-0.377,0.377H6.607c-0.208,0-0.377-0.169-0.377-0.377V3.969c0-0.208,0.169-0.377,0.377-0.377h6.785c0.208,0,0.377,0.169,0.377,0.377V13.77z">
-        </path>
-      </svg>
-      <span class="ml-2">
-        +212 524 202 747
-      </span>
-    </div>
-    <div class="flex items-center mt-4">
-      <!-- TODO(karim): change this to fax icon -->
-      <svg class="p-1 h-6 w-6 fill-current bg-black text-white rounded-full" xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24">
-        <path stroke-linecap="round"
-          d="M12.7407967,18.4035953 L15.8976569,15.246735 L21.114676,18.885324 L19.9443794,20.055614 C19.1648657,20.8351277 18.020623,21.1243165 16.9643502,20.8087683 C13.7351168,19.8440753 10.8342484,18.0754771 8.26174492,15.5029737 C5.6892452,12.930474 3.92064841,10.0296102 2.95595454,6.80038244 C2.64039085,5.74410652 2.92958124,4.59985601 3.70910009,3.82033716 L4.87939464,2.65004261 L8.51798358,7.86706169 L5.36112331,11.023922">
-        </path>
-      </svg>
-      <span class="ml-2">
-        +212 767 646 635
-      </span>
-    </div>
-    <div class="flex items-center mt-4">
-      <svg class="p-1 h-6 w-6 fill-current bg-black text-white rounded-full" viewBox="0 0 20 20">
-        <path
-          d="M16.999,4.975L16.999,4.975C16.999,4.975,16.999,4.975,16.999,4.975c-0.419-0.4-0.979-0.654-1.604-0.654H4.606c-0.584,0-1.104,0.236-1.514,0.593C3.076,4.928,3.05,4.925,3.037,4.943C3.034,4.945,3.035,4.95,3.032,4.953C2.574,5.379,2.276,5.975,2.276,6.649v6.702c0,1.285,1.045,2.329,2.33,2.329h10.79c1.285,0,2.328-1.044,2.328-2.329V6.649C17.724,5.989,17.441,5.399,16.999,4.975z M15.396,5.356c0.098,0,0.183,0.035,0.273,0.055l-5.668,4.735L4.382,5.401c0.075-0.014,0.145-0.045,0.224-0.045H15.396z M16.688,13.351c0,0.712-0.581,1.294-1.293,1.294H4.606c-0.714,0-1.294-0.582-1.294-1.294V6.649c0-0.235,0.081-0.445,0.192-0.636l6.162,5.205c0.096,0.081,0.215,0.122,0.334,0.122c0.118,0,0.235-0.041,0.333-0.12l6.189-5.171c0.099,0.181,0.168,0.38,0.168,0.6V13.351z">
-        </path>
-      </svg>
-      <span class="ml-2">
-        contact@noonescompany.com
-      </span>
-    </div>
-    <div class="flex items-center mt-4">
-        <svg class="p-1 h-6 w-6 fill-current bg-black text-white rounded-full" viewBox="0 0 20 20">
-          <path
-            d="M10.001,6.54c-0.793,0-1.438,0.645-1.438,1.438c0,0.792,0.645,1.435,1.438,1.435c0.791,0,1.435-0.644,1.435-1.435C11.437,7.184,10.792,6.54,10.001,6.54z M10.001,8.454c-0.264,0-0.479-0.213-0.479-0.476c0-0.265,0.215-0.479,0.479-0.479c0.263,0,0.477,0.214,0.477,0.479C10.478,8.241,10.265,8.454,10.001,8.454z">
-          </path>
-          <path
-            d="M10,3.021c-2.815,0-5.106,2.291-5.106,5.106c0,0.781,0.188,1.549,0.562,2.282c0.011,0.062,0.036,0.12,0.07,0.174l0.125,0.188c0.074,0.123,0.151,0.242,0.225,0.341l3.727,5.65c0.088,0.135,0.238,0.215,0.399,0.215c0.161,0,0.311-0.08,0.4-0.215l3.752-5.68c0.057-0.08,0.107-0.159,0.153-0.232l0.132-0.199c0.033-0.05,0.054-0.104,0.064-0.159c0.401-0.757,0.605-1.551,0.605-2.366C15.107,5.312,12.815,3.021,10,3.021z M13.596,10.152c-0.017,0.03-0.029,0.062-0.039,0.095l-0.056,0.084c-0.043,0.066-0.085,0.133-0.139,0.211L10,15.629l-3.339-5.061c-0.068-0.095-0.132-0.193-0.203-0.309l-0.051-0.078c-0.009-0.031-0.021-0.061-0.038-0.089C6.026,9.458,5.852,8.796,5.852,8.127c0-2.287,1.861-4.148,4.147-4.148c2.288,0,4.149,1.861,4.149,4.148C14.148,8.823,13.963,9.503,13.596,10.152z">
-          </path>
-        </svg>
-      <span class="ml-2">
-        154 Mhamid 5 Marrakech Maroc
-      </span>
-    </div>
-    <div class="mt-8 flex items-center">
-      <a href="#" target="_blank" rel="noopener noreferrer">
-        <svg class="h-6 w-6 fill-current text-black" viewBox="0 0 20 20">
-          <path
-            d="M11.344,5.71c0-0.73,0.074-1.122,1.199-1.122h1.502V1.871h-2.404c-2.886,0-3.903,1.36-3.903,3.646v1.765h-1.8V10h1.8v8.128h3.601V10h2.403l0.32-2.718h-2.724L11.344,5.71z">
-          </path>
-        </svg>
-      </a>
-      <a class="ml-4" href="#" target="_blank" rel="noopener noreferrer">
-        <svg class="h-6 w-6 fill-current text-black" viewBox="0 0 20 20">
-          <path
-            d="M14.52,2.469H5.482c-1.664,0-3.013,1.349-3.013,3.013v9.038c0,1.662,1.349,3.012,3.013,3.012h9.038c1.662,0,3.012-1.35,3.012-3.012V5.482C17.531,3.818,16.182,2.469,14.52,2.469 M13.012,4.729h2.26v2.259h-2.26V4.729z M10,6.988c1.664,0,3.012,1.349,3.012,3.012c0,1.664-1.348,3.013-3.012,3.013c-1.664,0-3.012-1.349-3.012-3.013C6.988,8.336,8.336,6.988,10,6.988 M16.025,14.52c0,0.831-0.676,1.506-1.506,1.506H5.482c-0.831,0-1.507-0.675-1.507-1.506V9.247h1.583C5.516,9.494,5.482,9.743,5.482,10c0,2.497,2.023,4.52,4.518,4.52c2.494,0,4.52-2.022,4.52-4.52c0-0.257-0.035-0.506-0.076-0.753h1.582V14.52z">
-          </path>
-        </svg>
-      </a>
-      <a class="ml-4" href="#" target="_blank" rel="noopener noreferrer">
-        <svg class="h-6 w-6 fill-current text-black" viewBox="0 0 20 20">
-          <path
-            d="M9.426,7.625h0.271c0.596,0,1.079-0.48,1.079-1.073V4.808c0-0.593-0.483-1.073-1.079-1.073H9.426c-0.597,0-1.079,0.48-1.079,1.073v1.745C8.347,7.145,8.83,7.625,9.426,7.625 M9.156,4.741c0-0.222,0.182-0.402,0.404-0.402c0.225,0,0.405,0.18,0.405,0.402V6.62c0,0.222-0.181,0.402-0.405,0.402c-0.223,0-0.404-0.181-0.404-0.402V4.741z M12.126,7.625c0.539,0,1.013-0.47,1.013-0.47v0.403h0.81V3.735h-0.81v2.952c0,0-0.271,0.335-0.54,0.335c-0.271,0-0.271-0.202-0.271-0.202V3.735h-0.81v3.354C11.519,7.089,11.586,7.625,12.126,7.625 M6.254,7.559H7.2v-2.08l1.079-2.952H7.401L6.727,4.473L6.052,2.527H5.107l1.146,2.952V7.559z M11.586,12.003c-0.175,0-0.312,0.104-0.405,0.204v2.706c0.086,0.091,0.213,0.18,0.405,0.18c0.405,0,0.405-0.451,0.405-0.451v-2.188C11.991,12.453,11.924,12.003,11.586,12.003 M14.961,8.463c0,0-2.477-0.129-4.961-0.129c-2.475,0-4.96,0.129-4.96,0.129c-1.119,0-2.025,0.864-2.025,1.93c0,0-0.203,1.252-0.203,2.511c0,1.252,0.203,2.51,0.203,2.51c0,1.066,0.906,1.931,2.025,1.931c0,0,2.438,0.129,4.96,0.129c2.437,0,4.961-0.129,4.961-0.129c1.117,0,2.024-0.864,2.024-1.931c0,0,0.202-1.268,0.202-2.51c0-1.268-0.202-2.511-0.202-2.511C16.985,9.328,16.078,8.463,14.961,8.463 M7.065,10.651H6.052v5.085H5.107v-5.085H4.095V9.814h2.97V10.651z M9.628,15.736h-0.81v-0.386c0,0-0.472,0.45-1.012,0.45c-0.54,0-0.606-0.515-0.606-0.515v-3.991h0.809v3.733c0,0,0,0.193,0.271,0.193c0.27,0,0.54-0.322,0.54-0.322v-3.604h0.81V15.736z M12.801,14.771c0,0,0,1.03-0.742,1.03c-0.455,0-0.73-0.241-0.878-0.429v0.364h-0.876V9.814h0.876v1.92c0.135-0.142,0.464-0.439,0.878-0.439c0.54,0,0.742,0.45,0.742,1.03V14.771z M15.973,12.39v1.287h-1.688v0.965c0,0,0,0.451,0.405,0.451s0.405-0.451,0.405-0.451v-0.45h0.877v0.708c0,0-0.136,0.901-1.215,0.901c-1.08,0-1.282-0.901-1.282-0.901v-2.51c0,0,0-1.095,1.282-1.095S15.973,12.39,15.973,12.39 M14.69,12.003c-0.405,0-0.405,0.45-0.405,0.45v0.579h0.811v-0.579C15.096,12.453,15.096,12.003,14.69,12.003">
-          </path>
-        </svg>
-      </a>
-    </div>
-  </div>
-</div>
-
+						<span class="text-gray-800">+212 767 646 635</span>
+					</div>
+					<div class="flex space-x-2">
+						<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg">
+							<g clip-path="url(#clip0)">
+								<path
+									fill-rule="evenodd"
+									clip-rule="evenodd"
+									d="M9.85651 6.33796C10.3746 5.63975 10.5604 4.9039 9.97444 4.25437C8.65949 2.41439 7.77515 1.27655 7.22044 0.728598C6.16589 -0.313135 4.43112 -0.172224 3.51779 0.727708C3.02723 1.21107 2.86116 1.37706 2.35747 1.88867C-0.448186 4.69583 1.26285 10.6301 5.81139 15.1831C10.3589 19.7351 16.2926 21.447 19.1041 18.6339C19.5689 18.1858 19.9624 17.7921 20.2728 17.464C21.1678 16.518 21.3037 14.8598 20.2669 13.7825C19.7354 13.2302 18.6503 12.3885 16.7329 11.017C16.1457 10.4919 15.4494 10.6057 14.811 11.0245C14.504 11.226 14.2805 11.4297 13.8585 11.8521L13.0923 12.6188C12.9914 12.7198 11.621 12.0335 10.2907 10.7019C8.95972 9.36959 8.2739 7.99912 8.37435 7.89868L9.14112 7.13148C9.27499 6.99748 9.339 6.9326 9.42108 6.84633C9.59209 6.6666 9.73368 6.5035 9.85651 6.33796ZM14.5057 14.033L15.2721 13.2662C15.5044 13.0337 15.6549 12.8908 15.7773 12.7923C17.457 13.9985 18.4297 14.7569 18.8271 15.1698C19.0656 15.4176 19.0286 15.8699 18.8212 16.0891C18.5342 16.3924 18.1613 16.7655 17.7037 17.2069C15.8857 19.0257 11.0959 17.6437 7.22513 13.7692C3.35315 9.89338 1.97188 5.10285 3.7762 3.29755C4.27786 2.78804 4.4368 2.62918 4.92035 2.15271C5.10166 1.97407 5.59552 1.93395 5.81608 2.15182C6.24314 2.5737 7.03534 3.58805 8.20071 5.21139C8.14038 5.28629 8.06503 5.37093 7.97333 5.4673C7.90603 5.53804 7.84996 5.59488 7.72738 5.71758L6.96136 6.48402C5.65821 7.78706 6.76802 10.0048 8.87697 12.1158C10.9845 14.2254 13.203 15.3364 14.5057 14.033Z"
+									fill="black"
+								/>
+							</g>
+							<defs>
+								<clipPath id="clip0">
+									<rect width="21" height="21" fill="white" />
+								</clipPath>
+							</defs>
+						</svg>
+						<span class="text-gray-800">+212 524 202 747</span>
+					</div>
+					<div class="flex space-x-2">
+						<svg
+							class="w-6 h-6"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								fill-rule="evenodd"
+								clip-rule="evenodd"
+								d="M12 23C5.92487 23 1 18.0751 1 12C1 5.92487 5.92487 1 12 1C18.0751 1 23 5.92487 23 12C23 18.0751 18.0751 23 12 23ZM12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21ZM14.7906 14.7906L17.5811 6.41886L9.20943 9.20943L6.41886 17.5811L14.7906 14.7906ZM13.2094 13.2094L9.58114 14.4189L10.7906 10.7906L14.4189 9.58114L13.2094 13.2094Z"
+								fill="black"
+							/>
+						</svg>
+						<span class="text-gray-800">154 Mhamid 5 Marrakech Maroc</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
 {% endblock %}

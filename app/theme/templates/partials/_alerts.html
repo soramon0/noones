@@ -1,6 +1,6 @@
 {% if messages %}
     {% for message in messages %}
-      <div class="p-4 mb-2 border-l-4 rounded relative {%if message.tags == 'error' %} bg-red-400 border-red-500 {% else %} bg-green-400 border-green-500 {% endif %}">
+      <div class="p-4 mb-8 mt-4 border-l-4 rounded relative {%if message.tags == 'error' %} bg-red-400 border-red-500 {% else %} bg-green-400 border-green-500 {% endif %}">
         <p class="text-sm text-white sm:text-base">{{message}}</p>
       </div>
     {% endfor %}
