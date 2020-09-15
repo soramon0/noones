@@ -11,14 +11,6 @@ body {
 	@apply mx-2 mt-2 bg-gray-100 border-t-4 border-red-400 px-2 py-5 shadow-lg rounded-sm max-w-lg;
 }
 
-.disc-list-item {
-	@apply flex text-sm;
-}
-
-.list-disc {
-	@apply mt-2 w-2 h-2 rounded-full border-2 border-red-400 mr-2 flex-shrink-0 flex-grow-0;
-}
-
 .btn-black {
 	@apply w-full text-center bg-black text-white px-6 py-2 uppercase tracking-wide rounded;
 }
@@ -100,6 +92,35 @@ body::-webkit-scrollbar-thumb {
 .contact-form__group textarea:valid + label {
 	transform: translateY(-38px);
 	left: 0;
+}
+
+.fade {
+	opacity: 0;
+	transition: opacity 250ms ease-in;
+}
+
+.fade.appear {
+	opacity: 1;
+}
+
+.slide-left {
+	transform: translateX(-50%);
+}
+
+.slide-right {
+	transform: translateX(50%);
+}
+
+.slide-left,
+.slide-right {
+	opacity: 0;
+	transition: opacity 250ms ease-in, transform 400ms ease-in;
+}
+
+.slide-left.appear,
+.slide-right.appear {
+	transform: translateX(0);
+	opacity: 1;
 }
 
 @tailwind utilities;

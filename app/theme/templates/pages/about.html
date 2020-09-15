@@ -1,0 +1,354 @@
+{% extends 'base.html' %} {% load static %}
+
+<!-- about -->
+{% block content %}
+
+<section class="pt-20 px-4 flex flex-col items-center sm:flex-row">
+	<div class="flex-1 h-64 md:h-auto">
+		<img
+			class="w-full h-full"
+			src="{% static 'images/communication.png' %}"
+			alt="illustration"
+		/>
+	</div>
+	<div class="flex-1 mt-4 sm:-mt-24">
+		<h1 class="text-2xl font-semibold sm:w-10/12 md:text-3xl lg:text-4xl">
+			Nous accueillons toutes les idées possibles,
+			<strong>avec ou sans budget</strong>!
+		</h1>
+		<div class="flex space-x-6 mt-4">
+			<a href="{% url 'contact' %}">
+				<button
+					class="p-3 text-sm font-semibold rounded-lg bg-black-lighter text-white md:px-6 md:text-base transition-transform transform duration-300 hover:scale-125"
+				>
+					Contact Us
+				</button>
+			</a>
+			<a href="{% url 'models' %}">
+				<button
+					class="p-3 text-sm border font-semibold rounded-lg border-black-lighter bg-white md:px-6 md:text-base transition-transform transform duration-300 hover:scale-125"
+				>
+					View Our Models
+				</button>
+			</a>
+		</div>
+	</div>
+</section>
+
+<section class="overflow-x-hidden mt-24 px-4 md:p-0 md:ml-10">
+	<h2 class="text-2xl font-bold sm:text-3xl lg:text-4xl">About us</h2>
+	<div class="mt-6 md:flex">
+		<div class="text-gray-600 md:w-3/5">
+			<div class="fade w-11/12 text-sm space-y-3 md:w-10/12 lg:text-base">
+				<p>
+					<strong>L’écoute, l’exécution</strong> et <em>le développement</em>
+					sont les trois piliers puissants de No One’s Company. Une agence de
+					communication et marketing certes, mais nous offrons beaucoup plus que
+					cela.
+				</p>
+				<p>
+					Nous vous orientons à l’aide du meilleur encadrement possible et nous
+					vous aidons à créer vos premiers pas correctement. No One’s Company
+					prend sous ses ailes toute personne ambitieuse qui veux réaliser des
+					projets utiles et les suit dans les démarches administratives et
+					sociales.
+				</p>
+				<p>
+					No One’s Company a des équipes constitués de membres différents, elle
+					est l’agence qui a réussi à marier le côté artistique et technique
+					pour toujours atteindre des résultats distingués.
+				</p>
+				<p>
+					Il est très important pour No One’s Company que ses clients sentent
+					que l’agence est leurs deuxième maison, parce que nous valorisons
+					l’humain avant son chèque bancaire. Nous encourageons les visions
+					innovantes, et nous tenons à faire notre possible pour qu’elles se
+					réalisent.
+				</p>
+				<p>
+					Ceci dit, nous travaillons avec un système digital très développé sous
+					le nom de l’application N.O.C. Cette dernière a énormément de
+					fonctions dont la facilité de la communication entre l’agence et ses
+					clients, la transparence à propos des taches à faire et la précision
+					des deadlines.
+				</p>
+				<p>
+					<strong>Le sérieux</strong> et <strong>la détermination</strong>
+					nous servent comme essence afin de bien nourrir le moteur de notre
+					endurance. No One’s Company n’est pas seulement une révolution dans le
+					monde digital, mais aussi dans le monde réel..
+				</p>
+			</div>
+		</div>
+		<div
+			class="slide-in slide-right mt-4 h-80 overflow-hidden rounded-md md:mt-0 md:w-80 md:h-500 lg:h-900 lg:w-2/5 lg:rounded-t-none lg:rounded-br-none lg:rounded-bl-xlarge"
+		>
+			<img
+				data-src="{% static 'images/model-working.jpg' %}"
+				class="w-full h-full object-cover"
+				alt="person working"
+			/>
+		</div>
+	</div>
+</section>
+
+<section
+	class="overflow-x-hidden mt-10 py-32 bg-gray-lighter lg:pt-64 lg:-mt-40"
+>
+	<h2 class="text-2xl text-center font-bold sm:text-3xl lg:text-4xl">
+		The Platform’s Goals
+	</h2>
+
+	<div
+		class="max-w-5xl mt-24 px-8 space-y-10 flex flex-col items-center md:flex-row md:space-y-0 md:space-x-6 md:mx-auto lg:px-0"
+	>
+		<div class="slide-in slide-left flex-1">
+			<p class="text-xl font-semibold text-gray-light lg:w-2/3">
+				Donner l’opportunité à l’industrie de la mode de chaque pays d’avoir des
+				profils diversifiés
+			</p>
+		</div>
+		<div
+			class="slide-in slide-right flex-1 w-full h-56 flex justify-center items-center relative sm:h-64 md:h-80"
+		>
+			<svg
+				class="absolute w-full h-full"
+				viewBox="0 0 585 450"
+				fill="none"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path
+					d="M336.225 32.605c-177.938-45.47-295.167-51.453-323.428 34.7-28.26 86.155-5.634 156.436 28.26 235.728 24.684 57.743 66.989 64.616 94.203 124.445 27.214 59.828 321.335-22.735 351.689 14.359 30.354 37.094 85.829-90.941 96.296-138.804 10.467-47.863-29.307-157.949-29.307-157.949s-39.775-67.009-217.713-112.48z"
+					fill="url(#paint0_linear)"
+				/>
+				<defs>
+					<linearGradient
+						id="paint0_linear"
+						x1="105.953"
+						y1="49.357"
+						x2="529.445"
+						y2="329.692"
+						gradientUnits="userSpaceOnUse"
+					>
+						<stop stop-color="#F0D3D3" />
+						<stop offset="1" stop-color="#CBAEA7" />
+					</linearGradient>
+				</defs>
+			</svg>
+			<img
+				style="height: 85%; width: 80%"
+				class="object-cover relative z-10 rounded-large"
+				data-src="{% static 'images/model-1.jpg' %}"
+				alt=""
+			/>
+		</div>
+	</div>
+
+	<div
+		class="max-w-5xl mt-24 px-8 space-y-10 flex flex-col items-center md:flex-row-reverse md:space-y-0 md:mx-auto lg:px-0"
+	>
+		<div class="slide-in slide-left flex-1 md:ml-6 lg:ml-0">
+			<p class="text-xl font-semibold text-gray-light md:ml-auto lg:w-2/3">
+				De donner la chance aux MODELS d’avoir un réseau qui ne traite que leurs
+				centres d’intérêt
+			</p>
+		</div>
+
+		<div
+			class="slide-in slide-right flex-1 w-full h-56 flex justify-center items-center relative sm:h-64 md:h-80"
+		>
+			<svg
+				class="absolute w-full h-full"
+				viewBox="0 0 585 450"
+				fill="none"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path
+					d="M516.073 410.733c-17.529 75.502-308.762 19.767-405.364 20.592-96.603.824-107.75-229.62-107.75-229.62S-29.91 14.918 123.471 58.389c153.381 43.471 91.317-68.638 261.132-57.2 90.862 6.121 151.19 22.88 188.44 178.46 37.25 155.581-21.216 77.081-56.971 231.084z"
+					fill="url(#paint0_linear)"
+				/>
+				<defs>
+					<linearGradient
+						id="paint0_linear"
+						x1="59.607"
+						y1="352.353"
+						x2="468.53"
+						y2="59.31"
+						gradientUnits="userSpaceOnUse"
+					>
+						<stop stop-color="#CBAEA7" />
+						<stop offset="1" stop-color="#F0D3D3" />
+					</linearGradient>
+				</defs>
+			</svg>
+			<img
+				style="height: 85%; width: 80%"
+				class="object-cover relative z-10 rounded-large"
+				data-src="{% static 'images/model-2.jpg' %}"
+				alt=""
+			/>
+		</div>
+	</div>
+
+	<div
+		class="max-w-5xl mt-24 px-8 space-y-10 flex flex-col items-center md:flex-row md:space-y-0 md:space-x-6 md:mx-auto lg:px-0"
+	>
+		<div class="slide-in slide-left flex-1">
+			<p class="text-xl font-semibold text-gray-light lg:w-2/3">
+				De donner la chance aux MODELS d’avoir un réseau qui ne traite que leurs
+				centres d’intérêt.
+			</p>
+		</div>
+		<div
+			class="slide-in slide-right flex-1 w-full h-56 flex justify-center items-center relative sm:h-64 md:h-80"
+		>
+			<svg
+				class="absolute w-full h-full"
+				viewBox="0 0 585 450"
+				fill="none"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path
+					d="M100.466 40.32c-106.813 54.506-35.54 71.761-72.827 125.002-37.288 53.241-34.938 110.837 0 187.533 25.443 55.853-7.013 64.703 79.3 82.646 86.314 17.942 222.258 17.942 294.545 8.971 72.288-8.971 114.366-10.631 172.627-195.816C632.373 63.47 451.115 92.35 410.116 40.321c-40.999-52.03-202.837-54.505-309.65 0z"
+					fill="url(#paint0_linear)"
+				/>
+				<defs>
+					<linearGradient
+						id="paint0_linear"
+						x1="51.311"
+						y1="82.021"
+						x2="470.514"
+						y2="377.741"
+						gradientUnits="userSpaceOnUse"
+					>
+						<stop stop-color="#F0D3D3" />
+						<stop offset="1" stop-color="#CBAEA7" />
+					</linearGradient>
+				</defs>
+			</svg>
+
+			<img
+				style="height: 85%; width: 80%"
+				class="object-cover relative z-10 rounded-large"
+				data-src="{% static 'images/model-3.jpg' %}"
+				alt=""
+			/>
+		</div>
+	</div>
+
+	<h2 class="mt-24 text-2xl text-center font-bold sm:text-3xl lg:text-4xl">
+		The Aim of NOC Models
+	</h2>
+
+	<div
+		class="max-w-5xl mt-24 px-8 space-y-10 flex flex-col items-center md:flex-row md:space-y-0 md:space-x-6 md:mx-auto lg:px-0"
+	>
+		<div class="slide-in slide-left flex-1">
+			<p class="text-xl font-semibold text-gray-light lg:w-2/3">
+				D’offrir à ses profils l’encadrement et l’orientation nécessaires pour
+				qu’ils puissent percer leurs noms sainement et intelligemment dans le
+				monde de la mode.
+			</p>
+		</div>
+		<div
+			class="slide-in slide-right flex-1 w-full h-56 flex justify-center items-center relative sm:h-64 md:h-80"
+		>
+			<svg
+				class="absolute w-full h-full"
+				viewBox="0 0 585 450"
+				fill="none"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path
+					d="M251.136 4.649c-122.375-12.951-213.314.14-238.75 79.836-25.434 79.696-5.07 144.709 25.436 218.057 22.215 53.415 33.638 74.856 84.784 115.116 51.146 40.259 286.96 46.693 331.888 0 44.929-46.694 129.574-152.148 79.184-202.1-50.389-49.953-92.416 0-98.98-57.353-6.563-57.352-61.187-140.606-183.562-153.556z"
+					fill="url(#paint0_linear)"
+				/>
+				<defs>
+					<linearGradient
+						id="paint0_linear"
+						x1="96.229"
+						y1="67.881"
+						x2="483.678"
+						y2="317.421"
+						gradientUnits="userSpaceOnUse"
+					>
+						<stop stop-color="#F0D3D3" />
+						<stop offset="1" stop-color="#CBAEA7" />
+					</linearGradient>
+				</defs>
+			</svg>
+			<img
+				style="height: 85%; width: 80%"
+				class="object-cover relative z-10 rounded-large"
+				data-src="{% static 'images/model-4.jpg' %}"
+				alt=""
+			/>
+		</div>
+	</div>
+
+	<div
+		class="max-w-5xl mt-24 px-8 space-y-10 flex flex-col items-center md:flex-row-reverse md:space-y-0 md:mx-auto lg:px-0"
+	>
+		<div class="slide-in slide-left flex-1 md:ml-6 lg:ml-0">
+			<p class="text-xl font-semibold text-gray-light md:ml-auto lg:w-2/3">
+				De les solliciter d’avoir des styles distingués et de les gérer
+				professionnellement.
+			</p>
+		</div>
+
+		<div
+			class="slide-in slide-right flex-1 w-full h-56 flex justify-center items-center relative sm:h-64 md:h-80"
+		>
+			<svg
+				class="absolute w-full h-full"
+				viewBox="0 0 585 450"
+				fill="none"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path
+					d="M545.911 386.679c-38.568 53.103-305.334 81.778-402.827 52.041-97.493-29.738-104.992-96.647-104.992-160.37 0-107.348-85.707-152.935 0-245.334 85.708-92.398 279.975 46.83 444.609 7.434 31.069-7.434 63.21 82.841 88.922 158.246 25.712 75.406 12.857 134.881-25.712 187.983z"
+					fill="url(#paint0_linear)"
+				/>
+				<defs>
+					<linearGradient
+						id="paint0_linear"
+						x1="72.781"
+						y1="334.308"
+						x2="460.157"
+						y2="36.686"
+						gradientUnits="userSpaceOnUse"
+					>
+						<stop stop-color="#CBAEA7" />
+						<stop offset="1" stop-color="#F0D3D3" />
+					</linearGradient>
+				</defs>
+			</svg>
+			<img
+				style="height: 85%; width: 80%"
+				class="object-cover relative z-10 rounded-large"
+				data-src="{% static 'images/model-5.jpg' %}"
+				alt=""
+			/>
+		</div>
+	</div>
+</section>
+
+<section
+	class="h-500 px-4 text-center flex flex-col justify-center items-center bg-black-lighter"
+>
+	<p class="text-lg sm:text-xl" style="color: #b89e97">
+		Have a project you’re intrested in discussing with us?
+	</p>
+	<h2 class="mt-4 text-4xl font-bold text-white">Get in Touch</h2>
+	<a href="{% url 'contact' %}">
+		<button
+			class="px-8 py-4 mt-6 bg-black text-white rounded-large font-semibold transition-transform transform duration-300 hover:scale-125"
+		>
+			Let’s get it started
+		</button>
+	</a>
+</section>
+
+<script src="{% static 'js/about.bundle.js' %}"></script>
+
+{% endblock %}

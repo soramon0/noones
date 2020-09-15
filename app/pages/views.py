@@ -10,10 +10,11 @@ from .forms import ContactForm, SearchForm
 
 def index(request):
     carousel = Carousel.objects.filter(inUse=True)
+    fields = ('profile__id', 'profile__first_name',
+              'profile__last_name', 'image')
     # TODO(karim): check for highlight
-    models = ProfilePicture.objects.filter(inUse=True, user__is_public=True).only(
-        "profile", "user", "image"
-    )[:12]
+    models = ProfilePicture.objects.filter(
+        inUse=True, user__is_public=True).select_related('profile').only(*fields)[:12]
 
     context = {"carousel": carousel, "data": models, "form": SearchForm()}
     return render(request, "pages/index.html", context)
@@ -63,9 +64,5 @@ def contact(request):
     return render(request, "pages/contact.html", context)
 
 
-def apropos(request):
-    return render(request, "pages/a-propos.html")
-
-
-def vision(request):
-    return render(request, "pages/vision.html")
+def about(request):
+    return render(request, "pages/about.html")
