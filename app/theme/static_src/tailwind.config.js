@@ -11,6 +11,10 @@ module.exports = {
 		},
 	},
 	theme: {
+		fontFamily: {
+			display: ['Sora'],
+			body: ['Ruda'],
+		},
 		extend: {
 			colors: {
 				black: {

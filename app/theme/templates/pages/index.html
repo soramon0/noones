@@ -4,9 +4,11 @@
 
 {% load static %}
 
-{% block content %}
 
-<section class="w-full h-64 relative overflow-hidden sm:h-500">
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/glider.min.css' %}">
+
+<section class="w-full mb-20 h-64 relative overflow-hidden sm:h-500">
   <button
     class="carousel-button carousel-left ml-2 absolute z-10 left-0 bg-gray-400 rounded-full p-2 focus:outline-none focus:bg-gray-500">
     <svg class="h-4 w-4 sm:h-6 sm:w-6 fill-current text-gray-700" viewBox="0 0 20 20">
@@ -18,7 +20,7 @@
   <div class="carousel-track h-full relative">
     {% if carousel %} {% for slide in carousel %}
     <div class="w-full h-full absolute inset-y-0">
-      <span class="carousel-title text-5xl text-white absolute z-10 sm:text-6xl">{{slide.title}}</span>
+      <span class="w-3/4 ml-8 -mt-20 top-1/2 text-2xl font-bold font-body text-white absolute z-10 sm:text-4xl sm:ml-20">{{slide.title}}</span>
       <img class="w-full h-full object-cover" src="{{slide.image.url}}" alt="slide image" />
     </div>
     {% endfor %} {% else %}
@@ -37,34 +39,59 @@
 
 {% include "partials/_search_form.html" with form=form %}
 
-<h3 class="mt-16 text-center text-lg uppercase sm:text-2xl">{% trans "Our Models" %}</h3>
+<section class="mt-32 ml-4 sm:mx-4 sm:max-w-6xl md:mx-auto">
+  <div class="flex justify-between items-center">
+    <h3 class="text-lg uppercase font-light sm:text-3xl">{% trans "Featured Models" %}</h3>
+    <div class="flex mr-4 space-x-8 sm:mr-0">
+      <svg class="glider-prev w-6 h-6 fill-current text-gray-500 cursor-pointer sm:w-8 sm:h-8" viewBox="0 0 47 47">
+        <path d="M11.7758 22.3039L32.7331 1.26195C33.417 0.578098 34.5262 0.573398 35.21 1.25725C35.9009 1.93875 35.9009 3.0503 35.2171 3.73415L15.4912 23.54L35.2171 43.2635C35.9009 43.9474 35.9009 45.0566 35.2171 45.7404C34.874 46.0835 34.4298 46.2527 33.9786 46.2527C33.5321 46.2527 33.0809 46.0812 32.7402 45.7404L11.7829 24.7808C11.099 24.0969 11.099 22.9924 11.7758 22.3039Z"/>
+      </svg>
+      <svg  class="glider-next w-6 h-6 fill-current text-gray-500 cursor-pointer sm:w-8 sm:h-8" viewBox="0 0 47 47">
+        <path d="M35.2242 22.3039L14.2669 1.26195C13.583 0.578098 12.4738 0.573398 11.79 1.25725C11.0991 1.93875 11.0991 3.0503 11.7829 3.73415L31.5088 23.54L11.7829 43.2635C11.0991 43.9474 11.0991 45.0566 11.7829 45.7404C12.126 46.0835 12.5702 46.2527 13.0214 46.2527C13.4679 46.2527 13.9191 46.0812 14.2598 45.7404L35.2171 24.7808C35.901 24.0969 35.901 22.9924 35.2242 22.3039Z"/>
+      </svg>
+    </div>
+  </div>
 
-<section class="mt-10 mx-4 sm:max-w-6xl md:mx-auto">
   {% if data %}
-  <div class="drag-slider whitespace-no-wrap pb-2" data-simplebar>
-    {% for item in data %}
-    <a class="w-64 h-56 mr-4 inline-block rounded-lg shadow overflow-hidden cursor-pointer sm:h-64" href="{% url 'model' item.profile.id %}">
-      {% if item.image %}
-        <img class="w-full h-full object-cover" src="{{item.image.url}}" alt="{{item.profile.first_name}}" />
-      {% else %}
-        <img class="w-full h-full object-cover" src="{% static 'images/noc-models-mission.jpg' %}" alt="{{item.profile.first_name}}" />
-      {% endif %}
-    </a>
-    {% endfor %}
-  </div>
-  <div class="w-12 mx-auto mt-6 flex justify-between">
-    <span class="w-3 h-3 bg-gray-900 rounded-full cursor-pointer hover:bg-gray-600 focus:bg-gray-600"></span>
-    <span class="w-3 h-3 bg-gray-900 rounded-full cursor-pointer hover:bg-gray-600 focus:bg-gray-600"></span>
-    <span class="w-3 h-3 bg-gray-900 rounded-full cursor-pointer hover:bg-gray-600 focus:bg-gray-600"></span>
-  </div>
+    <div class="mt-8 space-y-4">
+      <div class="glider">
+        {% for item in data %}
+          <a class="w-72 inline-block mr-8 sm:mr-10" href="{% url 'model' item.profile.id %}">
+            <div class="relative">
+              <div class="w-full h-80 inline-block overflow-hidden rounded-sm shadow">
+                {% if item.image %}
+                  <img class="w-full h-full object-cover transition-transform transform hover:scale-125 duration-500 ease-in-out" src="{{item.image.url}}" alt="{{item.profile.first_name}}" />
+                {% else %}
+                  <img class="w-full h-full object-cover transition-transform transform hover:scale-125 duration-500 ease-in-out" src="{% static 'images/noc-models-mission.jpg' %}" alt="{{item.profile.first_name}}" />
+                {% endif %}
+              </div>          
+              <div class="w-40 p-2 text-center absolute left-0 -mt-8 ml-2 truncate uppercase tracking-wider bg-white rounded shadow" title="{{item.profile.first_name}} {{item.profile.last_name}}">
+                <span>{{item.profile.first_name}} {{item.profile.last_name}}</span>
+              </div>
+            </div>
+
+            <div class="mt-6 px-2 space-y-2">
+              <div class="flex space-x-4 items-center">
+                <span class="capitalize text-gray-800 font-semibold font-body">Check Profile</span>
+                <svg class="w-12 h-8" viewBox="0 0 70 25">              
+                  <path d="M0 11H70M70 11L59.1549 1M70 11L59.1549 21" stroke="black"/>
+                </svg>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+
+      <div class="dots"></div>
+    </div>
   {% else %}
-  <div class="text-center">
-    <p class="text-lg">No Models</p>
-  </div>
+    <div class="text-center">
+      <p class="text-lg">No Models</p>
+    </div>
   {% endif %}
 </section>
 
-<section class="mt-12 relative">
+<section class="mt-24 relative">
   <img class="h-64 w-full sm:h-full" src="{% static 'images/cta-bg-1024.jpg' %}" alt="model smiling" />
   <div class="signup-text-container absolute mr-2">
     <h2 class="text-2xl text-white uppercase md:text-4xl lg:text-5xl">
@@ -75,7 +102,7 @@
   </div>
 </section>
 
-<script src="{% static 'js/carousel.bundle.js' %}"></script>
-<script src="{% static 'js/drag.bundle.js' %}"></script>
+<script src="{% static 'js/glider.min.js' %}"></script>
+<script src="{% static 'js/home.bundle.js' %}"></script>
 
 {% endblock %}

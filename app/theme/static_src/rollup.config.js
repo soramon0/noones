@@ -52,17 +52,15 @@ const plugins = [
 
 const fileNames = [
 	'svelte',
-	'carousel',
-	'drag',
-	'http',
 	'index',
+	'home',
 	'about',
-	'infiniteScroll',
-	'navbar',
 	'register',
 	'search',
-	'utils',
 	'model',
+	'http',
+	'infiniteScroll',
+	'utils',
 ];
 
 export default fileNames.map((name) => {
@@ -81,6 +79,8 @@ export default fileNames.map((name) => {
 
 	if (name === 'svelte') {
 		config['input'] = `src/svelte/main.ts`;
+	} else if (name === 'home') {
+		config['input'] = `src/main/home/index.ts`;
 	} else if (name === 'model') {
 		config['input'] = `src/main/model/index.ts`;
 	} else {
