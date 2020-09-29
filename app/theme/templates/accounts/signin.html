@@ -1,53 +1,76 @@
 {% extends 'base.html' %} {% load static %}
 
 <!-- Sign In -->
-{% block content %} {% include 'partials/_header.html' with title="Sign In" %}
+{% block content %}
+<div
+	class="h-screen w-10/12 absolute top-0 left-0 bottom-0 transform -skew-x-12 z-0 bg-gray-lighter md:w-500 md:ml-20"
+	style="z-index: -1"
+></div>
+<div class="py-20 max-w-screen-xl mx-auto flex md:py-0 md:items-center md:justify-center md:h-screen">
+	<div class="flex-1">
+		<div style="width: 380px;" class="px-4 pt-12 pb-8 mx-auto bg-white shadow-sm rounded-large">
+			<h1 class="text-2xl text-center">
+				Welcome Back
+				<span class="block text-3xl font-body font-semibold text-purple-600">Sign in</span>
+			</h1>
 
-<section
-  class="mt-12 mb-16 mx-8 p-4 shadow-lg rounded-lg sm:w-auto sm:max-w-sm sm:mx-auto"
->
-  <img
-    class="h-24 mx-auto my-4"
-    src="{% static 'icons/logo-noc.png' %}"
-    alt="logo"
-  />
+			{% include "partials/_alerts.html" %}
 
-  {% include "partials/_alerts.html" %}
+			<form class="mt-6 space-y-4" action="{% url 'signin' %}" method="post">
+				{% csrf_token %} {{ form.non_field_errors }}
+				<div>
+					<label
+						class="mb-2 ml-1 block text-gray-800"
+						for="{{ form.email.id_for_label }}"
+						>Email</label
+					>
+					{{ form.email }} {% include "partials/_form_errors.html" with key=form.email %}
+				</div>
+				<div class="flex flex-col">
+					<label
+						class="mb-2 ml-1 block text-gray-800"
+						for="{{ form.password.id_for_label }}"
+						>Password</label
+					>
+					{{ form.password }} {% include "partials/_form_errors.html" with key=form.password %}
+					<a class="inline-block ml-auto mt-1" href="{% url 'password_reset' %}"
+						>Forgot password?</a
+					>
+				</div>
+				<button
+					type="submit"
+					class="w-full py-3 mt-8 space-x-2 rounded-large text-white bg-purple-600"
+				>
+					<span class="text-sm font-bold">Sign in</span>
+					<svg
+						class="w-8 h-4 inline-block fill-current text-white"
+						width="33"
+						height="8"
+						viewBox="0 0 33 8"
+					>
+						<path
+							d="M32.3536 4.35356C32.5488 4.15829 32.5488 3.84171 32.3536 3.64645L29.1716 0.464469C28.9763 0.269206 28.6597 0.269206 28.4645 0.464469C28.2692 0.659731 28.2692 0.976313 28.4645 1.17158L31.2929 4L28.4645 6.82843C28.2692 7.02369 28.2692 7.34027 28.4645 7.53554C28.6597 7.7308 28.9763 7.7308 29.1716 7.53554L32.3536 4.35356ZM-4.37114e-08 4.5L32 4.5L32 3.5L4.37114e-08 3.5L-4.37114e-08 4.5Z"
+							fill="white"
+						/>
+					</svg>
+				</button>
+			</form>
 
-  <form class="mt-4" action="{% url 'signin' %}" method="post">
-    {% csrf_token %} {{ form.non_field_errors }}
-    <div>
-      <label
-        class="mb-2 ml-1 block text-gray-800 font-semibold"
-        for="{{ form.email.id_for_label }}"
-        >Email:</label
-      >
-      {{ form.email }} {% include "partials/_form_errors.html" with key=form.email %}
-    </div>
-    <div class="mt-2">
-      <label
-        class="mb-2 ml-1 block text-gray-800 font-semibold"
-        for="{{ form.password.id_for_label }}"
-        >Password</label
-      >
-      {{ form.password }} {% include "partials/_form_errors.html" with key=form.password %}
-    </div>
-    <div class="text-right mt-6">
-      <button
-        type="submit"
-        class="w-full px-6 py-2 text-center bg-black hover:bg-gray-700 text-white uppercase tracking-wide rounded sm:w-auto"
-      >
-        Sign in
-      </button>
-    </div>
-  </form>
-  <div class="mt-4 py-2 text-center border-t border-gray-400 text-md">
-  <p><a href="{% url 'password_reset' %}.">Forgot password?</a></p>
-    <p>
-      Don't have an acount?
-      <a class="font-bold" href="{% url 'signup' %}">Sign up</a>
-    </p>
-  </div>
-</section>
+			<div class="w-1/2 h-1 mt-6 mx-auto rounded-full bg-purple-700"></div>
+
+			<p class="mt-4 text-center text-md">
+				Don't have an acount?
+				<a class="font-body text-purple-800 font-semibold" href="{% url 'signup' %}">Sign up</a>
+			</p>
+		</div>
+	</div>
+	<div class="hidden flex-1 md:block">
+		<img
+			class="h-full w-full object-cover"
+			src="{% static 'images/tech-life.png' %}"
+			alt="illustration of a person working on their computer"
+		/>
+	</div>
+</div>
 
 {% endblock %}

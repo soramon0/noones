@@ -7,7 +7,8 @@ app/static
 *.js.map
 lib64
 bin
-app/theme/static/
+app/theme/static/css
+app/theme/static/js
 email_pass.txt
 email_user.txt
 .env.prod
