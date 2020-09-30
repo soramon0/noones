@@ -33,13 +33,13 @@
 						>Password</label
 					>
 					{{ form.password }} {% include "partials/_form_errors.html" with key=form.password %}
-					<a class="inline-block ml-auto mt-1" href="{% url 'password_reset' %}"
+					<a class="inline-block ml-auto mt-1 hover:text-purple-600" href="{% url 'password_reset' %}"
 						>Forgot password?</a
 					>
 				</div>
 				<button
 					type="submit"
-					class="w-full py-3 mt-8 space-x-2 rounded-large text-white bg-purple-600"
+					class="w-full py-3 mt-8 space-x-2 rounded-large text-white bg-purple-600 hover:bg-purple-700 transition-colors duration-300 ease-out"
 				>
 					<span class="text-sm font-bold">Sign in</span>
 					<svg
@@ -60,7 +60,7 @@
 
 			<p class="mt-4 text-center text-md">
 				Don't have an acount?
-				<a class="font-body text-purple-800 font-semibold" href="{% url 'signup' %}">Sign up</a>
+				<a class="font-body text-purple-800 font-semibold hover:text-indigo-700" href="{% url 'signup' %}">Sign up</a>
 			</p>
 		</div>
 	</div>

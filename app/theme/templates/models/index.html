@@ -4,12 +4,11 @@
 
 {% block content %}
 
-<!-- Model Header -->
-{% include "partials/_header.html" with title="Models" %}
-
+<!-- Search Form -->
+<div class="mt-32"></div>
 {% include "partials/_search_form.html" with form=form %}
 
-<h2 class="text-center text-xl uppercase mt-16">{% trans "All Models" %}</h2>
+<h2 class="text-center text-xl mt-16">{% trans "All Models" %}</h2>
 
 <section class="card-container mb-16 mt-10 mx-auto w-11/12 flex flex-wrap flex-col items-center justify-center sm:flex-row">
 

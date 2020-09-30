@@ -5,10 +5,7 @@
 
 {% block content %}
 
-<!-- Header -->
-{% include "partials/_header.html" with title="Sign up" %}
-
-<section class="mx-auto mb-16 sm:w-10/12">
+<section class="mx-auto mt-32 mb-16 sm:w-10/12">
   <div class="text-gray-800 text-sm w-11/12 mx-auto sm:text-base">
     <div class="text-center mt-10">
       <p class="mb-6">
@@ -38,7 +35,7 @@
     {{ profile_form.non_field_errors }}
     {{ history_form.non_field_errors }}
     {{ measures_form.non_field_errors }}
-    <div class="current transition duration-300 ease-in-out transform">
+    <div class="{% if step == 1  %} current {% else %} absolute top-0 invisible opacity-0 -translate-x-full {% endif %} transition duration-500 ease-in-out transform">
       <h3 class="uppercase text-2xl font-normal mt-12 tracking-wide">Contact</h3>
       {% include "partials/_alerts.html" %}
       <div class="mt-4 sm:flex">
@@ -122,7 +119,7 @@
           class="next w-full text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Next</button>
       </div>
     </div>
-    <div class="absolute top-0 transition duration-500 ease-in-out transform translate-x-full opacity-0">
+    <div class="{% if step == 2  %} current {% else %} absolute top-0 invisible opacity-0 translate-x-full {% endif %} transition duration-500 ease-in-out transform">
       <h3 class="mt-12 uppercase text-2xl font-normal tracking-wide">Racontez nous</h3>
       <div class="mt-4 md:pl-0 md:flex md:flex-wrap">
         <div class="mt-2 md:w-1/2">
@@ -143,15 +140,15 @@
         </div>
       </div>
       <div class="mt-4 text-xs sm:text-sm">
-        <p>
+        <p class="mt-4 mb-2">
           Un NOC MODEL doit être considéré comme idole dans le monde de la MODE.
         </p>
-        <p class="mt-2">
+        <p>
           Vous devriez avoir le potentiel de renforcer votre talent, la
           détermination pour travailler dur pour vos rêves et un bagage lourd de
           valeurs et d’éthiques pour allumer votre parcours.
         </p>
-        <p class="my-2">Un NOC MODEL est seulement officiel si :</p>
+        <p class="mt-4 mb-2">Un NOC MODEL est seulement officiel si :</p>
         <ul class="ml-2 pl-4">
           <li class="disc-list-item"><span class="list-disc"></span> Elle/il a suivi une formation de 3 mois fournie par
             l'agence</li>
@@ -178,9 +175,9 @@
           class="next w-full text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Next</button>
       </div>
     </div>
-    <div class="absolute top-0 transition duration-500 ease-in-out transform translate-x-full opacity-0">
+    <div class="{% if step == 3  %} current {% else %} absolute top-0 invisible opacity-0 translate-x-full {% endif %} transition duration-500 ease-in-out transform">
       <h3 class="uppercase text-2xl font-normal mt-12 tracking-wide">Mensurations</h3>
-      <p class="mt-2 text-base text-center">C'est l'une des parties les plus importantes de votre inscription.
+      <p class="text-xs mt-2 sm:text-base sm:w-5/6">C'est l'une des parties les plus importantes de votre inscription.
         Veuillez comprendre que n'importe quelle information fausse pourrait
         bannir votre profil de www.nocmodels.com. Veuillez s'assurer que vous
         portez un maillot de bain, et qu'une autre personne prend vos mesures à
@@ -249,8 +246,8 @@
       <div class="button-container text-right mt-6 mx-2">
         <button type="button"
           class="previous w-full mb-2 text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Previous</button>
-        <button type="submit"
-          class="w-full text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Register</button>
+        <button type="button"
+          class="register-btn w-full text-center bg-black hover:bg-gray-700 text-white px-6 py-2 uppercase tracking-wide rounded sm:w-auto">Register</button>
       </div>
     </div>
   </form>

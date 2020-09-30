@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<h1 class="mt-8 text-center text-lg uppercase font-light sm:text-3xl">{% trans "Find a model" %}</h1>
+<h1 class="text-center text-lg font-body font-light sm:text-3xl">{% trans "Find a model" %}</h1>
 <form id="search-form" class="mt-12" method="get" action="{% url 'search' %}">
   {{ form.non_field_errors }}
   <div class="px-4 sm:px-2 sm:flex sm:flex-wrap sm:mx-auto sm:max-w-4xl md:px-0">

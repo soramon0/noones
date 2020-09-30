@@ -39,13 +39,21 @@
 			href="{% url 'profile' %}"
 			class="text-xs text-gray-700 font-medium px-2"
 		>
-			{% translate "Dashboard" %}
+			<button
+				class="px-6 py-3 rounded-lg bg-black-lighter font-semibold text-white hover:bg-gray-700 transition-colors duration-300 ease-out"
+			>
+				{% translate "Dashboard" %}
+			</button>
 		</a>
 		<a
 			href="{% url 'signout' %}"
 			class="text-xs text-gray-700 font-medium px-2"
 		>
-			{% translate "Sign out" %}
+			<button
+				class="px-4 py-2 rounded-lg font-semibold bg-transparent border border-black-lighter hover:bg-black-lighter hover:text-white transition-colors duration-300 ease-out"
+			>
+				{% translate "Sign out" %}
+			</button>
 		</a>
 		{% else %}
 		<a href="{% url 'about' %}" class="text-xs text-gray-700 font-medium px-2">
@@ -61,11 +69,15 @@
 			{% translate "Contact" %}
 		</a>
 		<a href="{% url 'signin' %}" class="text-xs text-gray-700 font-medium px-2">
-			{% translate "Sign In" %}
+			<button
+				class="px-4 py-2 rounded-lg font-semibold bg-transparent border border-black-lighter hover:bg-black-lighter hover:text-white transition-colors duration-300 ease-out"
+			>
+				{% translate "Sign In" %}
+			</button>
 		</a>
 		<a href="{% url 'signup' %}" class="text-xs text-gray-700 font-medium px-2">
 			<button
-				class="px-6 py-3 rounded-lg bg-black-lighter font-semibold text-white"
+				class="px-6 py-3 rounded-lg bg-black-lighter font-semibold text-white hover:bg-gray-700 transition-colors duration-300 ease-out"
 			>
 				{% translate "Become our model" %}
 			</button>
