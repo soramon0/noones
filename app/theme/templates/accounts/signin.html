@@ -11,7 +11,7 @@
 		<div style="width: 380px;" class="px-4 pt-12 pb-8 mx-auto bg-white shadow-sm rounded-large">
 			<h1 class="text-2xl text-center">
 				Welcome Back
-				<span class="block text-3xl font-body font-semibold text-purple-600">Sign in</span>
+				<span class="block text-3xl font-body uppercase font-semibold text-black-light">Sign in</span>
 			</h1>
 
 			{% include "partials/_alerts.html" %}
@@ -33,13 +33,13 @@
 						>Password</label
 					>
 					{{ form.password }} {% include "partials/_form_errors.html" with key=form.password %}
-					<a class="inline-block ml-auto mt-1 hover:text-purple-600" href="{% url 'password_reset' %}"
-						>Forgot password?</a
-					>
+					<a class="inline-block ml-auto mt-1 transition-all duration-300 ease-out hover:text-black-lighter hover:font-bold" href="{% url 'password_reset' %}">
+						Forgot password?
+					</a>
 				</div>
 				<button
 					type="submit"
-					class="w-full py-3 mt-8 space-x-2 rounded-large text-white bg-purple-600 hover:bg-purple-700 transition-colors duration-300 ease-out"
+					class="w-full py-3 mt-8 space-x-2 rounded-large text-white bg-black-light hover:bg-black-lighter transition-colors duration-300 ease-out"
 				>
 					<span class="text-sm font-bold">Sign in</span>
 					<svg
@@ -56,11 +56,11 @@
 				</button>
 			</form>
 
-			<div class="w-1/2 h-1 mt-6 mx-auto rounded-full bg-purple-700"></div>
+			<div class="w-1/2 h-1 mt-6 mx-auto rounded-full bg-gray-800"></div>
 
 			<p class="mt-4 text-center text-md">
 				Don't have an acount?
-				<a class="font-body text-purple-800 font-semibold hover:text-indigo-700" href="{% url 'signup' %}">Sign up</a>
+				<a class="font-body transition-all duration-300 ease-out hover:text-black-lighter hover:font-bold" href="{% url 'signup' %}">Sign up</a>
 			</p>
 		</div>
 	</div>

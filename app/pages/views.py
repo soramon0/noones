@@ -12,11 +12,8 @@ def index(request):
     carousel = Carousel.objects.filter(inUse=True)
     fields = ('profile__id', 'profile__first_name', 'profile__country',
               'profile__city', 'profile__last_name', 'image')
-    # TODO(karim): check for highlight
-    # models = ProfilePicture.objects.filter(
-    #     inUse=True, user__is_public=True).select_related('profile').only(*fields)[:12]
     models = ProfilePicture.objects.filter(
-        inUse=True).select_related('profile').only(*fields)[:12]
+        inUse=True, user__highlight=True, user__is_public=True).select_related('profile').only(*fields)[:12]
 
     context = {"carousel": carousel, "data": models, "form": SearchForm()}
     return render(request, "pages/index.html", context)

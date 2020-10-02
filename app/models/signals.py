@@ -6,6 +6,14 @@ from updates.tasks import image_resize_task
 from core.utils import delete_file
 
 
+@receiver(post_save, sender=ProfilePicture)
+def handle_gallery_post_save(
+    sender, instance, created, raw, using, update_fields, **kwargs
+):
+    if created:
+        image_resize_task.delay(instance.image.path, 1280, 720)
+
+
 @receiver(post_delete, sender=Gallery)
 def delete_old_gallery_photo(sender, instance, using, **kwargs):
     # TODO(karim): check if any updates uses this image
@@ -21,12 +29,20 @@ def handle_pp_post_save(
 
 
 @receiver(post_delete, sender=ProfilePicture)
-def delete_old_profile_picture(sender, instance, using, **kwargs):
+def delete_old_pp(sender, instance, using, **kwargs):
     # TODO(karim): check if any updates uses this image
     delete_file(instance.image)
 
 
+@receiver(post_save, sender=ProfilePicture)
+def handle_cp_post_save(
+    sender, instance, created, raw, using, update_fields, **kwargs
+):
+    if created:
+        image_resize_task.delay(instance.image.path, 1280, 720)
+
+
 @receiver(post_delete, sender=CoverPicture)
-def delete_old_cover_picture(sender, instance, using, **kwargs):
+def delete_old_cp(sender, instance, using, **kwargs):
     # TODO(karim): check if any updates uses this image
     delete_file(instance.image)
