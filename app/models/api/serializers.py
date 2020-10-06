@@ -1,5 +1,3 @@
-import os
-
 from rest_framework import serializers
 
 from models.models import (
@@ -7,11 +5,9 @@ from models.models import (
     Mensuration,
     Gallery,
     ProfilePicture,
-    CoverPicture,
-    GENDER_CHOICES,
+    CoverPicture
 )
-from models.forms import HAIR_CHOICES
-
+from core import constants
 from core.models import User
 
 
@@ -83,19 +79,9 @@ class PhotoSerializer(serializers.ModelSerializer):
 
 
 class SearchSerilaizer(serializers.Serializer):
-    country = serializers.ChoiceField(choices=(
-        ('maroc', 'Maroc'),
-        ('france', 'France'),
-    ))
-    city = serializers.ChoiceField(choices=(
-        ('marrakech', 'Marrakech'),
-        ('agadir', 'Agadir'),
-    ))
-    gender = serializers.ChoiceField(choices=GENDER_CHOICES)
-    hair = serializers.ChoiceField(choices=HAIR_CHOICES)
-    eyes = serializers.ChoiceField(choices=HAIR_CHOICES)
-    height = serializers.ChoiceField(choices=(
-        ('1.40-1.60', '1.40-1.60'),
-        ('1.60-1.80', '1.60-1.80'),
-        ('1.80-2.00', '1.80-2.00'),
-    ))
+    country = serializers.ChoiceField(choices=constants.COUNTRY_CHOICES)
+    city = serializers.ChoiceField(choices=constants.CITY_CHOICES)
+    gender = serializers.ChoiceField(choices=constants.GENDER_CHOICES)
+    hair = serializers.ChoiceField(choices=constants.HAIR_CHOICES)
+    eyes = serializers.ChoiceField(choices=constants.EYES_CHOICES)
+    height = serializers.ChoiceField(choices=constants.HEIGHT_CHOICES)

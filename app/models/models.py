@@ -4,11 +4,7 @@ from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-
-GENDER_CHOICES = (
-    ("f", _("Female")),
-    ("m", _("Male")),
-)
+from core import constants
 
 
 class AbstractMensuration(models.Model):
@@ -18,7 +14,8 @@ class AbstractMensuration(models.Model):
         max_digits=5, decimal_places=2, verbose_name=_("height")
     )
     # taillenombrill for male
-    waist = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("waist"))
+    waist = models.DecimalField(
+        max_digits=5, decimal_places=2, verbose_name=_("waist"))
     # buste for female
     bust = models.IntegerField(verbose_name=_("bust"))
     # epaules
@@ -40,7 +37,8 @@ class AbstractMensuration(models.Model):
 
 class Mensuration(AbstractMensuration):
     permitted = models.BooleanField(default=False, verbose_name=_("permitted"))
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _("Mensuration")
@@ -51,10 +49,6 @@ class Mensuration(AbstractMensuration):
 
 
 class History(models.Model):
-    Q4_CHOICES = choices = (
-        ("y", _("Yes")),
-        ("n", _("No")),
-    )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     # Qui étés vous?:
     q1 = models.CharField(max_length=500, help_text=_("Who are you?"))
@@ -66,8 +60,10 @@ class History(models.Model):
     q3 = models.CharField(
         max_length=500, help_text=_("Why do we need to approve your registration?")
     )
-    q4 = models.CharField(max_length=1, choices=Q4_CHOICES, blank=False, default=True)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    q4 = models.CharField(
+        max_length=1, choices=constants.AGREEMENT_CHOICES, blank=False, default=True)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _("History")
@@ -81,14 +77,15 @@ class Profile(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     gender = models.CharField(
         max_length=1,
-        choices=GENDER_CHOICES,
+        choices=constants.GENDER_CHOICES,
         blank=False,
         default="m",
         verbose_name=_("gender"),
     )
     first_name = models.CharField(max_length=100, verbose_name=_("first name"))
     last_name = models.CharField(max_length=100, verbose_name=_("last name"))
-    bio = models.CharField(max_length=500, blank=True, verbose_name=_("biography"))
+    bio = models.CharField(max_length=500, blank=True,
+                           verbose_name=_("biography"))
     birth_date = models.DateField(verbose_name=_("birth date"))
     facebook = models.URLField()
     instagram = models.URLField()
@@ -98,7 +95,8 @@ class Profile(models.Model):
     country = models.CharField(max_length=100, verbose_name=_("country"))
     zipcode = models.CharField(max_length=50, verbose_name=_("zipcode"))
     nin = models.CharField(max_length=100, verbose_name=_("nin"))
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _("Profile")
@@ -113,7 +111,8 @@ class ProfilePicture(models.Model):
     image = models.ImageField(upload_to="photos/%Y/%m/%d")
     inUse = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     class Meta:
@@ -129,7 +128,8 @@ class CoverPicture(models.Model):
     image = models.ImageField(upload_to="photos/%Y/%m/%d")
     inUse = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     class Meta:
@@ -144,7 +144,8 @@ class Gallery(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     image = models.ImageField(upload_to="photos/%Y/%m/%d")
     inUse = models.BooleanField(default=False)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     class Meta:
@@ -156,11 +157,13 @@ class Gallery(models.Model):
 
 
 class Contact(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
     model_full_name = models.CharField(
         max_length=100, verbose_name=_("model full name")
     )
-    model_email = models.EmailField(max_length=255, verbose_name=_("model email"))
+    model_email = models.EmailField(
+        max_length=255, verbose_name=_("model email"))
     full_name = models.CharField(max_length=100, verbose_name=_("full name"))
     email = models.EmailField(max_length=255)
     phone = models.CharField(max_length=100, verbose_name=_("phone"))

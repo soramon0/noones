@@ -1,12 +1,7 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from models.models import GENDER_CHOICES
-from models.forms import HAIR_CHOICES
-
-INPUT_CLASS = {'class': 'form-input'}
-TEXTAREA_CLASS = {'class': 'form-textarea w-full h-48'}
-SELECT_CLASS = {'class': 'form-select'}
+from core import constants
 
 
 class ContactForm(forms.Form):
@@ -21,40 +16,30 @@ class ContactForm(forms.Form):
 class SearchForm(forms.Form):
     # TODO(karim): transalte or get a mdae up list of countries and cities
     country = forms.ChoiceField(
-        choices=(
-            ('maroc', 'Maroc'),
-            ('france', 'France'),
-        ),
+        choices=constants.COUNTRY_CHOICES,
         label=_('country'),
-        widget=forms.Select(attrs=SELECT_CLASS)
+        widget=forms.Select(attrs=constants.SELECT_CLASS)
     )
     city = forms.ChoiceField(
-        choices=(
-            ('marrakech', 'Marrakech'),
-            ('agadir', 'Agadir'),
-        ),
+        choices=constants.CITY_CHOICES,
         label=_('city'),
-        widget=forms.Select(attrs=SELECT_CLASS)
+        widget=forms.Select(attrs=constants.SELECT_CLASS)
     )
     gender = forms.ChoiceField(
-        choices=GENDER_CHOICES,
+        choices=constants.GENDER_CHOICES,
         label=_('gender'),
-        widget=forms.Select(attrs=SELECT_CLASS)
+        widget=forms.Select(attrs=constants.SELECT_CLASS)
     )
     hair = forms.ChoiceField(
-        choices=HAIR_CHOICES, label=_('hair'),
-        widget=forms.Select(attrs=SELECT_CLASS),
+        choices=constants.HAIR_CHOICES, label=_('hair'),
+        widget=forms.Select(attrs=constants.SELECT_CLASS),
     )
     eyes = forms.ChoiceField(
-        choices=HAIR_CHOICES, label=_('eyes'),
-        widget=forms.Select(attrs=SELECT_CLASS)
+        choices=constants.HAIR_CHOICES, label=_('eyes'),
+        widget=forms.Select(attrs=constants.SELECT_CLASS)
     )
     height = forms.ChoiceField(
-        choices=(
-            ('1.40-1.60', '1.40-1.60'),
-            ('1.60-1.80', '1.60-1.80'),
-            ('1.80-2.00', '1.80-2.00'),
-        ),
+        choices=constants.HEIGHT_CHOICES,
         label=_('height'),
-        widget=forms.Select(attrs=SELECT_CLASS)
+        widget=forms.Select(attrs=constants.SELECT_CLASS)
     )

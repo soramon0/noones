@@ -66,14 +66,14 @@
             {% include "partials/_form_errors.html" with key=profile_form.birth_date %}
           </div>
           <div class="mt-2">
-            <label class="block text-gray-800 font-semibold" for="{{ profile_form.city.id_for_label }}">{{profile_form.city.label_tag}}</label>
-            {{ profile_form.city }}
-            {% include "partials/_form_errors.html" with key=profile_form.city %}
-          </div>
-          <div class="mt-2">
             <label class="block text-gray-800 font-semibold" for="{{ profile_form.country.id_for_label }}">{{profile_form.country.label_tag}}</label>
             {{ profile_form.country }}
             {% include "partials/_form_errors.html" with key=profile_form.country %}
+          </div>
+          <div class="mt-2">
+            <label class="block text-gray-800 font-semibold" for="{{ profile_form.city.id_for_label }}">{{profile_form.city.label_tag}}</label>
+            {{ profile_form.city }}
+            {% include "partials/_form_errors.html" with key=profile_form.city %}
           </div>
         </div>
         <div class="sm:flex-1 sm:ml-12">
