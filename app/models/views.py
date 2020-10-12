@@ -113,6 +113,7 @@ def search_models(request):
     models = (
         ProfilePicture.objects.filter(
             inUse=True,
+            user__is_public=True,
             profile__country__iexact=country,
             profile__city__iexact=city,
             profile__gender__iexact=gender,
@@ -120,7 +121,7 @@ def search_models(request):
             user__mensuration__eyes__iexact=eyes,
             user__mensuration__height__gte=height[0],
             user__mensuration__height__lte=height[1],
-        )
+        ).select_related('profile')
         .only(*fields)
         .order_by("-user__created_at")[start:count]
     )

@@ -112,6 +112,7 @@ def signup(request):
 
         if User.objects.filter(email=email).exists():
             messages.error(request, _("Email provided is already in use."))
+            context['step'] = 1
             return render(request, "accounts/register.html", context)
 
         # if any of this dicts have same keys

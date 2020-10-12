@@ -1,3 +1,7 @@
+import { handleCountryChange } from "./utils";
+
+handleCountryChange()
+
 const registerForm = document.querySelector<HTMLFormElement>('.register-form');
 const registerBtn = registerForm.querySelector('.register-btn');
 const sections = Array.from(registerForm.children).slice(1);

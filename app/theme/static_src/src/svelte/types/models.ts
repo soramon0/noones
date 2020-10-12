@@ -21,6 +21,15 @@ export interface IProfile {
   user: string;
 }
 
+export interface ICountry {
+  name: String
+  code: String
+}
+
+export interface ICity {
+  name: String
+}
+
 export interface IProfileUpdate {
   id: string;
   bio: string;

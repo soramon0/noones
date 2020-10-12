@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import password_validation
 
 from core import constants
-from core.models import User
+from core.models import User, Country
 from models.models import Profile, History, Mensuration
 
 
@@ -31,12 +31,16 @@ class ProfileForm(ModelForm):
             'instagram': URLInput(attrs=constants.INPUT_CLASS),
             'phone': TextInput(attrs=constants.INPUT_CLASS),
             'address': TextInput(attrs=constants.INPUT_CLASS),
-            'country': Select(attrs=constants.SELECT_CLASS, choices=constants.COUNTRY_CHOICES),
-            'city': Select(attrs=constants.SELECT_CLASS, choices=constants.CITY_CHOICES),
+            'city': Select(attrs=constants.SELECT_CLASS),
             'zipcode': TextInput(attrs=constants.INPUT_CLASS),
             'nin': TextInput(attrs=constants.INPUT_CLASS),
             'gender': Select(attrs=constants.SELECT_CLASS),
         }
+    country = forms.ModelChoiceField(
+        queryset=Country.objects.all(),
+        widget=Select(attrs=constants.SELECT_CLASS),
+        empty_label='Select a Country',
+        to_field_name='code')
     email = forms.EmailField(
         max_length=255, widget=forms.EmailInput(attrs=constants.INPUT_CLASS))
     password = forms.CharField(
@@ -46,6 +50,12 @@ class ProfileForm(ModelForm):
         password = self.cleaned_data['password']
         password_validation.validate_password(password)
         return password
+
+    def clean_country(self):
+        country = self.cleaned_data['country']
+        if isinstance(country, Country):
+            return country.name
+        return country
 
 
 class HistoryForm(ModelForm):

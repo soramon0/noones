@@ -1,46 +1,48 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% load i18n %} {% load static %} {% block content %}
 
-{% load i18n %}
-
-{% load static %}
-
-{% block content %}
-
-<!-- Model Header -->
-{% include "partials/_header.html" with title="Models" %}
-
+<div class="mt-32"></div>
 {% include "partials/_search_form.html" with form=form %}
 
 <h2 class="text-center text-xl uppercase mt-16">{% trans "All Models" %}</h2>
 
-<section class="card-container mb-16 mt-10 mx-auto w-11/12 flex flex-wrap flex-col items-center justify-center sm:flex-row">
-  {% for item in data %}
-    <div class="w-64 mb-4 mr-4 overflow-hidden rounded-lg shadow relative">
-      <div class="h-56">
-          <img
-            class="w-full h-full object-fit"
-            src="{{item.image.url}}"
-            alt="{{item.profile.first_name}}"
-          />
-        <div class="-mt-4 w-full h-10 transform -skew-y-6 bg-white">
-        </div>
-        <div class="-mt-16 mr-4 py-2 px-4 truncate w-48 uppercase tracking-wider bg-white rounded text-center shadow absolute right-0">
-          {{item.profile.first_name}} {{item.profile.last_name}}
-        </div>
-      </div>
-      <div class="mt-6 px-4 pb-4 text-sm flex justify-between items-center relative">
-        <div class="tracking-wide">
-          <p class="uppercase tracking-wider">{{item.profile.country}}</p>
-          <p class="capitalize text-gray-800 font-semibold">{{item.profile.city}}</p>
-        </div>
-        <a href="{% url 'model' item.profile.id %}" class="px-4 py-3 text-xs rounded-lg bg-black hover:bg-gray-700 text-white uppercase tracking-wide">
-          {% trans "Profile" %}
-        </a>
-      </div>
-    </div>
-  {% empty %}
-    <p>No Models available</p>
-  {% endfor %}
+<section
+	class="card-container mb-16 mt-10 mx-auto w-11/12 flex flex-wrap flex-col items-center justify-center sm:flex-row"
+>
+	{% for item in data %}
+	<div class="w-64 mb-4 mr-4 overflow-hidden rounded-lg shadow relative">
+		<div class="h-56">
+			<img
+				class="w-full h-full object-fit"
+				src="{{item.image.url}}"
+				alt="{{item.profile.first_name}}"
+			/>
+			<div class="-mt-4 w-full h-10 transform -skew-y-6 bg-white"></div>
+			<div
+				class="-mt-16 mr-4 py-2 px-4 truncate w-48 uppercase tracking-wider bg-white rounded text-center shadow absolute right-0"
+			>
+				{{item.profile.first_name}} {{item.profile.last_name}}
+			</div>
+		</div>
+		<div
+			class="mt-6 px-4 pb-4 text-sm flex justify-between items-center relative"
+		>
+			<div class="tracking-wide">
+				<p class="uppercase tracking-wider">{{item.profile.country}}</p>
+				<p class="capitalize text-gray-800 font-semibold">
+					{{item.profile.city}}
+				</p>
+			</div>
+			<a
+				href="{% url 'model' item.profile.id %}"
+				class="px-4 py-3 text-xs rounded-lg bg-black hover:bg-gray-700 text-white uppercase tracking-wide"
+			>
+				{% trans "Profile" %}
+			</a>
+		</div>
+	</div>
+	{% empty %}
+	<p>No Models available</p>
+	{% endfor %}
 </section>
 
 <script src="{% static 'js/search.bundle.js' %}"></script>

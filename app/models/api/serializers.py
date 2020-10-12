@@ -79,8 +79,8 @@ class PhotoSerializer(serializers.ModelSerializer):
 
 
 class SearchSerilaizer(serializers.Serializer):
-    country = serializers.ChoiceField(choices=constants.COUNTRY_CHOICES)
-    city = serializers.ChoiceField(choices=constants.CITY_CHOICES)
+    country = serializers.CharField(max_length=100)
+    city = serializers.CharField(max_length=100)
     gender = serializers.ChoiceField(choices=constants.GENDER_CHOICES)
     hair = serializers.ChoiceField(choices=constants.HAIR_CHOICES)
     eyes = serializers.ChoiceField(choices=constants.EYES_CHOICES)

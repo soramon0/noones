@@ -61,6 +61,7 @@ const fileNames = [
 	'http',
 	'infiniteScroll',
 	'utils',
+	'searchForm',
 ];
 
 export default fileNames.map((name) => {

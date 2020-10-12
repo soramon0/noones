@@ -8,6 +8,8 @@ import type {
   IProfilePicture,
   ICoverPicture,
   IGallary,
+  ICountry,
+  ICity
 } from '../types/models';
 
 type Profile = {
@@ -16,6 +18,8 @@ type Profile = {
   email: string;
   profilePicture: IProfilePicture;
   coverPicture: ICoverPicture;
+  countries: ICountry[],
+  cities: ICity[],
   errors: any;
 };
 
@@ -25,6 +29,8 @@ const { subscribe, set, update } = writable<Profile>({
   coverPicture: {} as ICoverPicture,
   profilePicture: {} as IProfilePicture,
   email: null,
+  countries: [],
+  cities: [],
   errors: {},
 });
 
@@ -135,4 +141,31 @@ export default {
       }));
     }
   },
+  async getCountries() {
+    try {
+      const { data } = await http.get<ICountry[]>('country/')
+      update((store) => {
+        return {
+          ...store,
+          countries: data
+        }
+      })
+    } catch{}
+  },
+  async getCities(Countryname:string, countryCode: string) {
+    try {
+      const { data } = await http.get<ICity[]>('city/', {
+        params: {
+          country:Countryname,
+          code:countryCode
+        }
+      })
+      update((store) => {
+        return {
+          ...store,
+          cities: data
+        }
+      })
+    } catch{}
+  }
 };

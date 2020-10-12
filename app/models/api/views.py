@@ -56,14 +56,16 @@ def me(request):
     context["model"].update({"email": user_serializer.data["email"]})
 
     try:
-        profile_picture = ProfilePicture.objects.get(profile_id=profile.id, inUse=True)
+        profile_picture = ProfilePicture.objects.get(
+            profile_id=profile.id, inUse=True)
         profile_picture_serializer = ProfilePictureSerializer(profile_picture)
         context["profilePicture"] = profile_picture_serializer.data
     except ProfilePicture.DoesNotExist:
         context["profilePicture"] = {}
 
     try:
-        cover_picture = CoverPicture.objects.get(profile_id=profile.id, inUse=True)
+        cover_picture = CoverPicture.objects.get(
+            profile_id=profile.id, inUse=True)
         cover_picture_serializer = CoverPictureSerializer(cover_picture)
         context["coverPicture"] = cover_picture_serializer.data
     except CoverPicture.DoesNotExist:
@@ -189,21 +191,16 @@ class SearchModels(generics.ListAPIView):
             "profile__city",
         )
 
-        return (
-            ProfilePicture.objects.filter(
-                inUse=True,
-                profile__country__iexact=country,
-                profile__city__iexact=city,
-                profile__gender__iexact=gender,
-                user__mensuration__hair__iexact=hair,
-                user__mensuration__eyes__iexact=eyes,
-                user__mensuration__height__gte=height[0],
-                user__mensuration__height__lte=height[1],
-            )
-            .select_related("profile")
-            .only(*fields)
-            .order_by("-user__created_at")
-        )
+        return ProfilePicture.objects.filter(
+            inUse=True,
+            profile__country__iexact=country,
+            profile__city__iexact=city,
+            profile__gender__iexact=gender,
+            user__mensuration__hair__iexact=hair,
+            user__mensuration__eyes__iexact=eyes,
+            user__mensuration__height__gte=height[0],
+            user__mensuration__height__lte=height[1],
+        ).select_related("profile").only(*fields).order_by("-user__created_at")
 
     def set_data(self, data):
         self.data = data
@@ -353,7 +350,8 @@ class CoverPictureAPIView(APIView):
         picture = self.get_object(picture_id)
 
         if picture.inUse:
-            context = {"coverPicture": ["Can not delete current used cover picture."]}
+            context = {"coverPicture": [
+                "Can not delete current used cover picture."]}
             return Response(context, status=status.HTTP_400_BAD_REQUEST)
 
         picture.delete()

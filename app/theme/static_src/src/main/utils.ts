@@ -1,3 +1,5 @@
+import http from './http'
+
 export function lazyLoad(targets, op: IntersectionObserverInit = {}) {
 	const options = {
 		root: op.root || null,
@@ -156,3 +158,42 @@ export const appearOnScroll = new IntersectionObserver(
 	handleIntersection,
 	appearOptions
 );
+
+export function handleCountryChange() {
+	const countryField = document.querySelector<HTMLSelectElement>('#id_country')
+	const cityField = document.querySelector('#id_city')
+
+	const initialOption = document.createElement('option');
+	initialOption.text = "Select a City";
+	initialOption.disabled = true;
+	initialOption.selected = true;
+	cityField.appendChild(initialOption);	
+	
+	if (countryField && cityField) {
+		countryField.addEventListener('change', async (e) => {
+			const { value, options, selectedIndex } = e.target as HTMLSelectElement;
+			const countryName = options[selectedIndex].text;
+
+			setCities(value, countryName, cityField);
+		})
+	}
+}
+
+export async function setCities(countryCode:string, countryName:string, cityField: Element){
+	try {
+		const { data } = await http.get('city/', {
+			params: {
+				code: countryCode,
+				country: countryName
+			}
+		});
+
+		cityField.innerHTML = '';
+
+		data.forEach(city => {
+			const option = document.createElement('option');
+			option.value = option.text = city.name;
+			cityField.appendChild(option);
+		});
+	} catch {}
+}

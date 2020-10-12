@@ -14,6 +14,7 @@ urlpatterns = i18n_patterns(
 
 urlpatterns += [
     # API endpoints
+    path('api/v1/', include('core.api.urls')),
     path('api/v1/models/', include('models.api.urls')),
     path('api/v1/accounts/', include('accounts.api.urls')),
     path('api/v1/update/', include('updates.api.urls')),

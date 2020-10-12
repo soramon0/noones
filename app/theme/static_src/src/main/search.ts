@@ -5,15 +5,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const cardContainer = document.querySelector('.card-container');
   const searchForm = document.querySelector('#search-form');
   let hasMore = true;
-  let offset = 20;
+  let offset = 0;
 
-  const options = {
+  const ioOptions = {
     root: null,
     rootMargin: '200px 0px 0px 0px',
     threshold: 0.5,
   };
 
-  const io = new IntersectionObserver(handleIntersection, options);
+  const io = new IntersectionObserver(handleIntersection, ioOptions);
   io.observe(document.querySelector('footer'));
 
   searchForm.addEventListener('submit', (e) => {
@@ -33,8 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function getFilteredModels(nextSet) {
-    // @ts-ignore
-    const country = document.getElementById('id_country').value;
+    const country = document.querySelector<HTMLSelectElement>('#id_country').selectedOptions[0].text;
     // @ts-ignore
     const city = document.getElementById('id_city').value;
     // @ts-ignore
@@ -49,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       const { data } = await http.get(
-        `models/search?${searchParams}&offset=${nextSet}`
+        `models/search/?${searchParams}&offset=${nextSet}`
       );
 
       // If we get no data stop fetching
