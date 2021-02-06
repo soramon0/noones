@@ -44,8 +44,8 @@ def delete_all_profile_updates() -> tuple:
 def modify_profile_update(*, update: ProfileUpdate, bio: str) -> ProfileUpdate:
     update.bio = bio
     update.message = ""
+    update.dirty = True
     update.decline = None
-    update.created_at = timezone.now()
     update.save()
     return update
 
