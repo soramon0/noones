@@ -7,8 +7,10 @@ app_name = "updates"
 
 router = DefaultRouter()
 
-router.register(r"profile", views.ProfileUpdateViewSet, basename="profile-updates")
-router.register(r"measures", views.MeasuresUpdateViewSet, basename="measures-updates")
+router.register(r"profile", views.ProfileUpdateViewSet,
+                basename="profile-updates")
+router.register(r"measures", views.MeasuresUpdateViewSet,
+                basename="measures-updates")
 router.register(
     r"photos/gallery", views.GalleryUpdateViewSet, basename="gallery-updates"
 )
@@ -28,6 +30,4 @@ urlpatterns = [
         "photos/gallery/related_photo/<uuid:related_photo_id>/",
         views.ChangeOrCreateGalleryUpdate.as_view(),
     ),
-    # path("photos/cover/", views.get_or_create_cover_picture_update),
-    # path("photos/cover/<uuid:update_id>/", views.CoverPictureUpdateAPIView.as_view()),
 ] + router.urls

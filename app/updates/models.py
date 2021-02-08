@@ -1,5 +1,4 @@
 import uuid
-from django.utils import timezone
 
 from django.db import models
 from django.conf import settings
@@ -25,20 +24,6 @@ class BaseUpdates(models.Model):
             msg = "this update has already been accepted and will be deleted in the next 24h."
             context = {field: [msg]}
             raise ValidationError(context)
-
-    def is_update_within_a_day(self, field: str):
-        """
-        Update permission is only allowed if it hasn't been 24 hours.
-        But if the request was delined the user can update the request again for the next 24 hours
-        """
-        if not self.decline:
-            now = timezone.now()
-            days = (now - self.created_at).days
-
-            if days != 0:
-                msg = "You can only update within the first 24 hours."
-                context = {field: [msg]}
-                raise ValidationError(context)
 
     def purify(self):
         self.dirty = False
@@ -82,6 +67,9 @@ class MeasuresUpdate(AbstractMensuration, BaseUpdates):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     measures = models.OneToOneField(Mensuration, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    changed_at = models.DateTimeField(auto_now=True)
+    # keeps track of whether an update has been changed or not
+    dirty = models.BooleanField(default=False)
     accept = models.BooleanField(null=True, blank=True)
     decline = models.BooleanField(null=True, blank=True)
     message = models.TextField(max_length=500, blank=True, default="")
@@ -109,6 +97,9 @@ class GalleryUpdate(BaseUpdates):
         Gallery, null=True, blank=True, on_delete=models.CASCADE
     )
     created_at = models.DateTimeField(auto_now_add=True)
+    changed_at = models.DateTimeField(auto_now=True)
+    # keeps track of whether an update has been changed or not
+    dirty = models.BooleanField(default=False)
     accept = models.BooleanField(null=True, blank=True)
     decline = models.BooleanField(null=True, blank=True)
     message = models.TextField(max_length=500, blank=True, default="")
@@ -136,6 +127,9 @@ class ProfilePictureUpdate(BaseUpdates):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    changed_at = models.DateTimeField(auto_now=True)
+    # keeps track of whether an update has been changed or not
+    dirty = models.BooleanField(default=False)
     accept = models.BooleanField(null=True, blank=True)
     decline = models.BooleanField(null=True, blank=True)
     message = models.TextField(max_length=500, blank=True, default="")
@@ -153,6 +147,9 @@ class CoverPictureUpdate(BaseUpdates):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    changed_at = models.DateTimeField(auto_now=True)
+    # keeps track of whether an update has been changed or not
+    dirty = models.BooleanField(default=False)
     accept = models.BooleanField(null=True, blank=True)
     decline = models.BooleanField(null=True, blank=True)
     message = models.TextField(max_length=500, blank=True, default="")

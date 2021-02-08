@@ -149,7 +149,6 @@ class MeasuresUpdateViewSet(ApiErrorsMixin, viewsets.ViewSet):
         instance = get_measures_update(fetched_by=request.user, pk=pk)
 
         instance.is_update_accepted(field="measures")
-        instance.is_update_within_a_day(field="measures")
 
         serializer = InputMeasuresUpdateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -215,7 +214,6 @@ class GalleryUpdateViewSet(ApiErrorsMixin, viewsets.ViewSet):
         instance = get_gallery_update(fetched_by=request.user, pk=pk)
 
         instance.is_update_accepted(field="image")
-        instance.is_update_within_a_day(field="image")
 
         # Only update the image field
         data = {"image": request.data.get("image", None)}
@@ -307,7 +305,6 @@ class ProfilePictureUpdateViewSet(ApiErrorsMixin, viewsets.ViewSet):
         instance = get_profile_picture_update(fetched_by=request.user, pk=pk)
 
         instance.is_update_accepted(field="image")
-        instance.is_update_within_a_day(field="image")
 
         # Only update the image field
         data = {"image": request.data.get("image", None)}
@@ -359,7 +356,6 @@ class CoverPictureUpdateViewSet(ApiErrorsMixin, viewsets.ViewSet):
         instance = get_cover_picture_update(fetched_by=request.user, pk=pk)
 
         instance.is_update_accepted(field="image")
-        instance.is_update_within_a_day(field="image")
 
         # Only update the image field
         data = {"image": request.data.get("image", None)}

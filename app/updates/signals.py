@@ -48,8 +48,6 @@ def apply_measures_update(
         # if the admin sets the accept field to true
         # then we apply the update to the original table
         if instance.accept and not instance.decline:
-            m = instance.measures
-            print(instance.measures_id)
             Mensuration.objects.filter(pk=instance.measures.id).update(
                 height=instance.height,
                 waist=instance.waist,

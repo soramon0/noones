@@ -33,7 +33,7 @@ def delete_profile_update(*, fetched_by: User, pk: uuid.UUID):
 
 def delete_all_profile_updates() -> tuple:
     '''
-        delete all profile updates that are one day old or more
+    delete all profile updates that are one day old or more
     '''
     yesterday = timezone.now() - timedelta(days=1)
 
@@ -42,9 +42,9 @@ def delete_all_profile_updates() -> tuple:
 
 
 def modify_profile_update(*, update: ProfileUpdate, bio: str) -> ProfileUpdate:
+    update.dirty = True
     update.bio = bio
     update.message = ""
-    update.dirty = True
     update.decline = None
     update.save()
     return update
@@ -108,9 +108,9 @@ def modify_measures_update(
     hair: str,
     eyes: str,
 ) -> MeasuresUpdate:
+    update.dirty = True
     update.message = ""
     update.decline = None
-    update.created_at = timezone.now()
     update.height = height
     update.waist = waist
     update.bust = bust
@@ -150,9 +150,9 @@ def delete_all_gallery_updates() -> tuple:
 
 def modify_gallery_update(*, update: GalleryUpdate, image) -> GalleryUpdate:
     old_image = update.image
+    update.dirty = True
     update.message = ""
     update.decline = None
-    update.created_at = timezone.now()
     update.image = image
     update.save()
     delete_file(old_image)
@@ -163,7 +163,7 @@ def reset_gallery_update(*, update: GalleryUpdate, image) -> GalleryUpdate:
     # get a refrence to the old image to compare against later
     old_image = update.image
 
-    update.created_at = timezone.now()
+    update.dirty = True
     update.accept = None
     update.decline = None
     update.message = ""
@@ -194,9 +194,9 @@ def modify_profile_picturey_update(
     *, update: ProfilePictureUpdate, image
 ) -> ProfilePictureUpdate:
     old_image = update.image
+    update.dirty = True
     update.message = ""
     update.decline = None
-    update.created_at = timezone.now()
     update.image = image
     update.save()
     delete_file(old_image)
@@ -238,9 +238,9 @@ def modify_cover_picturey_update(
     *, update: CoverPictureUpdate, image
 ) -> CoverPictureUpdate:
     old_image = update.image
+    update.dirty = True
     update.message = ""
     update.decline = None
-    update.created_at = timezone.now()
     update.image = image
     update.save()
     delete_file(old_image)

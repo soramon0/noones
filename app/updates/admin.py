@@ -12,6 +12,17 @@ from updates.utils import is_update_dirty
 
 
 class BaseAdmin(admin.ModelAdmin):
+    # the dirty field is just an implementation detail
+    # used to track when a user modifies his intial update
+    # no need to show it
+    exclude = ('dirty',)
+    readonly_fields = ('created_at', 'changed_at')
+    date_hierarchy = "created_at"
+    list_per_page = 24
+    list_filter = ("created_at", 'changed_at', "accept", "decline")
+    search_fields = ("id", "user__email")
+    actions = (accept_update,)
+
     def get_object(self, request, object_id, from_field=None):
         obj = super().get_object(request, object_id, from_field=from_field)
 
@@ -37,60 +48,59 @@ class BaseAdmin(admin.ModelAdmin):
 class ProfileUpdateAdmin(BaseAdmin):
     fieldsets = (
         ('Owner', {'fields': ('user', 'profile')}),
-        ('Timestamp', {"fields": ('created_at', 'changed_at')}),
+        ('Timestamp', {'fields': ('created_at', 'changed_at')}),
         ('Update data', {'fields': ('bio',)}),
-        ('Response', {"fields": ('accept', 'decline', 'message')}),
+        ('Response', {'fields': ('accept', 'decline', 'message')}),
     )
-    # the dirty field is just an implementation detail
-    # used to track when a user modifies his intial update
-    # no need to show it
-    exclude = ('dirty',)
-    list_display = ('id', 'user', 'created_at')
+    list_display = ("id", "user", "created_at")
     list_display_links = ("id", "user")
-    list_filter = ("created_at", "accept", "decline")
-    date_hierarchy = "created_at"
-    search_fields = ("id", "user__email")
-    list_per_page = 24
-    readonly_fields = ('created_at', 'changed_at')
-    actions = (accept_update,)
 
 
 class MeasuresUpdateAdmin(BaseAdmin):
+    fieldsets = (
+        ('Owner', {'fields': ('user', 'measures')}),
+        ('Timestamp', {'fields': ('created_at', 'changed_at')}),
+        ('Update data', {'fields': (
+            'height', 'waist', 'bust', 'shoulders', 'hips',
+            'weight', 'shoe_size', 'hair', 'eyes'
+        )}),
+        ('Response', {'fields': ('accept', 'decline', 'message')}),
+    )
     list_display = ("id", "measures", "created_at")
     list_display_links = ("id", "measures")
-    list_filter = ("created_at", "accept", "decline")
-    date_hierarchy = "created_at"
-    search_fields = ("user__email",)
-    list_per_page = 24
-    actions = (accept_update,)
 
 
 class ProfilePictureUpdateAdmin(BaseAdmin):
+    fieldsets = (
+        ('Owner', {'fields': ('user',)}),
+        ('Timestamp', {'fields': ('created_at', 'changed_at')}),
+        ('Update data', {'fields': ('image',)}),
+        ('Response', {'fields': ('accept', 'decline', 'message')}),
+    )
     list_display = ("id", "user", "image", "created_at")
     list_display_links = ("id",)
-    list_filter = ("created_at", "accept", "decline")
-    date_hierarchy = "created_at"
-    list_per_page = 24
-    actions = (accept_update,)
 
 
 class CoverPictureUpdateAdmin(BaseAdmin):
+    fieldsets = (
+        ('Owner', {'fields': ('user',)}),
+        ('Timestamp', {'fields': ('created_at', 'changed_at')}),
+        ('Update data', {'fields': ('image',)}),
+        ('Response', {'fields': ('accept', 'decline', 'message')}),
+    )
     list_display = ("id", "user", "image", "created_at")
     list_display_links = ("id",)
-    list_filter = ("created_at", "accept", "decline")
-    date_hierarchy = "created_at"
-    list_per_page = 24
-    actions = (accept_update,)
 
 
 class GalleryUpdateAdmin(BaseAdmin):
-    readonly_fields = ("related_photo",)
+    fieldsets = (
+        ('Owner', {'fields': ('user',)}),
+        ('Timestamp', {'fields': ('created_at', 'changed_at')}),
+        ('Update data', {'fields': ('related_photo', 'image')}),
+        ('Response', {'fields': ('accept', 'decline', 'message')}),
+    )
+    readonly_fields = ('created_at', 'changed_at', 'related_photo')
     list_display = ("id", "user", "image", "created_at")
-    list_display_links = ("id",)
-    list_filter = ("created_at", "accept", "decline")
-    date_hierarchy = "created_at"
-    list_per_page = 24
-    actions = (accept_update,)
 
 
 admin.site.register(ProfileUpdate, ProfileUpdateAdmin)
