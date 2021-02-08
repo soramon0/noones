@@ -1,4 +1,5 @@
 import uuid
+from django.utils import timezone
 
 from django.db import models
 from django.conf import settings
@@ -10,10 +11,41 @@ from models.models import (
     Mensuration,
     Gallery,
 )
-from updates.utils import UpdateChecks
 
 
-class ProfileUpdate(models.Model, UpdateChecks):
+class BaseUpdates(models.Model):
+    class Meta:
+        abstract = True
+
+    def is_update_accepted(self, field: str):
+        """
+        if the update has been accepted, the user should not be able to change it.
+        """
+        if self.accept:
+            msg = "this update has already been accepted and will be deleted in the next 24h."
+            context = {field: [msg]}
+            raise ValidationError(context)
+
+    def is_update_within_a_day(self, field: str):
+        """
+        Update permission is only allowed if it hasn't been 24 hours.
+        But if the request was delined the user can update the request again for the next 24 hours
+        """
+        if not self.decline:
+            now = timezone.now()
+            days = (now - self.created_at).days
+
+            if days != 0:
+                msg = "You can only update within the first 24 hours."
+                context = {field: [msg]}
+                raise ValidationError(context)
+
+    def purify(self):
+        self.dirty = False
+        self.save()
+
+
+class ProfileUpdate(BaseUpdates):
     # This database table is going to hold the model update data
     # temporarily until the admin deletes it
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -43,7 +75,7 @@ class ProfileUpdate(models.Model, UpdateChecks):
         return str(self.id)
 
 
-class MeasuresUpdate(AbstractMensuration, UpdateChecks):
+class MeasuresUpdate(AbstractMensuration, BaseUpdates):
     # This database table is going to hold the measures update data
     # temporarily until the admin deletes it
     user = models.OneToOneField(
@@ -68,7 +100,7 @@ class MeasuresUpdate(AbstractMensuration, UpdateChecks):
         return str(self.id)
 
 
-class GalleryUpdate(models.Model, UpdateChecks):
+class GalleryUpdate(BaseUpdates):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     image = models.ImageField(upload_to="photos/%Y/%m/%d")
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -98,7 +130,7 @@ class GalleryUpdate(models.Model, UpdateChecks):
         return self.image.url
 
 
-class ProfilePictureUpdate(models.Model, UpdateChecks):
+class ProfilePictureUpdate(BaseUpdates):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     image = models.ImageField(upload_to="photos/%Y/%m/%d")
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -115,7 +147,7 @@ class ProfilePictureUpdate(models.Model, UpdateChecks):
         return self.image.url
 
 
-class CoverPictureUpdate(models.Model, UpdateChecks):
+class CoverPictureUpdate(BaseUpdates):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     image = models.ImageField(upload_to="photos/%Y/%m/%d")
     user = models.ForeignKey(settings.AUTH_USER_MODEL,

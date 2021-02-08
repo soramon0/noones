@@ -8,9 +8,33 @@ from updates.models import (
     CoverPictureUpdate,
 )
 from updates.actions import accept_update
+from updates.utils import is_update_dirty
 
 
-class ProfileUpdateAdmin(admin.ModelAdmin):
+class BaseAdmin(admin.ModelAdmin):
+    def get_object(self, request, object_id, from_field=None):
+        obj = super().get_object(request, object_id, from_field=from_field)
+
+        if request.method == 'GET' and is_update_dirty(obj):
+            obj.purify()
+
+        return obj
+
+    def save_model(self, request, obj, form, change):
+        update = self.get_object(request, str(obj.id))
+
+        if is_update_dirty(update):
+            update.purify()
+
+            msg = f'your changes has not been applied. update {update.pk} has been changed since last time you viewed it.'
+            # Change the messages level to ensure the success message is ingored
+            messages.set_level(request, messages.WARNING)
+            messages.warning(request, msg)
+        else:
+            return super().save_model(request, obj, form, change)
+
+
+class ProfileUpdateAdmin(BaseAdmin):
     fieldsets = (
         ('Owner', {'fields': ('user', 'profile')}),
         ('Timestamp', {"fields": ('created_at', 'changed_at')}),
@@ -30,35 +54,8 @@ class ProfileUpdateAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at', 'changed_at')
     actions = (accept_update,)
 
-    def get_object(self, request, object_id, from_field=None):
-        obj = super().get_object(request, object_id, from_field=from_field)
 
-        if obj and obj.dirty and request.method == 'GET':
-            obj.dirty = False
-            obj.save()
-
-        return obj
-
-    def save_model(self, request, obj, form, change):
-        update = self.get_object(request, str(obj.id))
-        # if update is dirty, stop and tell the admin
-        # to check the new version. dirty is set to True
-        # whenever the user changes his intial update
-        if update.dirty:
-            update.dirty = False
-            update.save()
-
-            # Change the messages level to ensure the success message is ingored
-            messages.set_level(request, messages.WARNING)
-            messages.warning(
-                request,
-                f'your changes has not been applied. update {update.pk} has been changed since last time you viewed it.'
-            )
-        else:
-            return super().save_model(request, obj, form, change)
-
-
-class MeasuresUpdateAdmin(admin.ModelAdmin):
+class MeasuresUpdateAdmin(BaseAdmin):
     list_display = ("id", "measures", "created_at")
     list_display_links = ("id", "measures")
     list_filter = ("created_at", "accept", "decline")
@@ -68,7 +65,7 @@ class MeasuresUpdateAdmin(admin.ModelAdmin):
     actions = (accept_update,)
 
 
-class ProfilePictureUpdateAdmin(admin.ModelAdmin):
+class ProfilePictureUpdateAdmin(BaseAdmin):
     list_display = ("id", "user", "image", "created_at")
     list_display_links = ("id",)
     list_filter = ("created_at", "accept", "decline")
@@ -77,7 +74,7 @@ class ProfilePictureUpdateAdmin(admin.ModelAdmin):
     actions = (accept_update,)
 
 
-class CoverPictureUpdateAdmin(admin.ModelAdmin):
+class CoverPictureUpdateAdmin(BaseAdmin):
     list_display = ("id", "user", "image", "created_at")
     list_display_links = ("id",)
     list_filter = ("created_at", "accept", "decline")
@@ -86,7 +83,7 @@ class CoverPictureUpdateAdmin(admin.ModelAdmin):
     actions = (accept_update,)
 
 
-class GalleryUpdateAdmin(admin.ModelAdmin):
+class GalleryUpdateAdmin(BaseAdmin):
     readonly_fields = ("related_photo",)
     list_display = ("id", "user", "image", "created_at")
     list_display_links = ("id",)
