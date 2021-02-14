@@ -131,6 +131,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Testing config
+TEST_RUNNER = 'app.runner.TestRunner'
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 

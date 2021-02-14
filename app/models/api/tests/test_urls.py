@@ -32,12 +32,14 @@ class TestAPIUrls(SimpleTestCase):
                           views.ListPorfilePictures)
 
     def test_delete_profile_picture_url_resolves(self):
-        url = reverse('models:delete_profile_picture', args=(1,))
+        url = reverse('models:delete_profile_picture',
+                      kwargs={'picture_id': uuid.uuid4()})
         self.assertEquals(resolve(url).func.view_class,
                           views.ProfilePictureAPIView)
 
     def test_mark_profile_picture_url_resolves(self):
-        url = reverse('models:mark_profile_picture', args=(1,))
+        url = reverse('models:mark_profile_picture', kwargs={
+                      'picture_id': uuid.uuid4()})
         self.assertEquals(resolve(url).func, views.mark_as_profile_picture)
 
     def test_list_cover_pictures_url_resolves(self):
@@ -46,10 +48,12 @@ class TestAPIUrls(SimpleTestCase):
                           views.ListCoverPictures)
 
     def test_delete_cover_picture_url_resolves(self):
-        url = reverse('models:delete_cover_picture', args=(1,))
+        url = reverse('models:delete_cover_picture',
+                      kwargs={'picture_id': uuid.uuid4()})
         self.assertEquals(resolve(url).func.view_class,
                           views.CoverPictureAPIView)
 
     def test_mark_cover_picture_url_resolves(self):
-        url = reverse('models:mark_cover_picture', args=(1,))
+        url = reverse('models:mark_cover_picture',
+                      kwargs={'picture_id': uuid.uuid4()})
         self.assertEquals(resolve(url).func, views.mark_as_cover_picture)

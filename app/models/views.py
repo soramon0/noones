@@ -39,7 +39,7 @@ def detail_model(request, id):
         "profile__bio",
         "mensuration",
     )
-    query = User.objects.only(*fields)
+    query = User.objects.only(*fields).filter(is_public=True)
     user = get_object_or_404(query, profile=id)
     model = user.profile
     photos = Gallery.objects.only("image").filter(user_id=user.id)[:8]

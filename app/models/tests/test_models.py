@@ -29,9 +29,9 @@ class TestModels(TestCase):
         self.assertEqual(str(measures), measures.user.email)
 
     def test_contact_creation(self):
-        contact = factories.ContactFactory()
+        contact = factories.ContactFactory(model_full_name="Jake Elite")
         self.assertIsInstance(contact, models.Contact)
-        self.assertEqual(str(contact), contact.model_full_name)
+        self.assertEqual(str(contact), "Jake Elite")
 
     def test_profile_picture_creation(self):
         profile = factories.ProfilePictureFactory()
