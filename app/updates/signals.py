@@ -122,7 +122,7 @@ def apply_profile_picture_update(
                 # set it's inUse value to false
                 ProfilePicture.objects.filter(
                     user=user, inUse=True).update(inUse=False)
-            except ProfilePicture.DoesNotExit:
+            except ProfilePicture.DoesNotExist:
                 pass
 
             ProfilePicture.objects.create(
@@ -150,7 +150,7 @@ def apply_cover_picture_update(
             try:
                 CoverPicture.objects.filter(
                     user=user, inUse=True).update(inUse=False)
-            except ProfilePicture.DoesNotExit:
+            except ProfilePicture.DoesNotExist:
                 pass
 
             CoverPicture.objects.create(

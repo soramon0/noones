@@ -4,8 +4,7 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 
-from . import factories
-from core.models import Country
+from models.tests import factories
 
 
 class TestViews(TestCase):
@@ -34,7 +33,7 @@ class TestViews(TestCase):
         )
 
         private_user = factories.UserFactory()
-        private_obj = factories.ProfilePictureFactory(
+        factories.ProfilePictureFactory(
             user=private_user,
             profile=factories.ModelFactory(user=private_user),
             inUse=True
@@ -106,7 +105,7 @@ class TestViews(TestCase):
         self.assertIsNone(context['cover'])
 
     def test_model_with_unused_profile_picture(self):
-        obj = factories.ProfilePictureFactory(
+        factories.ProfilePictureFactory(
             user=self.user,
             profile=self.model,
             inUse=False
@@ -128,6 +127,7 @@ class TestViews(TestCase):
         context = res.context
 
         self.assertIsNotNone(context['profile'])
+        # pylint: disable=no-member
         self.assertEqual(obj.image.url, context['profile'])
 
     def test_search_models_with_bad_query_params_returns_400(self):

@@ -36,4 +36,5 @@ class TestModels(TestCase):
     def test_profile_picture_creation(self):
         profile = factories.ProfilePictureFactory()
         self.assertIsInstance(profile, models.ProfilePicture)
+        # pylint: disable=no-member
         self.assertEqual(str(profile), profile.image.url)

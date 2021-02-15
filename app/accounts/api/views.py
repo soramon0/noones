@@ -91,6 +91,6 @@ def update_email(request):
     user.is_active = False
     user.email = email
     user.save()
-    confirmation_email_send(request, user)
+    confirmation_email_send(request=request, user=user)
 
     return Response(status=status.HTTP_200_OK)

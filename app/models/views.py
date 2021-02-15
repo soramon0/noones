@@ -4,14 +4,7 @@ from django.contrib.auth import get_user_model
 
 from pages.forms import SearchForm
 from models.forms import ModelContactForm
-from models.models import (
-    Profile,
-    Mensuration,
-    Gallery,
-    Contact,
-    ProfilePicture,
-    CoverPicture,
-)
+from models.models import Gallery, ProfilePicture, CoverPicture
 
 User = get_user_model()
 

@@ -83,4 +83,4 @@ class ProfilePictureFactory(DjangoModelFactory):
 
     profile = factory.SubFactory(ModelFactory)
     user = factory.SubFactory(UserFactory)
-    image = "image.jpg"
+    image = factory.django.ImageField(filename='image.jpg')

@@ -5,3 +5,5 @@ coverage==5.2.1
 factory-boy==2.12.0
 django-debug-toolbar==2.2
 bpython==0.19
+pylint==2.5.2
+pylint-django==2.4.2

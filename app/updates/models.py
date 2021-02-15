@@ -20,6 +20,7 @@ class BaseUpdates(models.Model):
         """
         if the update has been accepted, the user should not be able to change it.
         """
+        # pylint: disable=no-member
         if self.accept:
             msg = "this update has already been accepted and will be deleted in the next 24h."
             context = {field: [msg]}

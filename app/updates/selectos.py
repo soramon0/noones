@@ -78,7 +78,3 @@ def get_cover_picture_update(
 
 def get_cover_picture_updates(*, fetched_by: User) -> Iterator[CoverPictureUpdate]:
     return CoverPictureUpdate.objects.filter(user=fetched_by)
-
-
-def get_cover_picture_updates(*, fetched_by: User) -> Iterator[CoverPictureUpdate]:
-    return CoverPictureUpdate.objects.filter(user=fetched_by)

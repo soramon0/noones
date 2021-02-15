@@ -318,8 +318,7 @@ class ProfilePictureUpdateViewSet(ApiErrorsMixin, viewsets.ViewSet):
         return Response(serializer.data)
 
     def destroy(self, request, pk=None):
-        instance = delete_profile_picture_update(
-            fetched_by=request.user, pk=pk)
+        delete_profile_picture_update(fetched_by=request.user, pk=pk)
 
         # Send Email to admin
         # TODO(karim): Update this email
@@ -369,7 +368,7 @@ class CoverPictureUpdateViewSet(ApiErrorsMixin, viewsets.ViewSet):
         return Response(serializer.data)
 
     def destroy(self, request, pk=None):
-        instance = delete_cover_picture_update(fetched_by=request.user, pk=pk)
+        delete_cover_picture_update(fetched_by=request.user, pk=pk)
 
         # Send Email to admin
         # TODO(karim): Update this email
