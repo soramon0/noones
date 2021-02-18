@@ -70,6 +70,7 @@
 				action="{% url 'contact' %}"
 				method="post"
 			>
+				{% csrf_token %}
 				<!-- form start -->
 				{{ form.non_field_errors }}
 				<div class="contact-form__group">
