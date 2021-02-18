@@ -40,9 +40,13 @@ if not DEBUG:
     from sentry_sdk.integrations.django import DjangoIntegration
 
     sentry_sdk.init(
-        dsn="https://969f1f4da12e4dc5b8bdf1418d5464ad@sentry.io/2134391",
+        dsn="https://dc97e9d7dd944c8896c85471fdde5892@o526360.ingest.sentry.io/5641807",
         integrations=[DjangoIntegration()],
-        send_default_pii=True,
+        traces_sample_rate=1.0,
+
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True
     )
 
 # Application definition
